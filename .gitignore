@@ -17,3 +17,4 @@
 .idea
 
 testdb.sqlite3
+build/mysql/data/

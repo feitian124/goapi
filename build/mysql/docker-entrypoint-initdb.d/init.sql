@@ -1,1 +1,1 @@
-source /opt/sql/topology.sql;
+source /opt/sql/ddl.sql;
