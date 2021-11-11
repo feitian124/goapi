@@ -2,9 +2,8 @@ package mariadb
 
 import (
 	"database/sql"
-
-	"github.com/feitian124/goapi/drivers"
-	"github.com/feitian124/goapi/drivers/mysql"
+	"github.com/feitian124/goapi/database/drivers"
+	"github.com/feitian124/goapi/database/drivers/mysql"
 )
 
 type Mariadb struct {

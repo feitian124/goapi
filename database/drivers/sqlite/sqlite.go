@@ -3,12 +3,12 @@ package sqlite
 import (
 	"database/sql"
 	"fmt"
+	"github.com/feitian124/goapi/database/ddl"
 	"regexp"
 	"sort"
 	"strings"
 
 	"github.com/feitian124/goapi/database/schema"
-	"github.com/feitian124/goapi/ddl"
 	"github.com/pkg/errors"
 )
 

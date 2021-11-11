@@ -7,9 +7,9 @@ import (
 	"strings"
 
 	"github.com/aquasecurity/go-version/pkg/version"
+	"github.com/feitian124/goapi/database/ddl"
+	"github.com/feitian124/goapi/database/drivers"
 	"github.com/feitian124/goapi/database/schema"
-	"github.com/feitian124/goapi/ddl"
-	"github.com/feitian124/goapi/drivers"
 	"github.com/pkg/errors"
 )
 
