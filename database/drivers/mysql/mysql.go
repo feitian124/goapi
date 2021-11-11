@@ -106,71 +106,21 @@ func (m *Mysql) Analyze(s *schema.Schema) error {
 	defer tableRows.Close()
 
 	var relations []*schema.Relation
-
 	var tables []*schema.Table
+
 	for tableRows.Next() {
-		var (
-			tableName    string
-			tableType    string
-			tableComment string
-		)
+
+		var tableName string
+		var tableType string
+		var tableComment string
 		err := tableRows.Scan(&tableName, &tableType, &tableComment)
 		if err != nil {
 			return errors.WithStack(err)
 		}
-		table := &schema.Table{
-			Name:    tableName,
-			Type:    tableType,
-			Comment: tableComment,
-		}
 
-		// table definition
-		if tableType == "BASE TABLE" {
-			tableDefRows, err := m.db.Query(fmt.Sprintf("SHOW CREATE TABLE `%s`", tableName))
-			if err != nil {
-				return errors.WithStack(err)
-			}
-			defer tableDefRows.Close()
-			for tableDefRows.Next() {
-				var (
-					tableName string
-					tableDef  string
-				)
-				err := tableDefRows.Scan(&tableName, &tableDef)
-				if err != nil {
-					return errors.WithStack(err)
-				}
-
-				switch {
-				case m.showAutoIncrement:
-					table.Def = tableDef
-				case m.hideAutoIncrement:
-					table.Def = reAI.ReplaceAllLiteralString(tableDef, "")
-				default:
-					table.Def = reAI.ReplaceAllLiteralString(tableDef, " AUTO_INCREMENT=[Redacted by tbls]")
-				}
-			}
-		}
-
-		// view definition
-		if tableType == "VIEW" {
-			viewDefRows, err := m.db.Query(`
-SELECT view_definition FROM information_schema.views
-WHERE table_schema = ?
-AND table_name = ?;
-		`, s.Name, tableName)
-			if err != nil {
-				return errors.WithStack(err)
-			}
-			defer viewDefRows.Close()
-			for viewDefRows.Next() {
-				var tableDef string
-				err := viewDefRows.Scan(&tableDef)
-				if err != nil {
-					return errors.WithStack(err)
-				}
-				table.Def = fmt.Sprintf("CREATE VIEW %s AS (%s)", tableName, tableDef)
-			}
+		table, err := m.Table(s.Name, tableName, tableType, tableComment)
+		if err != nil {
+			return errors.WithStack(err)
 		}
 
 		indexes, err := m.Indexes(s.Name, tableName)
@@ -281,18 +231,16 @@ func (m *Mysql) EnableMariaMode() {
 	m.mariaMode = true
 }
 
-func (m *Mysql) queryForTables() string {
-	if m.mariaMode {
-		return `
-SELECT table_name, table_type, table_comment FROM information_schema.tables WHERE table_schema = ? ORDER BY table_name;`
-	}
-	return `
-SELECT table_name, table_type, table_comment FROM information_schema.tables WHERE table_schema = ?;`
-}
-
 func convertColumnNullable(str string) bool {
 	if str == "NO" {
 		return false
 	}
 	return true
+}
+
+func (m *Mysql) queryForTables() string {
+	if m.mariaMode {
+		return mariaTableSql
+	}
+	return mysqlTableSql
 }
