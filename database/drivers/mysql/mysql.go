@@ -110,9 +110,7 @@ func (m *Mysql) Analyze(s *schema.Schema) error {
 
 	for tableRows.Next() {
 
-		var tableName string
-		var tableType string
-		var tableComment string
+		var tableName, tableType, tableComment string
 		err := tableRows.Scan(&tableName, &tableType, &tableComment)
 		if err != nil {
 			return errors.WithStack(err)

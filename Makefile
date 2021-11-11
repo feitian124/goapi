@@ -36,8 +36,10 @@ sqlite:
 	sqlite3 $(PWD)/testdata/testdb.sqlite3 < testdata/ddl/sqlite.sql
 
 test:
-	go test ./... -v -coverprofile=coverage.out -covermode=count
-	$(MAKE) testdoc
+	go test ./database/drivers/mysql -v -coverprofile=coverage.out -covermode=count
+
+test_cover: test
+	go tool cover -html=coverage.out
 
 build:
 	go build -ldflags="$(BUILD_LDFLAGS)"
