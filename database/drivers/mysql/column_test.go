@@ -6,6 +6,7 @@ import (
 )
 
 func TestMysql_Columns(t *testing.T) {
+	t.Parallel()
 	m, err := New(db)
 	if err != nil {
 		t.Fatal(err)

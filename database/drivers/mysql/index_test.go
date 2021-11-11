@@ -7,6 +7,7 @@ import (
 )
 
 func TestMysql_Indexes(t *testing.T) {
+	t.Parallel()
 	m, err := New(db)
 	if err != nil {
 		t.Fatal(err)

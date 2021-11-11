@@ -105,9 +105,9 @@ func (m *Mysql) Analyze(s *schema.Schema) error {
 	}
 	defer tableRows.Close()
 
-	relations := []*schema.Relation{}
+	var relations []*schema.Relation
 
-	tables := []*schema.Table{}
+	var tables []*schema.Table
 	for tableRows.Next() {
 		var (
 			tableName    string
