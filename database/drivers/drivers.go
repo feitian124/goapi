@@ -15,6 +15,9 @@ const (
 type Driver interface {
 	Analyze(*schema.Schema) error
 	Info() (*schema.Driver, error)
+	//Tables(schema string) ([]schema.Table, error)
+	//Table(schema string, table string) (*schema.Table, error)
+	//Columns(table string) ([]schema.Column, error)
 }
 
 // Option is the type for change Config.
