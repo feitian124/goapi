@@ -3,11 +3,6 @@ package datasource
 import (
 	"bytes"
 	"encoding/json"
-	"github.com/feitian124/goapi/database/drivers"
-	"github.com/feitian124/goapi/database/drivers/mariadb"
-	"github.com/feitian124/goapi/database/drivers/mysql"
-	"github.com/feitian124/goapi/database/drivers/postgres"
-	"github.com/feitian124/goapi/database/drivers/sqlite"
 	"io"
 	"net/http"
 	"os"
@@ -16,6 +11,11 @@ import (
 	"time"
 
 	"github.com/feitian124/goapi/config"
+	"github.com/feitian124/goapi/database/drivers"
+	"github.com/feitian124/goapi/database/drivers/mariadb"
+	"github.com/feitian124/goapi/database/drivers/mysql"
+	"github.com/feitian124/goapi/database/drivers/postgres"
+	"github.com/feitian124/goapi/database/drivers/sqlite"
 	"github.com/feitian124/goapi/database/schema"
 	"github.com/pkg/errors"
 	"github.com/xo/dburl"

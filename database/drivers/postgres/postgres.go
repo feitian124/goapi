@@ -3,11 +3,11 @@ package postgres
 import (
 	"database/sql"
 	"fmt"
-	"github.com/feitian124/goapi/database/ddl"
 	"regexp"
 	"strings"
 
 	"github.com/aquasecurity/go-version/pkg/version"
+	"github.com/feitian124/goapi/database/ddl"
 	"github.com/feitian124/goapi/database/schema"
 	"github.com/lib/pq"
 	"github.com/pkg/errors"

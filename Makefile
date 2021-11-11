@@ -1,5 +1,7 @@
 PKG = github.com/feitian124/goapi
 COMMIT = $$(git describe --tags --always)
+
+# get date
 OSNAME=${shell uname -s}
 ifeq ($(OSNAME),Darwin)
 	SED = gsed
@@ -9,11 +11,13 @@ else
 	DATE = $$(date --utc '+%Y-%m-%d_%H:%M:%S')
 endif
 
+PACKAGES=`go list ./... | grep -v /vendor/`
+VET_PACKAGES=`go list ./... | grep -v /vendor/ | grep -v /examples/`
+GO_FILES=`find . -name "*.go" -type f -not -path "./vendor/*"`
+
 BUILD_LDFLAGS = -X $(PKG).commit=$(COMMIT) -X $(PKG).date=$(DATE)
 
-.PHONY: default test mysql postgres sqlite
-
-default: test
+default: check
 
 mysql:
 	usql my://root:mypass@localhost:33306/testdb -f testdata/ddl/mysql56.sql
@@ -40,3 +44,20 @@ build:
 
 install:
 	go install github.com/xo/usql@v0.9.4
+
+check:
+	@gofmt -s -w ${GO_FILES}
+	@go vet $(VET_PACKAGES)
+
+info:
+	@echo "COMMIT：${COMMIT}"
+	@echo "OSNAME: ${OSNAME}"
+	@echo "DATE: ${DATE}"
+	@echo -e "\nPACKAGES:"
+	@echo ${PACKAGES}
+	@echo -e "\nVET_PACKAGES:"
+	@echo ${VET_PACKAGES}
+	@echo -e "\nGO_FILES:"
+	@echo ${GO_FILES}
+
+.PHONY: default check test mysql postgres sqlite info

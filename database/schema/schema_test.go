@@ -12,11 +12,11 @@ func TestSchema_FindTableByName(t *testing.T) {
 	schema := Schema{
 		Name: "testschema",
 		Tables: []*Table{
-			&Table{
+			{
 				Name:    "a",
 				Comment: "table a",
 			},
-			&Table{
+			{
 				Name:    "b",
 				Comment: "table b",
 			},
@@ -34,11 +34,11 @@ func TestTable_FindColumnByName(t *testing.T) {
 	table := Table{
 		Name: "testtable",
 		Columns: []*Column{
-			&Column{
+			{
 				Name:    "a",
 				Comment: "column a",
 			},
-			&Column{
+			{
 				Name:    "b",
 				Comment: "column b",
 			},
@@ -56,18 +56,18 @@ func TestTable_FindConstrainsByColumnName(t *testing.T) {
 	table := Table{
 		Name: "testtable",
 		Columns: []*Column{
-			&Column{
+			{
 				Name:    "a",
 				Comment: "column a",
 			},
-			&Column{
+			{
 				Name:    "b",
 				Comment: "column b",
 			},
 		},
 	}
 	table.Constraints = []*Constraint{
-		&Constraint{
+		{
 			Name:              "PRIMARY",
 			Type:              "PRIMARY KEY",
 			Def:               "PRIMARY KEY(a)",
@@ -76,7 +76,7 @@ func TestTable_FindConstrainsByColumnName(t *testing.T) {
 			Columns:           []string{"a"},
 			ReferencedColumns: []string{},
 		},
-		&Constraint{
+		{
 			Name:              "UNIQUE",
 			Type:              "UNIQUE",
 			Def:               "UNIQUE KEY a (b)",
@@ -100,19 +100,19 @@ func TestSchema_Sort(t *testing.T) {
 	schema := Schema{
 		Name: "testschema",
 		Tables: []*Table{
-			&Table{
+			{
 				Name:    "b",
 				Comment: "table b",
 			},
-			&Table{
+			{
 				Name:    "a",
 				Comment: "table a",
 				Columns: []*Column{
-					&Column{
+					{
 						Name:    "b",
 						Comment: "column b",
 					},
-					&Column{
+					{
 						Name:    "a",
 						Comment: "column a",
 					},
@@ -203,7 +203,7 @@ func newTestSchema() *Schema {
 		Comment: "table a",
 		Columns: []*Column{
 			ca,
-			&Column{
+			{
 				Name:     "a2",
 				Type:     "datetime",
 				Comment:  "column a2",
@@ -222,7 +222,7 @@ func newTestSchema() *Schema {
 		Comment: "table b",
 		Columns: []*Column{
 			cb,
-			&Column{
+			{
 				Name:     "b2",
 				Comment:  "column b2",
 				Type:     "text",

@@ -61,22 +61,22 @@ func TestParseCheckConstraints(t *testing.T) {
 	table := &schema.Table{
 		Name: "check_constraints",
 		Columns: []*schema.Column{
-			&schema.Column{
+			{
 				Name: "id",
 			},
-			&schema.Column{
+			{
 				Name: "col",
 			},
-			&schema.Column{
+			{
 				Name: "brackets",
 			},
-			&schema.Column{
+			{
 				Name: "checkcheck",
 			},
-			&schema.Column{
+			{
 				Name: "downcase",
 			},
-			&schema.Column{
+			{
 				Name: "nl",
 			},
 		},
@@ -93,35 +93,35 @@ func TestParseCheckConstraints(t *testing.T) {
 );`
 	tableName := "check_constraints"
 	want := []*schema.Constraint{
-		&schema.Constraint{
+		{
 			Name:    "-",
 			Type:    "CHECK",
 			Def:     "CHECK(length(col) > 4)",
 			Table:   &tableName,
 			Columns: []string{"col"},
 		},
-		&schema.Constraint{
+		{
 			Name:    "-",
 			Type:    "CHECK",
 			Def:     "CHECK(((length(brackets) > 4)))",
 			Table:   &tableName,
 			Columns: []string{"brackets"},
 		},
-		&schema.Constraint{
+		{
 			Name:    "-",
 			Type:    "CHECK",
 			Def:     "CHECK(length(checkcheck) > 4)",
 			Table:   &tableName,
 			Columns: []string{"checkcheck"},
 		},
-		&schema.Constraint{
+		{
 			Name:    "-",
 			Type:    "CHECK",
 			Def:     "check(length(downcase) > 4)",
 			Table:   &tableName,
 			Columns: []string{"downcase"},
 		},
-		&schema.Constraint{
+		{
 			Name:    "-",
 			Type:    "CHECK",
 			Def:     "check(length(nl) > 4 OR nl != 'ln')",

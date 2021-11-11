@@ -36,7 +36,6 @@ services:
       - seccomp:unconfined
     command: mysqld --default-authentication-plugin=mysql_native_password
     volumes:
-      - './build/mysql/data:/var/lib/mysql'
       - './build/mysql/conf.d:/etc/mysql/conf.d'
       - './build/mysql/docker-entrypoint-initdb.d:/docker-entrypoint-initdb.d'
       - './build/mysql/sql:/opt/sql'
