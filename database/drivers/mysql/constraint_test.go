@@ -6,15 +6,15 @@ import (
 	"github.com/stretchr/testify/require"
 )
 
-func TestMysql_Indexes(t *testing.T) {
+func TestMysql_Constraints(t *testing.T) {
 	m, err := New(db)
 	if err != nil {
 		t.Fatal(err)
 	}
-	indexes, err := m.Indexes(s.Name, "posts")
+	constraints, err := m.Constraints(s.Name, "posts")
 
 	require.NoError(t, err)
 	// pk, fk and user defined
-	require.Len(t, indexes, 3)
-	require.Equal(t, "posts_user_id_idx", indexes[0].Name)
+	require.Len(t, constraints, 3)
+	require.Equal(t, "posts_user_id_fk", constraints[0].Name)
 }

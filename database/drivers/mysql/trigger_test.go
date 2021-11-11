@@ -15,5 +15,5 @@ func TestMysql_Triggers(t *testing.T) {
 
 	require.NoError(t, err)
 	require.Len(t, triggers, 1)
-	require.Equal(t, triggers[0].Name, "update_posts_updated")
+	require.Equal(t, "update_posts_updated", triggers[0].Name)
 }
