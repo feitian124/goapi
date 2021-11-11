@@ -4,6 +4,13 @@ import (
 	"github.com/feitian124/goapi/database/schema"
 )
 
+type Dialect int8
+
+const (
+	MYSQL = iota
+	SQLITE
+)
+
 // Driver is the common interface for database drivers
 type Driver interface {
 	Analyze(*schema.Schema) error
