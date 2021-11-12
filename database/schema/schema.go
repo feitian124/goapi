@@ -3,6 +3,7 @@ package schema
 import (
 	"database/sql"
 	"fmt"
+	"github.com/feitian124/goapi/database/ddl"
 	"regexp"
 	"sort"
 	"strings"
@@ -124,7 +125,7 @@ type Schema struct {
 func (s *Schema) genRelation(tb *Table, c *Constraint) (*Relation, error) {
 	r := &Relation{
 		Table: tb,
-		Def: c.Def,
+		Def:   c.Def,
 	}
 	result := reFK.FindAllStringSubmatch(r.Def, -1)
 	if len(result) == 0 || len(result[0]) < 4 {
@@ -183,6 +184,25 @@ func (s *Schema) GenRelations() error {
 	}
 	s.Relations = relations
 	return nil
+}
+
+// GenReferencedTables generate referenced tables for view
+func (s *Schema) GenReferencedTables() {
+	for _, tb := range s.Tables {
+		if tb.Type != "VIEW" {
+			continue
+		}
+		for _, rts := range ddl.ParseReferencedTables(tb.Def) {
+			rt, err := s.FindTableByName(strings.TrimPrefix(rts, fmt.Sprintf("%s.", s.Name)))
+			if err != nil {
+				rt = &Table{
+					Name:     rts,
+					External: true,
+				}
+			}
+			tb.ReferencedTables = append(tb.ReferencedTables, rt)
+		}
+	}
 }
 
 func (s *Schema) NormalizeTableName(name string) string {

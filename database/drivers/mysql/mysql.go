@@ -2,12 +2,10 @@ package mysql
 
 import (
 	"database/sql"
-	"fmt"
 	"regexp"
 	"strings"
 
 	"github.com/aquasecurity/go-version/pkg/version"
-	"github.com/feitian124/goapi/database/ddl"
 	"github.com/feitian124/goapi/database/drivers"
 	"github.com/feitian124/goapi/database/schema"
 	"github.com/pkg/errors"
@@ -151,22 +149,7 @@ func (m *Mysql) Analyze(s *schema.Schema) error {
 
 	s.GenRelations()
 
-	// referenced tables of view
-	for _, t := range s.Tables {
-		if t.Type != "VIEW" {
-			continue
-		}
-		for _, rts := range ddl.ParseReferencedTables(t.Def) {
-			rt, err := s.FindTableByName(strings.TrimPrefix(rts, fmt.Sprintf("%s.", s.Name)))
-			if err != nil {
-				rt = &schema.Table{
-					Name:     rts,
-					External: true,
-				}
-			}
-			t.ReferencedTables = append(t.ReferencedTables, rt)
-		}
-	}
+	s.GenReferencedTables()
 
 	return nil
 }
