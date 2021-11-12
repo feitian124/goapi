@@ -30,72 +30,6 @@ func TestSchema_FindTableByName(t *testing.T) {
 	}
 }
 
-func TestTable_FindColumnByName(t *testing.T) {
-	table := Table{
-		Name: "testtable",
-		Columns: []*Column{
-			{
-				Name:    "a",
-				Comment: "column a",
-			},
-			{
-				Name:    "b",
-				Comment: "column b",
-			},
-		},
-	}
-	column, _ := table.FindColumnByName("b")
-	want := "column b"
-	got := column.Comment
-	if got != want {
-		t.Errorf("got %v\nwant %v", got, want)
-	}
-}
-
-func TestTable_FindConstrainsByColumnName(t *testing.T) {
-	table := Table{
-		Name: "testtable",
-		Columns: []*Column{
-			{
-				Name:    "a",
-				Comment: "column a",
-			},
-			{
-				Name:    "b",
-				Comment: "column b",
-			},
-		},
-	}
-	table.Constraints = []*Constraint{
-		{
-			Name:              "PRIMARY",
-			Type:              "PRIMARY KEY",
-			Def:               "PRIMARY KEY(a)",
-			ReferencedTable:   nil,
-			Table:             &table.Name,
-			Columns:           []string{"a"},
-			ReferencedColumns: []string{},
-		},
-		{
-			Name:              "UNIQUE",
-			Type:              "UNIQUE",
-			Def:               "UNIQUE KEY a (b)",
-			ReferencedTable:   nil,
-			Table:             &table.Name,
-			Columns:           []string{"b"},
-			ReferencedColumns: []string{},
-		},
-	}
-
-	got := table.FindConstrainsByColumnName("a")
-	if want := 1; len(got) != want {
-		t.Errorf("got %v\nwant %v", len(got), want)
-	}
-	if want := "PRIMARY"; got[0].Name != want {
-		t.Errorf("got %v\nwant %v", got[0].Name, want)
-	}
-}
-
 func TestSchema_Sort(t *testing.T) {
 	schema := Schema{
 		Name: "testschema",
@@ -133,7 +67,7 @@ func TestSchema_Sort(t *testing.T) {
 	}
 }
 
-func TestRepair(t *testing.T) {
+func TestSchema_Repair(t *testing.T) {
 	got := &Schema{}
 	file, err := os.Open(filepath.Join(testdataDir(), "json_test_schema.json.golden"))
 	if err != nil {
