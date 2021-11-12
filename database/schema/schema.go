@@ -3,6 +3,7 @@ package schema
 import (
 	"database/sql"
 	"fmt"
+	"regexp"
 	"sort"
 	"strings"
 
@@ -13,6 +14,8 @@ import (
 const (
 	TypeFK = "FOREIGN KEY"
 )
+
+var reFK = regexp.MustCompile(`FOREIGN KEY \((.+)\) REFERENCES ([^\s]+)\s?\((.+)\)`)
 
 type Label struct {
 	Name    string
@@ -116,6 +119,70 @@ type Schema struct {
 	Relations []*Relation `json:"relations"`
 	Driver    *Driver     `json:"driver"`
 	Labels    Labels      `json:"labels,omitempty"`
+}
+
+func (s *Schema) genRelation(tb *Table, c *Constraint) (*Relation, error) {
+	r := &Relation{
+		Table: tb,
+		Def: c.Def,
+	}
+	result := reFK.FindAllStringSubmatch(r.Def, -1)
+	if len(result) == 0 || len(result[0]) < 4 {
+		return nil, errors.Errorf("can not parse foreign key: %s", r.Def)
+	}
+	strColumns := strings.Split(result[0][1], ", ")
+	strParentTable := result[0][2]
+	strParentColumns := strings.Split(result[0][3], ", ")
+	for _, c := range strColumns {
+		column, err := r.Table.FindColumnByName(c)
+		if err != nil {
+			return nil, errors.WithStack(err)
+		}
+		r.Columns = append(r.Columns, column)
+		column.ParentRelations = append(column.ParentRelations, r)
+	}
+	parentTable, err := s.FindTableByName(strParentTable)
+	if err != nil {
+		return nil, errors.WithStack(err)
+	}
+	r.ParentTable = parentTable
+	for _, c := range strParentColumns {
+		column, err := parentTable.FindColumnByName(c)
+		if err != nil {
+			return nil, errors.WithStack(err)
+		}
+		r.ParentColumns = append(r.ParentColumns, column)
+		column.ChildRelations = append(column.ChildRelations, r)
+	}
+	return r, nil
+}
+
+func (s *Schema) genTableRelations(tb *Table) ([]*Relation, error) {
+	var relations []*Relation
+	for _, c := range tb.Constraints {
+		if c.Type == TypeFK {
+			relation, err := s.genRelation(tb, c)
+			if err != nil {
+				return nil, errors.WithStack(err)
+			}
+			relations = append(relations, relation)
+		}
+	}
+	return relations, nil
+}
+
+// GenRelations generate relations from tables
+func (s *Schema) GenRelations() error {
+	var relations []*Relation
+	for _, tb := range s.Tables {
+		rs, err := s.genTableRelations(tb)
+		if err != nil {
+			return errors.WithStack(err)
+		}
+		relations = append(relations, rs...)
+	}
+	s.Relations = relations
+	return nil
 }
 
 func (s *Schema) NormalizeTableName(name string) string {

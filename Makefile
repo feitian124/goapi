@@ -2,8 +2,8 @@ PKG = github.com/feitian124/goapi
 COMMIT = $$(git describe --tags --always)
 
 # get date
-OSNAME=${shell uname -s}
-ifeq ($(OSNAME),Darwin)
+OS_NAME=${shell uname -s}
+ifeq ($(OS_NAME),Darwin)
 	SED = gsed
 	DATE = $$(gdate --utc '+%Y-%m-%d_%H:%M:%S')
 else
@@ -53,7 +53,7 @@ check:
 
 info:
 	@echo "COMMIT：${COMMIT}"
-	@echo "OSNAME: ${OSNAME}"
+	@echo "OS_NAME: ${OS_NAME}"
 	@echo "DATE: ${DATE}"
 	@echo -e "\nPACKAGES:"
 	@echo ${PACKAGES}

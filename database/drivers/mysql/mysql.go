@@ -105,7 +105,6 @@ func (m *Mysql) Analyze(s *schema.Schema) error {
 	}
 	defer tableRows.Close()
 
-	var relations []*schema.Relation
 	var tables []*schema.Table
 
 	for tableRows.Next() {
@@ -150,38 +149,7 @@ func (m *Mysql) Analyze(s *schema.Schema) error {
 
 	s.Tables = tables
 
-	// Relations
-	for _, r := range relations {
-		result := reFK.FindAllStringSubmatch(r.Def, -1)
-		if len(result) == 0 || len(result[0]) < 4 {
-			return errors.Errorf("can not parse foreign key: %s", r.Def)
-		}
-		strColumns := strings.Split(result[0][1], ", ")
-		strParentTable := result[0][2]
-		strParentColumns := strings.Split(result[0][3], ", ")
-		for _, c := range strColumns {
-			column, err := r.Table.FindColumnByName(c)
-			if err != nil {
-				return err
-			}
-			r.Columns = append(r.Columns, column)
-			column.ParentRelations = append(column.ParentRelations, r)
-		}
-		parentTable, err := s.FindTableByName(strParentTable)
-		if err != nil {
-			return err
-		}
-		r.ParentTable = parentTable
-		for _, c := range strParentColumns {
-			column, err := parentTable.FindColumnByName(c)
-			if err != nil {
-				return err
-			}
-			r.ParentColumns = append(r.ParentColumns, column)
-			column.ChildRelations = append(column.ChildRelations, r)
-		}
-	}
-	s.Relations = relations
+	s.GenRelations()
 
 	// referenced tables of view
 	for _, t := range s.Tables {

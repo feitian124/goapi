@@ -55,7 +55,6 @@ func (m Mysql) Constraints(schemaName string, tableName string) ([]*schema.Const
 	defer constraintRows.Close()
 
 	var constraints []*schema.Constraint
-	//var relations []*schema.Relation
 	for constraintRows.Next() {
 		var (
 			constraintName          string
@@ -77,10 +76,6 @@ func (m Mysql) Constraints(schemaName string, tableName string) ([]*schema.Const
 		case "FOREIGN KEY":
 			constraintType = schema.TypeFK
 			constraintDef = fmt.Sprintf("FOREIGN KEY (%s) REFERENCES %s (%s)", constraintColumnName, constraintRefTableName.String, constraintRefColumnName.String)
-			//relation := &schema.Relation{
-			//	Def:   constraintDef,
-			//}
-			//relations = append(relations, relation)
 		case "UNKNOWN":
 			constraintDef = fmt.Sprintf("UNKNOWN CONSTRAINT (%s) (%s) (%s)", constraintColumnName, constraintRefTableName.String, constraintRefColumnName.String)
 		}
