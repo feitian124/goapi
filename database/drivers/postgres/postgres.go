@@ -32,7 +32,7 @@ func New(db *sql.DB) *Postgres {
 
 // Analyze PostgreSQL database schema
 func (p *Postgres) Analyze(s *schema.Schema) error {
-	d, err := p.Info()
+	d, err := p.NewDriver()
 	if err != nil {
 		return errors.WithStack(err)
 	}
@@ -365,7 +365,7 @@ ORDER BY tgrelid
 }
 
 // Info return schema.Driver
-func (p *Postgres) Info() (*schema.Driver, error) {
+func (p *Postgres) NewDriver() (*schema.Driver, error) {
 	var v string
 	row := p.db.QueryRow(`SELECT version();`)
 	err := row.Scan(&v)

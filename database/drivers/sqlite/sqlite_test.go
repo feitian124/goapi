@@ -45,7 +45,7 @@ func TestAnalyzeView(t *testing.T) {
 
 func TestInfo(t *testing.T) {
 	driver := New(db)
-	d, err := driver.Info()
+	d, err := driver.NewDriver()
 	if err != nil {
 		t.Errorf("%v", err)
 	}

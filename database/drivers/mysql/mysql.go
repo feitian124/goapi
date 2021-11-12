@@ -63,7 +63,7 @@ func New(db *sql.DB, opts ...drivers.Option) (*Mysql, error) {
 
 // Analyze MySQL database schema
 func (m *Mysql) Analyze(s *schema.Schema) error {
-	d, err := m.Info()
+	d, err := m.NewDriver()
 	if err != nil {
 		return errors.WithStack(err)
 	}
@@ -155,12 +155,12 @@ func (m *Mysql) Analyze(s *schema.Schema) error {
 }
 
 // Info return schema.Driver
-func (m *Mysql) Info() (*schema.Driver, error) {
+func (m *Mysql) NewDriver() (*schema.Driver, error) {
 	var v string
 	row := m.db.QueryRow(`SELECT version();`)
 	err := row.Scan(&v)
 	if err != nil {
-		return nil, err
+		return nil, errors.WithStack(err)
 	}
 
 	name := "mysql"

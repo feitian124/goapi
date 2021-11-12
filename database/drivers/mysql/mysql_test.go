@@ -74,7 +74,7 @@ func TestInfo(t *testing.T) {
 	if err != nil {
 		t.Fatal(err)
 	}
-	d, err := driver.Info()
+	d, err := driver.NewDriver()
 	if err != nil {
 		t.Fatal(err)
 	}

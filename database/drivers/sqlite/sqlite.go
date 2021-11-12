@@ -41,7 +41,7 @@ type fk struct {
 
 // Analyze SQLite database schema
 func (l *Sqlite) Analyze(s *schema.Schema) error {
-	d, err := l.Info()
+	d, err := l.NewDriver()
 	if err != nil {
 		return errors.WithStack(err)
 	}
@@ -416,7 +416,7 @@ SELECT name, sql FROM sqlite_master WHERE type = 'trigger' AND tbl_name = ?;
 }
 
 // Info return schema.Driver
-func (l *Sqlite) Info() (*schema.Driver, error) {
+func (l *Sqlite) NewDriver() (*schema.Driver, error) {
 	var v string
 	row := l.db.QueryRow(`SELECT sqlite_version();`)
 	err := row.Scan(&v)
