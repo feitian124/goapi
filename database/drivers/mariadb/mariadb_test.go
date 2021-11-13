@@ -26,6 +26,7 @@ func TestMain(m *testing.M) {
 }
 
 func TestAnalyzeView(t *testing.T) {
+	t.Skip()
 	driver, err := New(db)
 	if err != nil {
 		t.Fatal(err)
@@ -42,6 +43,7 @@ func TestAnalyzeView(t *testing.T) {
 }
 
 func TestExtraDef(t *testing.T) {
+	t.Skip()
 	driver, err := New(db)
 	if err != nil {
 		t.Fatal(err)
@@ -67,6 +69,7 @@ func TestExtraDef(t *testing.T) {
 }
 
 func TestInfo(t *testing.T) {
+	t.Skip()
 	driver, err := New(db)
 	if err != nil {
 		t.Fatal(err)

@@ -1,6 +1,7 @@
 package datasource
 
 import (
+	"github.com/stretchr/testify/require"
 	"testing"
 
 	"github.com/feitian124/goapi/config"
@@ -14,21 +15,15 @@ var tests = []struct {
 	tableCount    int
 	relationCount int
 }{
-	{config.DSN{URL: "my://root:mypass@localhost:33306/testdb"}, "testdb", 9, 6},
-	{config.DSN{URL: "pg://postgres:pgpass@localhost:55432/testdb?sslmode=disable"}, "testdb", 17, 12},
+	{config.DSN{URL: "my://root:mypass@localhost:33308/testdb"}, "testdb", 9, 6},
+	//{config.DSN{URL: "pg://postgres:pgpass@localhost:55432/testdb?sslmode=disable"}, "testdb", 17, 12},
 }
 
 func TestAnalyzeSchema(t *testing.T) {
 	for _, tt := range tests {
 		schema, err := Analyze(tt.dsn)
-		if err != nil {
-			t.Errorf("%s", err)
-		}
-		want := tt.schemaName
-		got := schema.Name
-		if got != want {
-			t.Errorf("got %v\nwant %v", got, want)
-		}
+		require.NoError(t, err)
+		require.Equal(t, schema.Name, tt.schemaName)
 	}
 }
 

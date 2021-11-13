@@ -31,6 +31,7 @@ func TestMain(m *testing.M) {
 }
 
 func TestAnalyzeView(t *testing.T) {
+	t.Skip("sqlite not support yet")
 	driver := New(db)
 	err := driver.Analyze(s)
 	if err != nil {
@@ -44,6 +45,7 @@ func TestAnalyzeView(t *testing.T) {
 }
 
 func TestInfo(t *testing.T) {
+	t.Skip("sqlite not support yet")
 	driver := New(db)
 	d, err := driver.NewDriver()
 	if err != nil {
@@ -58,6 +60,7 @@ func TestInfo(t *testing.T) {
 }
 
 func TestParseCheckConstraints(t *testing.T) {
+	t.Skip("sqlite not support yet")
 	table := &schema.Table{
 		Name: "check_constraints",
 		Columns: []*schema.Column{

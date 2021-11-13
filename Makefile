@@ -36,7 +36,7 @@ sqlite:
 	sqlite3 $(PWD)/testdata/testdb.sqlite3 < testdata/ddl/sqlite.sql
 
 test:
-	go test ./database/drivers/mysql -v -coverprofile=coverage.out -covermode=count
+	go test ./... -coverprofile=coverage.out -covermode=count
 
 test_cover: test
 	go tool cover -html=coverage.out

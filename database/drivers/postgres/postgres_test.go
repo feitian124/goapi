@@ -26,6 +26,7 @@ func TestMain(m *testing.M) {
 }
 
 func TestAnalyzeView(t *testing.T) {
+	t.Skip("postgres not support yet")
 	driver := New(db)
 	err := driver.Analyze(s)
 	if err != nil {
@@ -39,6 +40,7 @@ func TestAnalyzeView(t *testing.T) {
 }
 
 func TestExtraDef(t *testing.T) {
+	t.Skip("postgres not support yet")
 	driver := New(db)
 	if err := driver.Analyze(s); err != nil {
 		t.Fatal(err)
@@ -54,6 +56,7 @@ func TestExtraDef(t *testing.T) {
 }
 
 func TestInfo(t *testing.T) {
+	t.Skip("postgres not support yet")
 	driver := New(db)
 	d, err := driver.NewDriver()
 	if err != nil {

@@ -63,7 +63,7 @@ func Analyze(dsn config.DSN) (*schema.Schema, error) {
 			driver, err = mysql.New(db, opts...)
 		}
 		if err != nil {
-			return s, err
+			return s, errors.WithStack(err)
 		}
 	case "postgres":
 		s.Name = parts[1]
@@ -76,7 +76,7 @@ func Analyze(dsn config.DSN) (*schema.Schema, error) {
 	}
 	err = driver.Analyze(s)
 	if err != nil {
-		return s, err
+		return s, errors.WithStack(err)
 	}
 	return s, nil
 }
