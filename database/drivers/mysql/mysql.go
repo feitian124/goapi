@@ -11,11 +11,13 @@ import (
 	"github.com/pkg/errors"
 )
 
+const MinMysqlVersion = "5.7.6"
+const MinMariadbVersion = "10.2"
+
 var reFK = regexp.MustCompile(`FOREIGN KEY \((.+)\) REFERENCES ([^\s]+)\s?\((.+)\)`)
 var reAI = regexp.MustCompile(` AUTO_INCREMENT=[\d]+`)
 var supportGeneratedColumn = true
 
-// Mysql struct
 type Mysql struct {
 	db        *sql.DB
 	mariaMode bool
@@ -61,29 +63,22 @@ func New(db *sql.DB, opts ...drivers.Option) (*Mysql, error) {
 	return m, nil
 }
 
-// Analyze MySQL database schema
-func (m *Mysql) Analyze(s *schema.Schema) error {
-	d, err := m.NewDriver()
-	if err != nil {
-		return errors.WithStack(err)
-	}
-	s.Driver = d
-
+func (m *Mysql) checkVersion(s *schema.Schema) error {
 	if m.mariaMode {
-		verGeneratedColumn, err := version.Parse("10.2")
+		verGeneratedColumn, err := version.Parse(MinMariadbVersion)
 		if err != nil {
-			return err
+			return errors.WithStack(err)
 		}
-		splitted := strings.Split(s.Driver.DatabaseVersion, "-")
-		v, err := version.Parse(splitted[0])
+		parts := strings.Split(s.Driver.DatabaseVersion, "-")
+		v, err := version.Parse(parts[0])
 		if err != nil {
-			return err
+			return errors.WithStack(err)
 		}
 		if v.LessThan(verGeneratedColumn) {
 			supportGeneratedColumn = false
 		}
 	} else {
-		verGeneratedColumn, err := version.Parse("5.7.6")
+		verGeneratedColumn, err := version.Parse(MinMysqlVersion)
 		if err != nil {
 			return err
 		}
@@ -94,6 +89,21 @@ func (m *Mysql) Analyze(s *schema.Schema) error {
 		if v.LessThan(verGeneratedColumn) {
 			supportGeneratedColumn = false
 		}
+	}
+	return nil
+}
+
+// Analyze MySQL database schema
+func (m *Mysql) Analyze(s *schema.Schema) error {
+	d, err := m.NewDriver()
+	if err != nil {
+		return errors.WithStack(err)
+	}
+	s.Driver = d
+
+	err = m.checkVersion(s)
+	if err != nil {
+		return errors.WithStack(err)
 	}
 
 	// tables and comments
@@ -154,7 +164,7 @@ func (m *Mysql) Analyze(s *schema.Schema) error {
 	return nil
 }
 
-// Info return schema.Driver
+// NewDriver return schema.Driver
 func (m *Mysql) NewDriver() (*schema.Driver, error) {
 	var v string
 	row := m.db.QueryRow(`SELECT version();`)
