@@ -1,12 +1,12 @@
 package datasource
 
 import (
-	"github.com/stretchr/testify/require"
 	"testing"
 
 	"github.com/feitian124/goapi/config"
 	_ "github.com/go-sql-driver/mysql"
 	_ "github.com/lib/pq"
+	"github.com/stretchr/testify/require"
 )
 
 var tests = []struct {
@@ -20,6 +20,7 @@ var tests = []struct {
 }
 
 func TestAnalyzeSchema(t *testing.T) {
+	t.Parallel()
 	for _, tt := range tests {
 		schema, err := Analyze(tt.dsn)
 		require.NoError(t, err)
@@ -28,29 +29,19 @@ func TestAnalyzeSchema(t *testing.T) {
 }
 
 func TestAnalyzeTables(t *testing.T) {
+	t.Parallel()
 	for _, tt := range tests {
 		schema, err := Analyze(tt.dsn)
-		if err != nil {
-			t.Errorf("%s", err)
-		}
-		want := tt.tableCount
-		got := len(schema.Tables)
-		if got != want {
-			t.Errorf("%v: got %v\nwant %v", tt.dsn, got, want)
-		}
+		require.NoError(t, err)
+		require.Len(t, schema.Tables, tt.tableCount)
 	}
 }
 
 func TestAnalyzeRelations(t *testing.T) {
+	t.Parallel()
 	for _, tt := range tests {
 		schema, err := Analyze(tt.dsn)
-		if err != nil {
-			t.Errorf("%s", err)
-		}
-		want := tt.relationCount
-		got := len(schema.Relations)
-		if got != want {
-			t.Errorf("got %v\nwant %v", got, want)
-		}
+		require.NoError(t, err)
+		require.Len(t, schema.Relations, tt.relationCount)
 	}
 }
