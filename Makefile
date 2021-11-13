@@ -39,8 +39,10 @@ install-lint:
 	go install github.com/golangci/golangci-lint/cmd/golangci-lint@v1.43.0
 
 check:
-	@gofmt -s -w ${GO_FILES}
-	@go vet $(VET_PACKAGES)
+	gofumpt -l -w .
+
+install-gofumpt:
+	go install mvdan.cc/gofumpt@0.2.0
 
 test:
 	go test ./... --cover
