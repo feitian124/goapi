@@ -8,7 +8,7 @@ import (
 	"github.com/pkg/errors"
 )
 
-const columnSql = `
+const supportGeneratedColumnSql = `
 	SELECT column_name, column_default, is_nullable, column_type, column_comment, extra, generation_expression
 	FROM information_schema.columns
 	WHERE table_schema = ?
@@ -16,7 +16,7 @@ const columnSql = `
 	ORDER BY ordinal_position
 `
 
-const supportGeneratedColumnSql = `
+const columnSql = `
 	SELECT column_name, column_default, is_nullable, column_type, column_comment, extra
 	FROM information_schema.columns
 	WHERE table_schema = ? AND table_name = ? ORDER BY ordinal_position
