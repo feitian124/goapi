@@ -23,9 +23,9 @@ const supportGeneratedColumnSql = `
 `
 
 func (m Mysql) Columns(schemaName string, tableName string) ([]*schema.Column, error) {
-	columnStmt := columnSql
+	columnStmt := supportGeneratedColumnSql
 	if !supportGeneratedColumn {
-		columnStmt = supportGeneratedColumnSql
+		columnStmt = columnSql
 	}
 	columnRows, err := m.db.Query(columnStmt, schemaName, tableName)
 	if err != nil {
