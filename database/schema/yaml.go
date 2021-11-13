@@ -2,6 +2,7 @@ package schema
 
 import (
 	"github.com/goccy/go-yaml"
+	"github.com/pkg/errors"
 )
 
 // MarshalYAML return custom JSON byte
@@ -24,7 +25,7 @@ func (t Table) MarshalYAML() ([]byte, error) {
 		referencedTables = append(referencedTables, rt.Name)
 	}
 
-	return yaml.Marshal(&struct {
+	bytes, err := yaml.Marshal(&struct {
 		Name             string        `yaml:"name"`
 		Type             string        `yaml:"type"`
 		Comment          string        `yaml:"comment"`
@@ -47,12 +48,13 @@ func (t Table) MarshalYAML() ([]byte, error) {
 		Labels:           t.Labels,
 		ReferencedTables: referencedTables,
 	})
+	return bytes, errors.WithStack(err)
 }
 
 // MarshalYAML return custom YAML byte
 func (c Column) MarshalYAML() ([]byte, error) {
 	if c.Default.Valid {
-		return yaml.Marshal(&struct {
+		bytes, err := yaml.Marshal(&struct {
 			Name            string      `yaml:"name"`
 			Type            string      `yaml:"type"`
 			Nullable        bool        `yaml:"nullable"`
@@ -71,8 +73,9 @@ func (c Column) MarshalYAML() ([]byte, error) {
 			ParentRelations: c.ParentRelations,
 			ChildRelations:  c.ChildRelations,
 		})
+		return bytes, errors.WithStack(err)
 	}
-	return yaml.Marshal(&struct {
+	bytes, err := yaml.Marshal(&struct {
 		Name            string      `yaml:"name"`
 		Type            string      `yaml:"type"`
 		Nullable        bool        `yaml:"nullable"`
@@ -91,6 +94,7 @@ func (c Column) MarshalYAML() ([]byte, error) {
 		ParentRelations: c.ParentRelations,
 		ChildRelations:  c.ChildRelations,
 	})
+	return bytes, errors.WithStack(err)
 }
 
 // MarshalYAML return custom YAML byte
@@ -104,7 +108,7 @@ func (r Relation) MarshalYAML() ([]byte, error) {
 		parentColumns = append(parentColumns, c.Name)
 	}
 
-	return yaml.Marshal(&struct {
+	bytes, err := yaml.Marshal(&struct {
 		Table         string   `yaml:"table"`
 		Columns       []string `yaml:"columns"`
 		ParentTable   string   `yaml:"parentTable"`
@@ -119,6 +123,7 @@ func (r Relation) MarshalYAML() ([]byte, error) {
 		Def:           r.Def,
 		Virtual:       r.Virtual,
 	})
+	return bytes, errors.WithStack(err)
 }
 
 // UnMarshalYAML unmarshal JSON to schema.Table
@@ -137,7 +142,7 @@ func (t *Table) UnMarshalYAML(data []byte) error {
 	}{}
 	err := yaml.Unmarshal(data, &s)
 	if err != nil {
-		return err
+		return errors.WithStack(err)
 	}
 	t.Name = s.Name
 	t.Type = s.Type
@@ -170,7 +175,7 @@ func (c *Column) UnmarshalYAML(data []byte) error {
 	}{}
 	err := yaml.Unmarshal(data, &s)
 	if err != nil {
-		return err
+		return errors.WithStack(err)
 	}
 
 	c.Name = s.Name
@@ -200,7 +205,7 @@ func (r *Relation) UnmarshalYAML(data []byte) error {
 	}{}
 	err := yaml.Unmarshal(data, &s)
 	if err != nil {
-		return err
+		return errors.WithStack(err)
 	}
 	r.Table = &Table{
 		Name: s.Table,

@@ -64,7 +64,7 @@ linters:
 #    - unparam
 #    - wastedassign
 #    - whitespace
-#    - wrapcheck
+    - wrapcheck
 #    - wsl
 
 linters-settings:

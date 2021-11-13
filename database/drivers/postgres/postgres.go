@@ -318,7 +318,7 @@ ORDER BY tgrelid
 		for _, c := range strColumns {
 			column, err := r.Table.FindColumnByName(c)
 			if err != nil {
-				return err
+				return errors.WithStack(err)
 			}
 			r.Columns = append(r.Columns, column)
 			column.ParentRelations = append(column.ParentRelations, r)
@@ -326,18 +326,18 @@ ORDER BY tgrelid
 
 		dn, err := detectFullTableName(strParentTable, s.Driver.Meta.SearchPaths, fullTableNames)
 		if err != nil {
-			return err
+			return errors.WithStack(err)
 		}
 		strParentTable = dn
 		parentTable, err := s.FindTableByName(strParentTable)
 		if err != nil {
-			return err
+			return errors.WithStack(err)
 		}
 		r.ParentTable = parentTable
 		for _, c := range strParentColumns {
 			column, err := parentTable.FindColumnByName(c)
 			if err != nil {
-				return err
+				return errors.WithStack(err)
 			}
 			r.ParentColumns = append(r.ParentColumns, column)
 			column.ChildRelations = append(column.ChildRelations, r)
@@ -372,7 +372,7 @@ func (p *Postgres) NewDriver() (*schema.Driver, error) {
 	row := p.db.QueryRow(`SELECT version();`)
 	err := row.Scan(&v)
 	if err != nil {
-		return nil, err
+		return nil, errors.WithStack(err)
 	}
 
 	name := "postgres"
@@ -396,7 +396,7 @@ func (p *Postgres) EnableRsMode() {
 func (p *Postgres) queryForColumns(v string) (string, error) {
 	verGeneratedColumn, err := version.Parse("12")
 	if err != nil {
-		return "", err
+		return "", errors.WithStack(err)
 	}
 	// v => PostgreSQL 9.5.24 on x86_64-pc-linux-gnu (Debian 9.5.24-1.pgdg90+1), compiled by gcc (Debian 6.3.0-18+deb9u1) 6.3.0 20170516, 64-bit
 	matches := reVersion.FindStringSubmatch(v)
@@ -405,7 +405,7 @@ func (p *Postgres) queryForColumns(v string) (string, error) {
 	}
 	vv, err := version.Parse(matches[1])
 	if err != nil {
-		return "", err
+		return "", errors.WithStack(err)
 	}
 	if vv.LessThan(verGeneratedColumn) {
 		return `

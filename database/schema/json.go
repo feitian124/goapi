@@ -2,6 +2,8 @@ package schema
 
 import (
 	"encoding/json"
+
+	"github.com/pkg/errors"
 )
 
 // MarshalJSON return custom JSON byte
@@ -12,7 +14,7 @@ func (s Schema) MarshalJSON() ([]byte, error) {
 	if len(s.Relations) == 0 {
 		s.Relations = []*Relation{}
 	}
-	return json.Marshal(&struct {
+	bytes, err := json.Marshal(&struct {
 		Name      string      `json:"name"`
 		Desc      string      `json:"desc"`
 		Tables    []*Table    `json:"tables"`
@@ -27,6 +29,7 @@ func (s Schema) MarshalJSON() ([]byte, error) {
 		Driver:    s.Driver,
 		Labels:    s.Labels,
 	})
+	return bytes, errors.WithStack(err)
 }
 
 // MarshalJSON return custom JSON byte
@@ -34,7 +37,7 @@ func (d Driver) MarshalJSON() ([]byte, error) {
 	if d.Meta == nil {
 		d.Meta = &DriverMeta{}
 	}
-	return json.Marshal(&struct {
+	bytes, err := json.Marshal(&struct {
 		Name            string      `json:"name"`
 		DatabaseVersion string      `json:"database_version"`
 		Meta            *DriverMeta `json:"meta"`
@@ -43,6 +46,7 @@ func (d Driver) MarshalJSON() ([]byte, error) {
 		DatabaseVersion: d.DatabaseVersion,
 		Meta:            d.Meta,
 	})
+	return bytes, errors.WithStack(err)
 }
 
 // MarshalJSON return custom JSON byte
@@ -65,7 +69,7 @@ func (t Table) MarshalJSON() ([]byte, error) {
 		referencedTables = append(referencedTables, rt.Name)
 	}
 
-	return json.Marshal(&struct {
+	bytes, err := json.Marshal(&struct {
 		Name             string        `json:"name"`
 		Type             string        `json:"type"`
 		Comment          string        `json:"comment"`
@@ -88,12 +92,13 @@ func (t Table) MarshalJSON() ([]byte, error) {
 		Labels:           t.Labels,
 		ReferencedTables: referencedTables,
 	})
+	return bytes, errors.WithStack(err)
 }
 
 // MarshalJSON return custom JSON byte
 func (c Column) MarshalJSON() ([]byte, error) {
 	if c.Default.Valid {
-		return json.Marshal(&struct {
+		bytes, err := json.Marshal(&struct {
 			Name            string      `json:"name"`
 			Type            string      `json:"type"`
 			Nullable        bool        `json:"nullable"`
@@ -112,8 +117,9 @@ func (c Column) MarshalJSON() ([]byte, error) {
 			ParentRelations: c.ParentRelations,
 			ChildRelations:  c.ChildRelations,
 		})
+		return bytes, errors.WithStack(err)
 	}
-	return json.Marshal(&struct {
+	bytes, err := json.Marshal(&struct {
 		Name            string      `json:"name"`
 		Type            string      `json:"type"`
 		Nullable        bool        `json:"nullable"`
@@ -132,6 +138,7 @@ func (c Column) MarshalJSON() ([]byte, error) {
 		ParentRelations: c.ParentRelations,
 		ChildRelations:  c.ChildRelations,
 	})
+	return bytes, errors.WithStack(err)
 }
 
 // MarshalJSON return custom JSON byte
@@ -145,7 +152,7 @@ func (r Relation) MarshalJSON() ([]byte, error) {
 		parentColumns = append(parentColumns, c.Name)
 	}
 
-	return json.Marshal(&struct {
+	bytes, err := json.Marshal(&struct {
 		Table         string   `json:"table"`
 		Columns       []string `json:"columns"`
 		ParentTable   string   `json:"parent_table"`
@@ -160,6 +167,7 @@ func (r Relation) MarshalJSON() ([]byte, error) {
 		Def:           r.Def,
 		Virtual:       r.Virtual,
 	})
+	return bytes, errors.WithStack(err)
 }
 
 // UnmarshalJSON unmarshal JSON to schema.Table
@@ -178,7 +186,7 @@ func (t *Table) UnmarshalJSON(data []byte) error {
 	}{}
 	err := json.Unmarshal(data, &s)
 	if err != nil {
-		return err
+		return errors.WithStack(err)
 	}
 	t.Name = s.Name
 	t.Type = s.Type
@@ -211,7 +219,7 @@ func (c *Column) UnmarshalJSON(data []byte) error {
 	}{}
 	err := json.Unmarshal(data, &s)
 	if err != nil {
-		return err
+		return errors.WithStack(err)
 	}
 	c.Name = s.Name
 	c.Type = s.Type
@@ -240,7 +248,7 @@ func (r *Relation) UnmarshalJSON(data []byte) error {
 	}{}
 	err := json.Unmarshal(data, &s)
 	if err != nil {
-		return err
+		return errors.WithStack(err)
 	}
 	r.Table = &Table{
 		Name: s.Table,

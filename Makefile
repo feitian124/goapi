@@ -38,6 +38,10 @@ lint:
 install-lint:
 	go install github.com/golangci/golangci-lint/cmd/golangci-lint@v1.43.0
 
+check:
+	@gofmt -s -w ${GO_FILES}
+	@go vet $(VET_PACKAGES)
+
 test:
 	go test ./... --cover
 

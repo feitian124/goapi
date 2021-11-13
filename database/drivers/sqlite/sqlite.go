@@ -374,20 +374,20 @@ SELECT name, sql FROM sqlite_master WHERE type = 'trigger' AND tbl_name = ?;
 		for _, c := range strColumns {
 			column, err := r.Table.FindColumnByName(c)
 			if err != nil {
-				return err
+				return errors.WithStack(err)
 			}
 			r.Columns = append(r.Columns, column)
 			column.ParentRelations = append(column.ParentRelations, r)
 		}
 		parentTable, err := s.FindTableByName(strParentTable)
 		if err != nil {
-			return err
+			return errors.WithStack(err)
 		}
 		r.ParentTable = parentTable
 		for _, c := range strParentColumns {
 			column, err := parentTable.FindColumnByName(c)
 			if err != nil {
-				return err
+				return errors.WithStack(err)
 			}
 			r.ParentColumns = append(r.ParentColumns, column)
 			column.ChildRelations = append(column.ChildRelations, r)
@@ -422,7 +422,7 @@ func (l *Sqlite) NewDriver() (*schema.Driver, error) {
 	row := l.db.QueryRow(`SELECT sqlite_version();`)
 	err := row.Scan(&v)
 	if err != nil {
-		return nil, err
+		return nil, errors.WithStack(err)
 	}
 
 	d := &schema.Driver{

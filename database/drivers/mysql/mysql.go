@@ -83,11 +83,11 @@ func (m *Mysql) checkVersion(s *schema.Schema) error {
 	} else {
 		verGeneratedColumn, err := version.Parse(MinMysqlVersion)
 		if err != nil {
-			return err
+			return errors.WithStack(err)
 		}
 		v, err := version.Parse(s.Driver.DatabaseVersion)
 		if err != nil {
-			return err
+			return errors.WithStack(err)
 		}
 		if v.LessThan(verGeneratedColumn) {
 			supportGeneratedColumn = false

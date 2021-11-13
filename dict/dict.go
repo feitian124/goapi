@@ -4,6 +4,8 @@ import (
 	"encoding/json"
 	"sync"
 
+	"github.com/pkg/errors"
+
 	"github.com/goccy/go-yaml"
 )
 
@@ -57,14 +59,15 @@ func (d *Dict) Dump() map[string]string {
 }
 
 func (d *Dict) MarshalJSON() ([]byte, error) {
-	return json.Marshal(d.Dump())
+	bytes, err := json.Marshal(d.Dump())
+	return bytes, errors.WithStack(err)
 }
 
 func (d *Dict) UnmarshalJSON(data []byte) error {
 	m := map[string]string{}
 	err := json.Unmarshal(data, &m)
 	if err != nil {
-		return err
+		return errors.WithStack(err)
 	}
 	for k, v := range m {
 		d.s.Store(k, v)
@@ -73,14 +76,15 @@ func (d *Dict) UnmarshalJSON(data []byte) error {
 }
 
 func (d *Dict) MarchalYAML() ([]byte, error) {
-	return yaml.Marshal(d.Dump())
+	bytes, err := yaml.Marshal(d.Dump())
+	return bytes, errors.WithStack(err)
 }
 
 func (d *Dict) UnmarshalYAML(data []byte) error {
 	m := map[string]string{}
 	err := yaml.Unmarshal(data, &m)
 	if err != nil {
-		return err
+		return errors.WithStack(err)
 	}
 	for k, v := range m {
 		d.s.Store(k, v)

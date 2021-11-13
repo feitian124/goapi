@@ -3,6 +3,8 @@ package mariadb
 import (
 	"database/sql"
 
+	"github.com/pkg/errors"
+
 	"github.com/feitian124/goapi/database/drivers"
 	"github.com/feitian124/goapi/database/drivers/mysql"
 )
@@ -15,7 +17,7 @@ type Mariadb struct {
 func New(db *sql.DB, opts ...drivers.Option) (*Mariadb, error) {
 	m, err := mysql.New(db, opts...)
 	if err != nil {
-		return nil, err
+		return nil, errors.WithStack(err)
 	}
 	m.EnableMariaMode()
 	return &Mariadb{*m}, nil
