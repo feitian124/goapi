@@ -15,18 +15,18 @@ import (
 )
 
 func Analyze(dsn config.DSN) (*schema.Schema, error) {
-	urlstr := dsn.URL
+	url := dsn.URL
 	s := &schema.Schema{}
-	u, err := dburl.Parse(urlstr)
+	u, err := dburl.Parse(url)
 	if err != nil {
 		return s, errors.WithStack(err)
 	}
-	splitted := strings.Split(u.Short(), "/")
-	if len(splitted) < 2 {
-		return s, errors.Errorf("invalid DSN: parse %s -> %#v", urlstr, u)
+	parts := strings.Split(u.Short(), "/")
+	if len(parts) < 2 {
+		return s, errors.Errorf("invalid DSN: parse %s -> %#v", url, u)
 	}
 
-	opts := []drivers.Option{}
+	var opts []drivers.Option
 	if u.Driver == "mysql" {
 		values := u.Query()
 		for k := range values {
@@ -40,10 +40,10 @@ func Analyze(dsn config.DSN) (*schema.Schema, error) {
 			}
 		}
 		u.RawQuery = values.Encode()
-		urlstr = u.String()
+		url = u.String()
 	}
 
-	db, err := dburl.Open(urlstr)
+	db, err := dburl.Open(url)
 	defer db.Close()
 	if err != nil {
 		return s, errors.WithStack(err)
@@ -56,7 +56,7 @@ func Analyze(dsn config.DSN) (*schema.Schema, error) {
 
 	switch u.Driver {
 	case "mysql":
-		s.Name = splitted[1]
+		s.Name = parts[1]
 		if u.Scheme == "maria" || u.Scheme == "mariadb" {
 			driver, err = mariadb.New(db, opts...)
 		} else {
@@ -66,10 +66,10 @@ func Analyze(dsn config.DSN) (*schema.Schema, error) {
 			return s, err
 		}
 	case "postgres":
-		s.Name = splitted[1]
+		s.Name = parts[1]
 		driver = postgres.New(db)
 	case "sqlite3":
-		s.Name = splitted[len(splitted)-1]
+		s.Name = parts[len(parts)-1]
 		driver = sqlite.New(db)
 	default:
 		return s, errors.Errorf("unsupported driver '%s'", u.Driver)
