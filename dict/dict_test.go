@@ -3,6 +3,7 @@ package dict
 import "testing"
 
 func TestDelete(t *testing.T) {
+	t.Parallel()
 	tests := []struct {
 		in   map[string]string
 		want int
@@ -31,6 +32,7 @@ func TestDelete(t *testing.T) {
 }
 
 func TestMerge(t *testing.T) {
+	t.Parallel()
 	tests := []struct {
 		ain  map[string]string
 		bin  map[string]string
@@ -81,6 +83,7 @@ func TestMerge(t *testing.T) {
 }
 
 func TestMergeIfNotPresent(t *testing.T) {
+	t.Parallel()
 	tests := []struct {
 		ain  map[string]string
 		bin  map[string]string

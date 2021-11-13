@@ -15,9 +15,9 @@ const (
 type Driver interface {
 	NewDriver() (*schema.Driver, error)
 	Analyze(*schema.Schema) error
-	//Tables(schema string) ([]schema.Table, error)
-	//Table(schema string, table string) (*schema.Table, error)
-	//Columns(table string) ([]schema.Column, error)
+	// Tables(schema string) ([]schema.Table, error)
+	// Table(schema string, table string) (*schema.Table, error)
+	// Columns(table string) ([]schema.Column, error)
 }
 
 // Option is the type for change Config.

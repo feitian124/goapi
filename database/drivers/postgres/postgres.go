@@ -13,8 +13,10 @@ import (
 	"github.com/pkg/errors"
 )
 
-var reFK = regexp.MustCompile(`FOREIGN KEY \((.+)\) REFERENCES ([^\s]+)\s?\((.+)\)`)
-var reVersion = regexp.MustCompile(`([0-9]+(\.[0-9]+)*)`)
+var (
+	reFK      = regexp.MustCompile(`FOREIGN KEY \((.+)\) REFERENCES ([^\s]+)\s?\((.+)\)`)
+	reVersion = regexp.MustCompile(`([0-9]+(\.[0-9]+)*)`)
+)
 
 // Postgres struct
 type Postgres struct {

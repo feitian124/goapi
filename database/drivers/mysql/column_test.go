@@ -1,8 +1,9 @@
 package mysql
 
 import (
-	"github.com/stretchr/testify/require"
 	"testing"
+
+	"github.com/stretchr/testify/require"
 )
 
 func TestMysql_Columns(t *testing.T) {

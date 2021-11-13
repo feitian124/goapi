@@ -2,6 +2,7 @@ package schema
 
 import (
 	"database/sql"
+
 	"github.com/pkg/errors"
 )
 

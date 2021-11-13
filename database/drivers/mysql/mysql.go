@@ -11,12 +11,15 @@ import (
 	"github.com/pkg/errors"
 )
 
-const MinMysqlVersion = "5.7.6"
-const MinMariadbVersion = "10.2"
+const (
+	MinMysqlVersion   = "5.7.6"
+	MinMariadbVersion = "10.2"
+)
 
-var reFK = regexp.MustCompile(`FOREIGN KEY \((.+)\) REFERENCES ([^\s]+)\s?\((.+)\)`)
-var reAI = regexp.MustCompile(` AUTO_INCREMENT=[\d]+`)
-var supportGeneratedColumn = true
+var (
+	reAI                   = regexp.MustCompile(` AUTO_INCREMENT=[\d]+`)
+	supportGeneratedColumn = true
+)
 
 type Mysql struct {
 	db        *sql.DB
@@ -157,7 +160,10 @@ func (m *Mysql) Analyze(s *schema.Schema) error {
 
 	s.Tables = tables
 
-	s.GenRelations()
+	err = s.GenRelations()
+	if err != nil {
+		return errors.WithStack(err)
+	}
 
 	s.GenReferencedTables()
 
@@ -191,10 +197,7 @@ func (m *Mysql) EnableMariaMode() {
 }
 
 func convertColumnNullable(str string) bool {
-	if str == "NO" {
-		return false
-	}
-	return true
+	return str != "NO"
 }
 
 func (m *Mysql) queryForTables() string {

@@ -95,5 +95,4 @@ func (m *Mysql) Constraints(schemaName string, tableName string) ([]*schema.Cons
 		constraints = append(constraints, constraint)
 	}
 	return constraints, nil
-
 }

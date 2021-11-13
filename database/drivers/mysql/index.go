@@ -64,5 +64,4 @@ func (m *Mysql) Indexes(schemaName string, tableName string) ([]*schema.Index, e
 		indexes = append(indexes, index)
 	}
 	return indexes, nil
-
 }

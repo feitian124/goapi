@@ -2,6 +2,7 @@ package mariadb
 
 import (
 	"database/sql"
+
 	"github.com/feitian124/goapi/database/drivers"
 	"github.com/feitian124/goapi/database/drivers/mysql"
 )

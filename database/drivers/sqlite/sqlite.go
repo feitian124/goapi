@@ -3,17 +3,20 @@ package sqlite
 import (
 	"database/sql"
 	"fmt"
-	"github.com/feitian124/goapi/database/ddl"
 	"regexp"
 	"sort"
 	"strings"
+
+	"github.com/feitian124/goapi/database/ddl"
 
 	"github.com/feitian124/goapi/database/schema"
 	"github.com/pkg/errors"
 )
 
-var reFK = regexp.MustCompile(`FOREIGN KEY \((.+)\) REFERENCES ([^\s]+)\s?\((.+)\)`)
-var reFTS = regexp.MustCompile(`(?i)USING\s+fts([34])`)
+var (
+	reFK  = regexp.MustCompile(`FOREIGN KEY \((.+)\) REFERENCES ([^\s]+)\s?\((.+)\)`)
+	reFTS = regexp.MustCompile(`(?i)USING\s+fts([34])`)
+)
 
 var shadowTables []string
 
@@ -342,9 +345,7 @@ SELECT name, sql FROM sqlite_master WHERE type = 'trigger' AND tbl_name = ?;
 
 		// constraints(CHECK)
 		checkConstraints := parseCheckConstraints(table, tableDef)
-		for _, c := range checkConstraints {
-			constraints = append(constraints, c)
-		}
+		constraints = append(constraints, checkConstraints...)
 
 		table.Constraints = constraints
 		table.Triggers = triggers
@@ -432,10 +433,7 @@ func (l *Sqlite) NewDriver() (*schema.Driver, error) {
 }
 
 func convertColumnNullable(str string) bool {
-	if str == "1" {
-		return false
-	}
-	return true
+	return str != "1"
 }
 
 func parseCheckConstraints(table *schema.Table, sql string) []*schema.Constraint {

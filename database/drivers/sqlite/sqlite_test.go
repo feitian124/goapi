@@ -13,8 +13,10 @@ import (
 	"github.com/xo/dburl"
 )
 
-var s *schema.Schema
-var db *sql.DB
+var (
+	s  *schema.Schema
+	db *sql.DB
+)
 
 func TestMain(m *testing.M) {
 	s = &schema.Schema{

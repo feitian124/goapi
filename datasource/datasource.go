@@ -44,10 +44,11 @@ func Analyze(dsn config.DSN) (*schema.Schema, error) {
 	}
 
 	db, err := dburl.Open(url)
-	defer db.Close()
 	if err != nil {
 		return s, errors.WithStack(err)
 	}
+	defer db.Close()
+
 	if err := db.Ping(); err != nil {
 		return s, errors.WithStack(err)
 	}

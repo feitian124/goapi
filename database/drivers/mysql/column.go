@@ -77,5 +77,4 @@ func (m *Mysql) Columns(schemaName string, tableName string) ([]*schema.Column, 
 		columns = append(columns, column)
 	}
 	return columns, nil
-
 }

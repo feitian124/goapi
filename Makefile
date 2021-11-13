@@ -32,8 +32,7 @@ info:
 	@echo ${GO_FILES}
 	@echo -e "\ngolangci-lint:"
 
-lint: install-lint
-	#
+lint:
 	golangci-lint run
 
 install-lint:

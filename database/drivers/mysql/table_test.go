@@ -1,9 +1,10 @@
 package mysql
 
 import (
-	"github.com/stretchr/testify/require"
 	"strings"
 	"testing"
+
+	"github.com/stretchr/testify/require"
 )
 
 func TestMysql_Table(t *testing.T) {
