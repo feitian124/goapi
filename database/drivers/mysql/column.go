@@ -22,7 +22,7 @@ const columnSql = `
 	WHERE table_schema = ? AND table_name = ? ORDER BY ordinal_position
 `
 
-func (m Mysql) Columns(schemaName string, tableName string) ([]*schema.Column, error) {
+func (m *Mysql) Columns(schemaName string, tableName string) ([]*schema.Column, error) {
 	columnStmt := supportGeneratedColumnSql
 	if !supportGeneratedColumn {
 		columnStmt = columnSql

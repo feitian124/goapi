@@ -20,7 +20,7 @@ const triggerSql = `
 	AND event_object_table = ?
 `
 
-func (m Mysql) Triggers(schemaName string, tableName string) ([]*schema.Trigger, error) {
+func (m *Mysql) Triggers(schemaName string, tableName string) ([]*schema.Trigger, error) {
 	triggerRows, err := m.db.Query(triggerSql, schemaName, tableName)
 	if err != nil {
 		return nil, errors.WithStack(err)

@@ -25,7 +25,7 @@ const mysqlViewSql = `
 	AND table_name = ?
 `
 
-func (m Mysql) Table(schemaName string, tableName string, tableType string, tableComment string) (*schema.Table, error) {
+func (m *Mysql) Table(schemaName string, tableName string, tableType string, tableComment string) (*schema.Table, error) {
 	table := &schema.Table{
 		Name:    tableName,
 		Type:    tableType,

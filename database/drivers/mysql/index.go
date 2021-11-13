@@ -27,7 +27,7 @@ const indexSql = `
 `
 
 // Indexes get a table's indexes
-func (m Mysql) Indexes(schemaName string, tableName string) ([]*schema.Index, error) {
+func (m *Mysql) Indexes(schemaName string, tableName string) ([]*schema.Index, error) {
 	// indexes
 	indexRows, err := m.db.Query(indexSql, schemaName, tableName)
 	if err != nil {

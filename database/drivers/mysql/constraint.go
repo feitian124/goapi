@@ -47,7 +47,7 @@ const constraintSql = `
 	GROUP BY kcu.constraint_name, sub.costraint_type, kcu.referenced_table_name
 `
 
-func (m Mysql) Constraints(schemaName string, tableName string) ([]*schema.Constraint, error) {
+func (m *Mysql) Constraints(schemaName string, tableName string) ([]*schema.Constraint, error) {
 	constraintRows, err := m.db.Query(constraintSql, tableName, schemaName, tableName)
 	if err != nil {
 		return nil, errors.WithStack(err)
