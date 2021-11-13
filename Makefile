@@ -17,7 +17,36 @@ GO_FILES=`find . -name "*.go" -type f -not -path "./vendor/*"`
 
 BUILD_LDFLAGS = -X $(PKG).commit=$(COMMIT) -X $(PKG).date=$(DATE)
 
-default: check
+default: test
+
+info:
+	@echo "PKG：${PKG}"
+	@echo "COMMIT：${COMMIT}"
+	@echo "OS_NAME: ${OS_NAME}"
+	@echo "DATE: ${DATE}"
+	@echo -e "\nPACKAGES:"
+	@echo ${PACKAGES}
+	@echo -e "\nVET_PACKAGES:"
+	@echo ${VET_PACKAGES}
+	@echo -e "\nGO_FILES:"
+	@echo ${GO_FILES}
+	@echo -e "\ngolangci-lint:"
+
+lint: install-lint
+	#
+	golangci-lint run
+
+install-lint:
+	go install github.com/golangci/golangci-lint/cmd/golangci-lint@v1.43.0
+
+test:
+	go test ./... --cover
+
+build:
+	go build -ldflags="$(BUILD_LDFLAGS)"
+
+install:
+	go install github.com/xo/usql@v0.9.4
 
 mysql:
 	usql my://root:mypass@localhost:33306/testdb -f testdata/ddl/mysql56.sql
@@ -34,32 +63,5 @@ postgres:
 
 sqlite:
 	sqlite3 $(PWD)/testdata/testdb.sqlite3 < testdata/ddl/sqlite.sql
-
-test:
-	go test ./... -coverprofile=coverage.out -covermode=count
-
-test_cover: test
-	go tool cover -html=coverage.out
-
-build:
-	go build -ldflags="$(BUILD_LDFLAGS)"
-
-install:
-	go install github.com/xo/usql@v0.9.4
-
-check:
-	@gofmt -s -w ${GO_FILES}
-	@go vet $(VET_PACKAGES)
-
-info:
-	@echo "COMMIT：${COMMIT}"
-	@echo "OS_NAME: ${OS_NAME}"
-	@echo "DATE: ${DATE}"
-	@echo -e "\nPACKAGES:"
-	@echo ${PACKAGES}
-	@echo -e "\nVET_PACKAGES:"
-	@echo ${VET_PACKAGES}
-	@echo -e "\nGO_FILES:"
-	@echo ${GO_FILES}
 
 .PHONY: default check test mysql postgres sqlite info
