@@ -32,26 +32,26 @@ info:
 	@echo ${GO_FILES}
 	@echo -e "\ngolangci-lint:"
 
-lint:
-	golangci-lint run
+lint: install-lint
+	@golangci-lint run --timeout "5m"
 
 install-lint:
-	go install github.com/golangci/golangci-lint/cmd/golangci-lint@v1.43.0
+	@go install github.com/golangci/golangci-lint/cmd/golangci-lint@v1.43.0
 
-fmt:
-	gofumpt -l -w .
+fmt: install-gofumpt
+	@gofumpt -l -w .
 
 install-gofumpt:
-	go install mvdan.cc/gofumpt@latest
+	@go install mvdan.cc/gofumpt@latest
 
 test:
-	go test ./... --cover
+	@go test ./... --cover
 
 build:
-	go build -ldflags="$(BUILD_LDFLAGS)"
+	@go build -ldflags="$(BUILD_LDFLAGS)"
 
 install:
-	go install github.com/xo/usql@v0.9.4
+	@go install github.com/xo/usql@v0.9.4
 
 mysql:
 	usql my://root:mypass@localhost:33306/testdb -f testdata/ddl/mysql56.sql
@@ -69,4 +69,4 @@ postgres:
 sqlite:
 	sqlite3 $(PWD)/testdata/testdb.sqlite3 < testdata/ddl/sqlite.sql
 
-.PHONY: default check test mysql postgres sqlite info
+.PHONY: default check test mysql postgres sqlite info fmt install-gofumpt
