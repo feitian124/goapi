@@ -1,14 +1,16 @@
-package mysql
+package mysql_test
 
 import (
 	"testing"
+
+	"github.com/feitian124/goapi/database/drivers/mysql"
 
 	"github.com/stretchr/testify/require"
 )
 
 func TestMysql_Constraints(t *testing.T) {
 	t.Parallel()
-	m, err := New(db)
+	m, err := mysql.New(db)
 	if err != nil {
 		t.Fatal(err)
 	}

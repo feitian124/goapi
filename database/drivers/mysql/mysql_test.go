@@ -1,9 +1,11 @@
-package mysql
+package mysql_test
 
 import (
 	"database/sql"
 	"os"
 	"testing"
+
+	"github.com/feitian124/goapi/database/drivers/mysql"
 
 	"github.com/feitian124/goapi/database/schema"
 	_ "github.com/go-sql-driver/mysql"
@@ -31,7 +33,7 @@ func TestMain(m *testing.M) {
 
 func TestAnalyzeView(t *testing.T) {
 	t.Parallel()
-	driver, err := New(db)
+	driver, err := mysql.New(db)
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -48,7 +50,7 @@ func TestAnalyzeView(t *testing.T) {
 
 func TestExtraDef(t *testing.T) {
 	t.Parallel()
-	driver, err := New(db)
+	driver, err := mysql.New(db)
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -74,7 +76,7 @@ func TestExtraDef(t *testing.T) {
 
 func TestInfo(t *testing.T) {
 	t.Parallel()
-	driver, err := New(db)
+	driver, err := mysql.New(db)
 	if err != nil {
 		t.Fatal(err)
 	}
