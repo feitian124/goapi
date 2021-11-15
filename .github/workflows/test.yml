@@ -5,14 +5,12 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
-
       - name: Install Go
         uses: actions/setup-go@v2
         with:
           go-version: 1.17
-
-      - name: lint
-        run: make lint
+      - run: make install
+      - run: make lint
   test:
     runs-on: ubuntu-latest
     services:
@@ -32,14 +30,11 @@ jobs:
           --health-retries=3
     steps:
     - uses: actions/checkout@v2
-
     - name: Set up mysql
       run: mysql --host 127.0.0.1 --port 33308 -uroot -pmypass < build/mysql/sql/ddl.sql
-
     - name: Install Go
       uses: actions/setup-go@v2
       with:
         go-version: 1.17
-
     - name: Test
       run: make test

@@ -17,32 +17,13 @@ GO_FILES=`find . -name "*.go" -type f -not -path "./vendor/*"`
 
 BUILD_LDFLAGS = -X $(PKG).commit=$(COMMIT) -X $(PKG).date=$(DATE)
 
-default: test
+default: fmt lint test
 
-info:
-	@echo "PKG：${PKG}"
-	@echo "COMMIT：${COMMIT}"
-	@echo "OS_NAME: ${OS_NAME}"
-	@echo "DATE: ${DATE}"
-	@echo -e "\nPACKAGES:"
-	@echo ${PACKAGES}
-	@echo -e "\nVET_PACKAGES:"
-	@echo ${VET_PACKAGES}
-	@echo -e "\nGO_FILES:"
-	@echo ${GO_FILES}
-	@echo -e "\ngolangci-lint:"
+fmt:
+	gofumpt -l -w .
 
-lint: install-lint
-	@golangci-lint run --timeout "5m"
-
-install-lint:
-	@go install github.com/golangci/golangci-lint/cmd/golangci-lint@v1.43.0
-
-fmt: install-gofumpt
-	@gofumpt -l -w .
-
-install-gofumpt:
-	@go install mvdan.cc/gofumpt@latest
+lint:
+	golangci-lint run --timeout "5m"
 
 test:
 	@go test ./... --cover
@@ -51,7 +32,9 @@ build:
 	@go build -ldflags="$(BUILD_LDFLAGS)"
 
 install:
-	@go install github.com/xo/usql@v0.9.4
+	go install mvdan.cc/gofumpt@latest
+	go install github.com/golangci/golangci-lint/cmd/golangci-lint@v1.43.0
+	# go install github.com/xo/usql@v0.9.4
 
 mysql:
 	usql my://root:mypass@localhost:33306/testdb -f testdata/ddl/mysql56.sql
@@ -69,4 +52,17 @@ postgres:
 sqlite:
 	sqlite3 $(PWD)/testdata/testdb.sqlite3 < testdata/ddl/sqlite.sql
 
-.PHONY: default check test mysql postgres sqlite info fmt install-gofumpt
+info:
+	@echo "PKG：${PKG}"
+	@echo "COMMIT：${COMMIT}"
+	@echo "OS_NAME: ${OS_NAME}"
+	@echo "DATE: ${DATE}"
+	@echo -e "\nPACKAGES:"
+	@echo ${PACKAGES}
+	@echo -e "\nVET_PACKAGES:"
+	@echo ${VET_PACKAGES}
+	@echo -e "\nGO_FILES:"
+	@echo ${GO_FILES}
+	@echo -e "\ngolangci-lint:"
+
+.PHONY: default fmt lint test build install mysql postgres sqlite info
