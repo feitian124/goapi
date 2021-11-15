@@ -2,7 +2,7 @@
 
 ![test workflow](https://github.com/feitian124/goapi/actions/workflows/test.yml/badge.svg)
 
-goapi is an expose database as api, both `static` and `dynamic`:
+goapi expose database as api, both `static` and `dynamic`:
 
 - **static** means you can easily write CRUD code.
 - **dynamic** means you can expose database data directly as restful api or rpc call.
@@ -37,7 +37,7 @@ GET /rows/:table
 - 包含查询  
   查询数据格式采用逗号分隔, 如 name=jack,jhon， 生成 in 查询
 
-- 不匹配查询
+- 不匹配查询  
   查询数据格式需要加叹号前缀, 如 name=!jack
 
 - 范围查询  
