@@ -9,7 +9,7 @@ import (
 	"github.com/pkg/errors"
 )
 
-const constraintSql = `
+const constraintSQL = `
 	SELECT
 	  kcu.constraint_name,
 	  sub.costraint_type,
@@ -48,7 +48,7 @@ const constraintSql = `
 `
 
 func (m *Mysql) Constraints(schemaName string, tableName string) ([]*schema.Constraint, error) {
-	constraintRows, err := m.db.Query(constraintSql, tableName, schemaName, tableName)
+	constraintRows, err := m.db.Query(constraintSQL, tableName, schemaName, tableName)
 	if err != nil {
 		return nil, errors.WithStack(err)
 	}

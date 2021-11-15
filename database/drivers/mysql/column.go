@@ -8,7 +8,7 @@ import (
 	"github.com/pkg/errors"
 )
 
-const supportGeneratedColumnSql = `
+const supportGeneratedColumnSQL = `
 	SELECT column_name, column_default, is_nullable, column_type, column_comment, extra, generation_expression
 	FROM information_schema.columns
 	WHERE table_schema = ?
@@ -16,16 +16,16 @@ const supportGeneratedColumnSql = `
 	ORDER BY ordinal_position
 `
 
-const columnSql = `
+const columnSQL = `
 	SELECT column_name, column_default, is_nullable, column_type, column_comment, extra
 	FROM information_schema.columns
 	WHERE table_schema = ? AND table_name = ? ORDER BY ordinal_position
 `
 
 func (m *Mysql) Columns(schemaName string, tableName string) ([]*schema.Column, error) {
-	columnStmt := supportGeneratedColumnSql
+	columnStmt := supportGeneratedColumnSQL
 	if !supportGeneratedColumn {
-		columnStmt = columnSql
+		columnStmt = columnSQL
 	}
 	columnRows, err := m.db.Query(columnStmt, schemaName, tableName)
 	if err != nil {

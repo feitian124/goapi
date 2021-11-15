@@ -72,13 +72,13 @@ func ParseReferencedTables(src string) []string {
 			tWith = false
 		default:
 			if tFrom {
-				tables = append(tables, strings.Replace(token, "`", "", -1))
+				tables = append(tables, strings.ReplaceAll(token, "`", ""))
 			}
 			if tJoin {
-				tables = append(tables, strings.Replace(token, "`", "", -1))
+				tables = append(tables, strings.ReplaceAll(token, "`", ""))
 			}
 			if tWith {
-				with = append(with, strings.Replace(token, "`", "", -1))
+				with = append(with, strings.ReplaceAll(token, "`", ""))
 			}
 			tFrom = false
 			tJoin = false

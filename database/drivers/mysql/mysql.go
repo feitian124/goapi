@@ -34,9 +34,9 @@ type Mysql struct {
 
 func ShowAutoIcrrement() drivers.Option {
 	return func(d drivers.Driver) error {
-		switch d := d.(type) {
-		case *Mysql:
-			d.showAutoIncrement = true
+		dd, ok := d.(*Mysql)
+		if ok {
+			dd.showAutoIncrement = true
 		}
 		return nil
 	}
@@ -44,9 +44,9 @@ func ShowAutoIcrrement() drivers.Option {
 
 func HideAutoIcrrement() drivers.Option {
 	return func(d drivers.Driver) error {
-		switch d := d.(type) {
-		case *Mysql:
-			d.hideAutoIncrement = true
+		dd, ok := d.(*Mysql)
+		if ok {
+			dd.hideAutoIncrement = true
 		}
 		return nil
 	}
@@ -174,8 +174,8 @@ func (m *Mysql) Analyze(s *schema.Schema) error {
 func (m *Mysql) NewDriver() (*schema.Driver, error) {
 	var v string
 	row := m.db.QueryRow(`SELECT version();`)
-	err := row.Scan(&v)
-	if err != nil {
+
+	if err := row.Scan(&v); err != nil {
 		return nil, errors.WithStack(err)
 	}
 
@@ -202,7 +202,7 @@ func convertColumnNullable(str string) bool {
 
 func (m *Mysql) queryForTables() string {
 	if m.mariaMode {
-		return mariaTableSql
+		return mariaTableSQL
 	}
-	return mysqlTableSql
+	return mysqlTableSQL
 }

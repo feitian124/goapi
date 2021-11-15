@@ -8,6 +8,8 @@ import (
 	"reflect"
 	"testing"
 
+	"github.com/stretchr/testify/require"
+
 	"github.com/feitian124/goapi/database/schema"
 	_ "github.com/mattn/go-sqlite3"
 	"github.com/xo/dburl"
@@ -25,25 +27,23 @@ func TestMain(m *testing.M) {
 	sqliteFilepath := filepath.Join(testdataDir(), "testdb.sqlite3")
 
 	db, _ = dburl.Open(fmt.Sprintf("sq://%s", sqliteFilepath))
-	defer db.Close()
-	exit := m.Run()
-	if exit != 0 {
+
+	if exit := m.Run(); exit != 0 {
+		db.Close()
 		os.Exit(exit)
 	}
+
+	db.Close()
 }
 
 func TestAnalyzeView(t *testing.T) {
 	t.Skip("sqlite not support yet")
 	driver := New(db)
 	err := driver.Analyze(s)
-	if err != nil {
-		t.Errorf("%v", err)
-	}
-	view, _ := s.FindTableByName("post_comments")
-	want := view.Def
-	if want == "" {
-		t.Errorf("got not empty string.")
-	}
+	require.NoError(t, err)
+	view, err := s.FindTableByName("post_comments")
+	require.NoError(t, err)
+	require.NotEmpty(t, view.Def)
 }
 
 func TestInfo(t *testing.T) {

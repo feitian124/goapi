@@ -175,7 +175,9 @@ WHERE name != 'sqlite_sequence' AND (type = 'table' OR type = 'view');`)
 			}
 
 			if f, ok := fkMap[foreignKeyID]; ok {
+				//nolint:gocritic
 				fkMap[foreignKeyID].ColumnNames = append(f.ColumnNames, foreignKeyColumnName)
+				//nolint:gocritic
 				fkMap[foreignKeyID].ForeignColumnNames = append(f.ForeignColumnNames, foreignKeyForeignColumnName)
 			} else {
 				f := &fk{
@@ -420,8 +422,8 @@ SELECT name, sql FROM sqlite_master WHERE type = 'trigger' AND tbl_name = ?;
 func (l *Sqlite) NewDriver() (*schema.Driver, error) {
 	var v string
 	row := l.db.QueryRow(`SELECT sqlite_version();`)
-	err := row.Scan(&v)
-	if err != nil {
+
+	if err := row.Scan(&v); err != nil {
 		return nil, errors.WithStack(err)
 	}
 
@@ -455,17 +457,17 @@ func parseCheckConstraints(table *schema.Table, sql string) []*schema.Constraint
 			continue
 		}
 		if def != "" && v == space {
-			def = def + v
+			def += v
 			continue
 		}
 		if def != "" && v == "(" {
-			def = def + v
-			counter = counter + 1
+			def += v
+			counter++
 			continue
 		}
 		if def != "" && v == ")" {
-			def = def + v
-			counter = counter - 1
+			def += v
+			counter--
 			if counter == 0 {
 				replaced := r3.Replace(def)
 				constraint := &schema.Constraint{
@@ -486,7 +488,7 @@ func parseCheckConstraints(table *schema.Table, sql string) []*schema.Constraint
 			continue
 		}
 		if def != "" && counter > 0 {
-			def = def + v
+			def += v
 		}
 	}
 

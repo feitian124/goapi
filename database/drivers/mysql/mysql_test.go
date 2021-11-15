@@ -20,11 +20,13 @@ func TestMain(m *testing.M) {
 		Name: "testdb",
 	}
 	db, _ = dburl.Open("my://root:mypass@localhost:33308/testdb")
-	defer db.Close()
-	exit := m.Run()
-	if exit != 0 {
+
+	if exit := m.Run(); exit != 0 {
+		db.Close()
 		os.Exit(exit)
 	}
+
+	db.Close()
 }
 
 func TestAnalyzeView(t *testing.T) {

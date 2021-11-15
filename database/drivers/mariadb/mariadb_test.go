@@ -20,15 +20,18 @@ func TestMain(m *testing.M) {
 		Name: "testdb",
 	}
 	db, _ = dburl.Open("maria://root:mypass@localhost:33309/testdb")
-	defer db.Close()
-	exit := m.Run()
-	if exit != 0 {
+
+	if exit := m.Run(); exit != 0 {
+		db.Close()
 		os.Exit(exit)
 	}
+
+	db.Close()
 }
 
 func TestAnalyzeView(t *testing.T) {
 	t.Skip()
+	t.Parallel()
 	driver, err := New(db)
 	if err != nil {
 		t.Fatal(err)
@@ -46,6 +49,7 @@ func TestAnalyzeView(t *testing.T) {
 
 func TestExtraDef(t *testing.T) {
 	t.Skip()
+	t.Parallel()
 	driver, err := New(db)
 	if err != nil {
 		t.Fatal(err)
@@ -72,6 +76,7 @@ func TestExtraDef(t *testing.T) {
 
 func TestInfo(t *testing.T) {
 	t.Skip()
+	t.Parallel()
 	driver, err := New(db)
 	if err != nil {
 		t.Fatal(err)

@@ -5,6 +5,8 @@ import (
 	"os"
 	"testing"
 
+	"github.com/stretchr/testify/require"
+
 	"github.com/feitian124/goapi/database/schema"
 	_ "github.com/lib/pq"
 	"github.com/xo/dburl"
@@ -20,25 +22,23 @@ func TestMain(m *testing.M) {
 		Name: "testdb",
 	}
 	db, _ = dburl.Open("pg://postgres:pgpass@localhost:55413/testdb?sslmode=disable")
-	defer db.Close()
-	exit := m.Run()
-	if exit != 0 {
+
+	if exit := m.Run(); exit != 0 {
+		db.Close()
 		os.Exit(exit)
 	}
+
+	db.Close()
 }
 
 func TestAnalyzeView(t *testing.T) {
 	t.Skip("postgres not support yet")
 	driver := New(db)
 	err := driver.Analyze(s)
-	if err != nil {
-		t.Errorf("%v", err)
-	}
-	view, _ := s.FindTableByName("post_comments")
-	want := view.Def
-	if want == "" {
-		t.Errorf("got not empty string.")
-	}
+	require.NoError(t, err)
+	view, err := s.FindTableByName("post_comments")
+	require.NoError(t, err)
+	require.NotEmpty(t, view.Def)
 }
 
 func TestExtraDef(t *testing.T) {

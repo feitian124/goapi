@@ -140,7 +140,7 @@ func (t *Table) CollectTablesAndRelations(distance int, root bool) ([]*Table, []
 	if distance == 0 {
 		return tables, relations, nil
 	}
-	distance = distance - 1
+	distance--
 	for _, c := range t.Columns {
 		for _, r := range c.ParentRelations {
 			relations = append(relations, r)

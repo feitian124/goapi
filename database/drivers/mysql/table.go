@@ -7,19 +7,19 @@ import (
 	"github.com/pkg/errors"
 )
 
-const mariaTableSql = `
+const mariaTableSQL = `
 	SELECT table_name, table_type, table_comment 
 	FROM information_schema.tables 
 	WHERE table_schema = ? ORDER BY table_name
 `
 
-const mysqlTableSql = `
+const mysqlTableSQL = `
 	SELECT table_name, table_type, table_comment 
 	FROM information_schema.tables 
 	WHERE table_schema = ?
 `
 
-const mysqlViewSql = `
+const mysqlViewSQL = `
 	SELECT view_definition FROM information_schema.views
 	WHERE table_schema = ?
 	AND table_name = ?
@@ -62,7 +62,7 @@ func (m *Mysql) Table(schemaName string, tableName string, tableType string, tab
 
 	// view definition
 	if tableType == "VIEW" {
-		viewDefRows, err := m.db.Query(mysqlViewSql, schemaName, tableName)
+		viewDefRows, err := m.db.Query(mysqlViewSQL, schemaName, tableName)
 		if err != nil {
 			return nil, errors.WithStack(err)
 		}

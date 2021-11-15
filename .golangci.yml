@@ -17,53 +17,22 @@ linters:
     - errorlint
     - errname
     - exhaustive
-#    - exportloopref
-#    - forbidigo
-#    - funlen
-#    - gci
-#    - gochecknoglobals
-#    - gochecknoinits
-#    - gocognit
-#    - goconst
-#    - gocritic
-#    - gocyclo
-#    - godot
-#    - godox
-#    - goerr113
+    - gocritic
     - gofumpt
-#    - goheader
-#    - gomnd
-#    - gomoddirectives
-#    - gomodguard
-#    - goprintffuncname
-#    - gosec
-#    - ifshort
-#    - importas
+    - gosec
+    - ifshort
 #    - lll
-#    - makezero
-#    - misspell
-#    - nakedret
-#    - nestif
-#    - nilerr
-#    - nlreturn
-#    - noctx
-#    - nolintlint
+    - nolintlint
 #    - paralleltest
-#    - prealloc
-#    - predeclared
-#    - promlinter
-#    - revive
-#    - rowserrcheck
-#    - sqlclosecheck
-#    - stylecheck
+    - prealloc
+    - predeclared
+    - revive
+    - stylecheck
 #    - tagliatelle
 #    - testpackage
-#    - thelper
-#    - tparallel
-#    - unconvert
-#    - unparam
-#    - wastedassign
-#    - whitespace
+    - thelper
+    - unconvert
+    - unparam
     - wrapcheck
 #    - wsl
 

@@ -6,10 +6,12 @@ import (
 	"os"
 	"path/filepath"
 	"testing"
+
+	"github.com/stretchr/testify/require"
 )
 
 func TestSchema_FindTableByName(t *testing.T) {
-	schema := Schema{
+	s := Schema{
 		Name: "testschema",
 		Tables: []*Table{
 			{
@@ -22,16 +24,13 @@ func TestSchema_FindTableByName(t *testing.T) {
 			},
 		},
 	}
-	table, _ := schema.FindTableByName("b")
-	want := "table b"
-	got := table.Comment
-	if got != want {
-		t.Errorf("got %v\nwant %v", got, want)
-	}
+	table, err := s.FindTableByName("b")
+	require.NoError(t, err)
+	require.Equal(t, "table b", table.Comment)
 }
 
 func TestSchema_Sort(t *testing.T) {
-	schema := Schema{
+	s := Schema{
 		Name: "testschema",
 		Tables: []*Table{
 			{
@@ -54,61 +53,44 @@ func TestSchema_Sort(t *testing.T) {
 			},
 		},
 	}
-	_ = schema.Sort()
-	want := "a"
-	got := schema.Tables[0].Name
-	if got != want {
-		t.Errorf("got %v\nwant %v", got, want)
-	}
-	want2 := "a"
-	got2 := schema.Tables[0].Columns[0].Name
-	if got2 != want2 {
-		t.Errorf("got %v\nwant %v", got2, want2)
-	}
+	err := s.Sort()
+	require.NoError(t, err)
+	require.Equal(t, "a", s.Tables[0].Name)
+	require.Equal(t, "a", s.Tables[0].Columns[0].Name)
 }
 
 func TestSchema_Repair(t *testing.T) {
-	got := &Schema{}
 	file, err := os.Open(filepath.Join(testdataDir(), "json_test_schema.json.golden"))
-	if err != nil {
-		t.Error(err)
-	}
+	require.NoError(t, err)
+
 	dec := json.NewDecoder(file)
+	got := &Schema{}
 	err = dec.Decode(got)
-	if err != nil {
-		t.Error(err)
-	}
+	require.NoError(t, err)
 	want := newTestSchema()
 	err = got.Repair()
-	if err != nil {
-		t.Error(err)
-	}
+	require.NoError(t, err)
 
 	for i, tt := range got.Tables {
-		compareStrings(t, got.Tables[i].Name, want.Tables[i].Name)
+		require.Equal(t, want.Tables[i].Name, got.Tables[i].Name)
 		for j := range tt.Columns {
-			compareStrings(t, got.Tables[i].Columns[j].Name, want.Tables[i].Columns[j].Name)
+			require.Equal(t, want.Tables[i].Columns[j].Name, got.Tables[i].Columns[j].Name)
 			for k := range got.Tables[i].Columns[j].ParentRelations {
-				compareStrings(t, got.Tables[i].Columns[j].ParentRelations[k].Table.Name, want.Tables[i].Columns[j].ParentRelations[k].Table.Name)
-				compareStrings(t, got.Tables[i].Columns[j].ParentRelations[k].ParentTable.Name, want.Tables[i].Columns[j].ParentRelations[k].ParentTable.Name)
+				require.Equal(t, want.Tables[i].Columns[j].ParentRelations[k].Table.Name,
+					got.Tables[i].Columns[j].ParentRelations[k].Table.Name)
+				require.Equal(t, want.Tables[i].Columns[j].ParentRelations[k].ParentTable.Name,
+					got.Tables[i].Columns[j].ParentRelations[k].ParentTable.Name)
 			}
 			for k := range got.Tables[i].Columns[j].ChildRelations {
-				compareStrings(t, got.Tables[i].Columns[j].ChildRelations[k].Table.Name, want.Tables[i].Columns[j].ChildRelations[k].Table.Name)
-				compareStrings(t, got.Tables[i].Columns[j].ChildRelations[k].ParentTable.Name, want.Tables[i].Columns[j].ChildRelations[k].ParentTable.Name)
+				require.Equal(t, want.Tables[i].Columns[j].ChildRelations[k].Table.Name,
+					got.Tables[i].Columns[j].ChildRelations[k].Table.Name)
+				require.Equal(t, want.Tables[i].Columns[j].ChildRelations[k].ParentTable.Name,
+					got.Tables[i].Columns[j].ChildRelations[k].ParentTable.Name)
 			}
 		}
 	}
 
-	if len(got.Relations) != len(want.Relations) {
-		t.Errorf("got %#v\nwant %#v", got.Relations, want.Relations)
-	}
-}
-
-func compareStrings(tb testing.TB, got, want string) {
-	tb.Helper()
-	if got != want {
-		tb.Errorf("got %#v\nwant %#v", got, want)
-	}
+	require.Equal(t, len(want.Relations), len(got.Relations))
 }
 
 func testdataDir() string {

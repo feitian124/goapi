@@ -7,7 +7,7 @@ import (
 	"github.com/pkg/errors"
 )
 
-const triggerSql = `
+const triggerSQL = `
 	SELECT
 	  trigger_name,
 	  action_timing,
@@ -21,7 +21,7 @@ const triggerSql = `
 `
 
 func (m *Mysql) Triggers(schemaName string, tableName string) ([]*schema.Trigger, error) {
-	triggerRows, err := m.db.Query(triggerSql, schemaName, tableName)
+	triggerRows, err := m.db.Query(triggerSQL, schemaName, tableName)
 	if err != nil {
 		return nil, errors.WithStack(err)
 	}

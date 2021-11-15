@@ -8,7 +8,7 @@ import (
 	"github.com/pkg/errors"
 )
 
-const indexSql = `
+const indexSQL = `
 	SELECT
 	(CASE WHEN s.index_name='PRIMARY' AND s.non_unique=0 THEN 'PRIMARY KEY'
 		  WHEN s.index_name!='PRIMARY' AND s.non_unique=0 THEN 'UNIQUE KEY'
@@ -29,7 +29,7 @@ const indexSql = `
 // Indexes get a table's indexes
 func (m *Mysql) Indexes(schemaName string, tableName string) ([]*schema.Index, error) {
 	// indexes
-	indexRows, err := m.db.Query(indexSql, schemaName, tableName)
+	indexRows, err := m.db.Query(indexSQL, schemaName, tableName)
 	if err != nil {
 		return nil, errors.WithStack(err)
 	}

@@ -366,12 +366,12 @@ ORDER BY tgrelid
 	return nil
 }
 
-// Info return schema.Driver
+// NewDriver return schema.Driver
 func (p *Postgres) NewDriver() (*schema.Driver, error) {
 	var v string
 	row := p.db.QueryRow(`SELECT version();`)
-	err := row.Scan(&v)
-	if err != nil {
+
+	if err := row.Scan(&v); err != nil {
 		return nil, errors.WithStack(err)
 	}
 
@@ -430,8 +430,9 @@ AND NOT attr.attisdropped
 AND attr.attrelid = $1::oid
 ORDER BY attr.attnum;
 `, nil
-	} else {
-		return `
+	}
+
+	return `
 SELECT
     attr.attname AS column_name,
     pg_get_expr(def.adbin, def.adrelid) AS column_default,
@@ -453,7 +454,6 @@ AND NOT attr.attisdropped
 AND attr.attrelid = $1::oid
 ORDER BY attr.attnum;
 `, nil
-	}
 }
 
 func (p *Postgres) queryForConstraints() string {

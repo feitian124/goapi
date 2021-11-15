@@ -16,7 +16,7 @@ var tests = []struct {
 	relationCount int
 }{
 	{config.DSN{URL: "my://root:mypass@localhost:33308/testdb"}, "testdb", 9, 6},
-	//{config.DSN{URL: "pg://postgres:pgpass@localhost:55432/testdb?sslmode=disable"}, "testdb", 17, 12},
+	// {config.DSN{URL: "pg://postgres:pgpass@localhost:55432/testdb?sslmode=disable"}, "testdb", 17, 12},
 }
 
 func TestAnalyzeSchema(t *testing.T) {

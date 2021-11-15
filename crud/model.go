@@ -8,7 +8,7 @@ import (
 type ID uint64
 
 type BaseModel struct {
-	Id        ID
+	ID        ID
 	CreatedAt time.Time
 	UpdatedAt time.Time
 }
