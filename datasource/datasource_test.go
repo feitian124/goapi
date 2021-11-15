@@ -1,7 +1,9 @@
-package datasource
+package datasource_test
 
 import (
 	"testing"
+
+	"github.com/feitian124/goapi/datasource"
 
 	"github.com/feitian124/goapi/config"
 	_ "github.com/go-sql-driver/mysql"
@@ -22,7 +24,7 @@ var tests = []struct {
 func TestAnalyzeSchema(t *testing.T) {
 	t.Parallel()
 	for _, tt := range tests {
-		schema, err := Analyze(tt.dsn)
+		schema, err := datasource.Analyze(tt.dsn)
 		require.NoError(t, err)
 		require.Equal(t, schema.Name, tt.schemaName)
 	}
@@ -31,7 +33,7 @@ func TestAnalyzeSchema(t *testing.T) {
 func TestAnalyzeTables(t *testing.T) {
 	t.Parallel()
 	for _, tt := range tests {
-		schema, err := Analyze(tt.dsn)
+		schema, err := datasource.Analyze(tt.dsn)
 		require.NoError(t, err)
 		require.Len(t, schema.Tables, tt.tableCount)
 	}
@@ -40,7 +42,7 @@ func TestAnalyzeTables(t *testing.T) {
 func TestAnalyzeRelations(t *testing.T) {
 	t.Parallel()
 	for _, tt := range tests {
-		schema, err := Analyze(tt.dsn)
+		schema, err := datasource.Analyze(tt.dsn)
 		require.NoError(t, err)
 		require.Len(t, schema.Relations, tt.relationCount)
 	}

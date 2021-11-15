@@ -7,24 +7,26 @@ import (
 
 	"github.com/feitian124/goapi/config"
 	"github.com/feitian124/goapi/datasource"
+	_ "github.com/go-sql-driver/mysql"
+	_ "github.com/lib/pq"
 )
 
 func main() {
-	// 定义命令行参数方式1
 	var dsn string
-	flag.StringVar(&dsn, "name", "张三", "姓名")
-
-	// 解析命令行参数
+	flag.StringVar(&dsn, "dsn", "my://root:mypass@localhost:33308/testdb", "数据库连接符")
 	flag.Parse()
-	fmt.Println(dsn)
 
-	c, err := config.New()
-	if err != nil {
-		os.Exit(-1)
+	c := config.New()
+
+	if len(dsn) > 0 {
+		c.DSN = config.DSN{
+			URL: dsn,
+		}
 	}
 
 	s, err := datasource.Analyze(c.DSN)
 	if err != nil {
+		fmt.Println(err)
 		os.Exit(-1)
 	}
 	fmt.Printf("%+v", s)

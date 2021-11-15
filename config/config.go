@@ -9,8 +9,12 @@ type DSN struct {
 	Headers map[string]string `yaml:"headers,omitempty"`
 }
 
-// New return Config
-func New() (*Config, error) {
-	c := Config{}
-	return &c, nil
+func New() *Config {
+	dsn := DSN{
+		URL: "my://root:mypass@localhost:33308/testdb",
+	}
+	c := Config{
+		dsn,
+	}
+	return &c
 }

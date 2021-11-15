@@ -26,7 +26,7 @@ lint:
 	golangci-lint run --timeout "5m"
 
 test:
-	@go test ./... --cover
+	@go test ./... --cover -count=1
 
 build:
 	@go build -ldflags="$(BUILD_LDFLAGS)"
