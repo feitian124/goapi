@@ -25,10 +25,10 @@ GET /rows/:table
   查询数据没有特殊格式，默认为全匹配查询, 如 name=jack。
 
   全匹配支持`高级值规则`用法 (查询内容，带有查询规则符号)
-  * 小于查询。 查询内容值规则："lt+ 空格 + 内容", 如 `age=lt 60`
-  * 小于等于查询。 查询内容值规则："le+ 空格+ 内容"
-  * 大于查询。 查询内容值规则："gt+ 空格+ 内容"
-  * 大于等于查询。 查询内容值规则："ge+ 空格+ 内容"
+  - 小于查询。 查询内容值规则："lt+ 空格 + 内容", 如 `age=lt 60`
+  - 小于等于查询。 查询内容值规则："le+ 空格+ 内容"
+  - 大于查询。 查询内容值规则："gt+ 空格+ 内容"
+  - 大于等于查询。 查询内容值规则："ge+ 空格+ 内容"
 
 - 模糊查询  
   查询数据格式需加星号, 支持前模糊, 后模糊, 前后模糊, 全模糊. 如 name=*jack
@@ -47,6 +47,8 @@ GET /rows/:table
 
 ## thanks
 
-https://github.com/directus/directus  
-https://github.com/jeecgboot/jeecg-boot  
-https://github.com/Tencent/APIJSON  
+<https://github.com/directus/directus>  
+
+<https://github.com/jeecgboot/jeecg-boot>  
+
+<https://github.com/Tencent/APIJSON>  
