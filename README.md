@@ -11,7 +11,7 @@ goapi expose database as api, both `static` and `dynamic`:
 
 ```go
 m := db.Open("my://root:mypass@localhost:33308/testdb")
-s := m.UseSchema("blog")
+s := m.Schema
 
 // ddl
 s.Tables("name = :name", name) // basic info of tables

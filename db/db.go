@@ -1,28 +1,64 @@
 package db
 
 import (
-	"database/sql"
+	"strings"
+
+	"github.com/feitian124/goapi/database/drivers"
+	"github.com/feitian124/goapi/database/drivers/mysql"
+	"github.com/pkg/errors"
+	"github.com/xo/dburl"
 )
 
 type DB struct {
-
-}
-
-type Schema struct {
-	Name      string      `json:"name"`
-	Desc      string      `json:"desc"`
-	db *sql.DB
-}
-
-type ISchema interface {
-	Tables(schema string) ([]*TableInfo, error)
-	Table(schema string, table string) (*Table, error)
+	Name    string `json:"name"`
+	Version string `json:"version"`
+	Schema  *Schema
 }
 
 func Open(url string) (*DB, error) {
-	return nil, nil
-}
+	u, err := dburl.Parse(url)
+	if err != nil {
+		return nil, errors.WithStack(err)
+	}
+	parts := strings.Split(u.Short(), "/")
+	if len(parts) < 2 {
+		return nil, errors.Errorf("invalid url: parse %s -> %#v", url, u)
+	}
 
-func (d *DB) UseSchema(name string) (*Schema, error) {
-	return nil, nil
+	var opts []drivers.Option
+	if u.Driver == "mysql" {
+		values := u.Query()
+		for k := range values {
+			if k == "show_auto_increment" {
+				opts = append(opts, mysql.ShowAutoIcrrement())
+				values.Del(k)
+			}
+			if k == "hide_auto_increment" {
+				opts = append(opts, mysql.HideAutoIcrrement())
+				values.Del(k)
+			}
+		}
+		u.RawQuery = values.Encode()
+		url = u.String()
+	}
+
+	db, err := dburl.Open(url)
+	if err != nil {
+		return nil, errors.WithStack(err)
+	}
+	defer db.Close()
+
+	if err := db.Ping(); err != nil {
+		return nil, errors.WithStack(err)
+	}
+
+	d := &DB{
+		Name: u.Driver,
+		Schema: &Schema{
+			Name: u.Driver,
+			DB:   db,
+		},
+	}
+
+	return d, nil
 }

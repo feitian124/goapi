@@ -7,10 +7,10 @@ import (
 )
 
 type TableInfo struct {
-	Name      string      `json:"name"`
-	Type             string        `json:"type"`
-	Comment          string        `json:"comment"`
-	Def              string        `json:"def"`
+	Name    string `json:"name"`
+	Type    string `json:"type"`
+	Comment string `json:"comment"`
+	Def     string `json:"def"`
 }
 
 // Table is the struct for database table
