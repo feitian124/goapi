@@ -1,4 +1,4 @@
-package db
+package mysql
 
 import (
 	"database/sql"
@@ -10,11 +10,15 @@ import (
 )
 
 // DB stands for a connection to database, including current schema
+// The returned DB is safe for concurrent use by multiple goroutines
+// and maintains its own pool of idle connections. Thus, the Open
+// function should be called just once. It is rarely necessary to
+// close a DB.
 type DB struct {
 	Name    string  `json:"name"`
 	Version string  `json:"version"`
 	Url     string  `json:"url"`
-	DB      *sql.DB `json:"db"`
+	db      *sql.DB `json:"db"`
 	Schema  *Schema `json:"schema"`
 }
 
@@ -32,7 +36,6 @@ func Open(url string) (*DB, error) {
 	if err != nil {
 		return nil, errors.WithStack(err)
 	}
-	defer db.Close()
 
 	if err := db.Ping(); err != nil {
 		return nil, errors.WithStack(err)
@@ -42,7 +45,7 @@ func Open(url string) (*DB, error) {
 	if u.Driver == "mysql" {
 		d = &DB{
 			Name: u.Driver,
-			DB:   db,
+			db:   db,
 			Schema: &Schema{
 				Name: parts[1],
 			},
@@ -52,8 +55,8 @@ func Open(url string) (*DB, error) {
 }
 
 func (d *DB) Close() error {
-	if d != nil && d.DB != nil {
-		if err := d.DB.Close(); err != nil {
+	if d != nil && d.db != nil {
+		if err := d.db.Close(); err != nil {
 			return errors.WithStack(err)
 		}
 	}
