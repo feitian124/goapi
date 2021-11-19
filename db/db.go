@@ -10,10 +10,12 @@ import (
 	"github.com/xo/dburl"
 )
 
+// DB stands for a connection to database, including current schema
 type DB struct {
-	Name    string `json:"name"`
-	Version string `json:"version"`
-	Schema  *Schema
+	Name    string  `json:"name"`
+	Version string  `json:"version"`
+	Url     string  `json:"url"`
+	Schema  *Schema `json:"schema"`
 }
 
 func Open(url string) (*DB, error) {
@@ -62,4 +64,31 @@ func Open(url string) (*DB, error) {
 	}
 
 	return d, nil
+}
+
+func (d *DB) Close() error {
+	if d != nil && d.Schema != nil && d.Schema.DB != nil {
+		if err := d.Schema.DB.Close(); err != nil {
+			return errors.WithStack(err)
+		}
+	}
+	return nil
+}
+
+// UseSchema do nothing if the schema has been used, otherwise change the schema
+func (d *DB) UseSchema(name string) (*Schema, error) {
+	if d.Schema != nil && d.Schema.Name == name {
+		return d.Schema, nil
+	}
+
+	if err := d.Close(); err != nil {
+		return nil, errors.WithStack(err)
+	}
+
+	// TODO wip, update d.Url with param name
+	s, err := Open(d.Url)
+	if err != nil {
+		return nil, err
+	}
+	return s.Schema, nil
 }

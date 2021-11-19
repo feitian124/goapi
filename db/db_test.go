@@ -1,18 +1,22 @@
 package db_test
 
 import (
+	"testing"
+
 	"github.com/feitian124/goapi/db"
 	"github.com/stretchr/testify/require"
-	"testing"
 )
 
+const mysql80Url = "my://root:mypass@localhost:33308/testdb"
+
 func TestOpen(t *testing.T) {
+	t.Parallel()
 	tests := []struct {
-		name    string
-		url string
-		want    *db.DB
+		name string
+		url  string
+		want *db.DB
 	}{
-		{"mysql80", "my://root:mypass@localhost:33308/testdb", &db.DB{ Name:"mysql", Schema: &db.Schema{Name: "testdb"}} },
+		{"mysql80", mysql80Url, &db.DB{Name: "mysql", Schema: &db.Schema{Name: "testdb"}}},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
@@ -22,6 +26,46 @@ func TestOpen(t *testing.T) {
 			require.Equal(t, tt.want.Schema.Name, got.Schema.Name)
 			// TODO use below equal directly?
 			// require.Equal(t, tt.want, got)
+		})
+	}
+}
+
+func TestDB_Close(t *testing.T) {
+	t.Parallel()
+	tests := []struct {
+		name string
+		url  string
+	}{
+		{"mysql80", mysql80Url},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			d, err := db.Open(tt.url)
+			require.NoError(t, err)
+			require.Equal(t, d.Schema.Name, "testdb")
+
+			err = d.Close()
+			require.NoError(t, err)
+		})
+	}
+}
+
+func TestDB_UseSchema(t *testing.T) {
+	t.Skip()
+	tests := []struct {
+		name   string
+		DB     *db.DB
+		schema string
+		want   *db.Schema
+	}{
+		{"mysql80 use same schema", &db.DB{Url: mysql80Url}, "testdb", &db.Schema{}},
+		{"mysql80 use different change", &db.DB{Url: mysql80Url}, "testdb2", &db.Schema{}},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			s, err := tt.DB.UseSchema(tt.schema)
+			require.NoError(t, err)
+			require.Equal(t, tt.want.Name, s.Name)
 		})
 	}
 }
