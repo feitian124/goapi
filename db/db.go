@@ -5,6 +5,7 @@ import (
 
 	"github.com/feitian124/goapi/database/drivers"
 	"github.com/feitian124/goapi/database/drivers/mysql"
+	_ "github.com/go-sql-driver/mysql"
 	"github.com/pkg/errors"
 	"github.com/xo/dburl"
 )
@@ -55,7 +56,7 @@ func Open(url string) (*DB, error) {
 	d := &DB{
 		Name: u.Driver,
 		Schema: &Schema{
-			Name: u.Driver,
+			Name: parts[1],
 			DB:   db,
 		},
 	}
