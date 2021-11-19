@@ -49,23 +49,3 @@ func TestDB_Close(t *testing.T) {
 		})
 	}
 }
-
-func TestDB_UseSchema(t *testing.T) {
-	t.Skip()
-	tests := []struct {
-		name   string
-		DB     *db.DB
-		schema string
-		want   *db.Schema
-	}{
-		{"mysql80 use same schema", &db.DB{Url: mysql80Url}, "testdb", &db.Schema{}},
-		{"mysql80 use different change", &db.DB{Url: mysql80Url}, "testdb2", &db.Schema{}},
-	}
-	for _, tt := range tests {
-		t.Run(tt.name, func(t *testing.T) {
-			s, err := tt.DB.UseSchema(tt.schema)
-			require.NoError(t, err)
-			require.Equal(t, tt.want.Name, s.Name)
-		})
-	}
-}

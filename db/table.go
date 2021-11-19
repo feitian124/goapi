@@ -2,15 +2,17 @@ package db
 
 import (
 	"database/sql"
+	"time"
 
 	"github.com/pkg/errors"
 )
 
 type TableInfo struct {
-	Name    string `json:"name"`
-	Type    string `json:"type"`
-	Comment string `json:"comment"`
-	Def     string `json:"def"`
+	Name      string    `json:"name"`
+	Type      string    `json:"type"`
+	Comment   string    `json:"comment"`
+	Def       string    `json:"def"`
+	CreatedAt time.Time `json:"createdAt"`
 }
 
 // Table is the struct for database table

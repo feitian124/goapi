@@ -11,6 +11,8 @@ goapi expose database as api, both `static` and `dynamic`:
 
 ```go
 m := db.Open("my://root:mypass@localhost:33308/testdb")
+defer m.Close()
+
 s := m.Schema
 
 // ddl
@@ -29,6 +31,7 @@ sql := `
       where author = :author
 `
 s.Sql(sql, author)
+
 ```
 
 ## dynamic
