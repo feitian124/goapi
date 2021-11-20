@@ -8,8 +8,6 @@ import (
 	"github.com/stretchr/testify/require"
 )
 
-const mysql80Url = "my://root:mypass@localhost:33308/testdb?parseTime=true"
-
 func TestOpen(t *testing.T) {
 	t.Parallel()
 	tests := []struct {

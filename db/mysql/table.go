@@ -13,6 +13,7 @@ type TableInfo struct {
 	Comment   string    `json:"comment"`
 	Def       string    `json:"def"`
 	CreatedAt time.Time `json:"createdAt"`
+	External  bool      `json:"-"` // Table external to the schema
 }
 
 // Table is the struct for database table
@@ -23,7 +24,6 @@ type Table struct {
 	Constraints      []*Constraint `json:"constraints"`
 	Triggers         []*Trigger    `json:"triggers"`
 	ReferencedTables []*Table      `json:"referenced_tables,omitempty" yaml:"referencedTables,omitempty"`
-	External         bool          `json:"-"` // Table external to the schema
 }
 
 // Index is the struct for database index

@@ -71,6 +71,19 @@ func (d *DB) Tables(pattern string) ([]TableInfo, error) {
 	return tis, nil
 }
 
+func (d *DB) Table(name string) (*TableInfo, error) {
+	tis, err := d.Tables(name)
+	if err != nil {
+		return nil, err
+	}
+	for _, ti := range tis {
+		if ti.Name == name {
+			return &ti, nil
+		}
+	}
+	return nil, nil
+}
+
 func (d *DB) FindTableDDL(tableName string, tableType TableType) (string, error) {
 	if tableType == BaseTable {
 		tableDefRows, err := d.db.Query(fmt.Sprintf("SHOW CREATE TABLE `%s`", tableName))

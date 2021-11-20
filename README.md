@@ -16,7 +16,7 @@ defer m.Close()
 s := m.Schema
 
 // ddl
-s.Tables("name = :name", name) // basic info of tables
+s.Tables("pattern") // basic info of tables
 s.Table("tableName") // detail info of the table
 
 // data

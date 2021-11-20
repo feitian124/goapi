@@ -8,6 +8,7 @@ import (
 )
 
 func TestDB_Tables(t *testing.T) {
+	t.Parallel()
 	type args struct {
 		pattern string
 	}
@@ -21,22 +22,41 @@ func TestDB_Tables(t *testing.T) {
 		{"mysql80 table ddl", args{"posts"}, 1, false},
 	}
 
-	d, err := mysql.Open(mysql80Url)
-	require.NoError(t, err)
-
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			got, err := d.Tables(tt.args.pattern)
+			got, err := mysql80DB.Tables(tt.args.pattern)
 			require.NoError(t, err)
 			require.Equal(t, len(got), tt.want)
 		})
 	}
+}
 
-	err = d.Close()
-	require.NoError(t, err)
+func TestDB_Table(t *testing.T) {
+	t.Parallel()
+	type args struct {
+		pattern string
+	}
+	tests := []struct {
+		name    string
+		args    args
+		want    string
+		wantErr bool
+	}{
+		{"mysql80 table ddl", args{"posts"}, "posts", false},
+		{"mysql80 table ddl", args{"comments"}, "comments", false},
+	}
+
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			got, err := mysql80DB.Table(tt.args.pattern)
+			require.NoError(t, err)
+			require.Equal(t, got.Name, tt.want)
+		})
+	}
 }
 
 func TestDB_FindTableDDL(t *testing.T) {
+	t.Parallel()
 	type args struct {
 		tableName string
 		tableType mysql.TableType
@@ -52,13 +72,9 @@ func TestDB_FindTableDDL(t *testing.T) {
 		{"mysql80 not exist ddl", args{"a_table_not_exists", mysql.BaseTable}, "", true},
 	}
 
-	d, err := mysql.Open(mysql80Url)
-
-	require.NoError(t, err)
-
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			got, err := d.FindTableDDL(tt.args.tableName, tt.args.tableType)
+			got, err := mysql80DB.FindTableDDL(tt.args.tableName, tt.args.tableType)
 			if tt.wantErr {
 				require.Error(t, err)
 				require.Contains(t, err.Error(), tt.args.tableName)
@@ -68,7 +84,4 @@ func TestDB_FindTableDDL(t *testing.T) {
 			}
 		})
 	}
-
-	err = d.Close()
-	require.NoError(t, err)
 }
