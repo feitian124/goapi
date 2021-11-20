@@ -14,6 +14,8 @@ type Schema struct {
 	Name string `json:"name"`
 }
 
+type TableType = string
+
 const queryTablesByLike = `
 	SELECT table_name, table_type, table_comment, create_time
 	FROM information_schema.tables
@@ -26,8 +28,6 @@ const mysqlViewSQL = `
 	WHERE table_schema = ?
 	AND table_name = ?
 `
-
-type TableType = string
 
 const (
 	BaseTable TableType = "BASE TABLE"

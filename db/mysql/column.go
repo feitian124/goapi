@@ -8,6 +8,18 @@ import (
 	"github.com/pkg/errors"
 )
 
+// Column is the struct for table column
+type Column struct {
+	Name            string         `json:"name"`
+	Type            string         `json:"type"`
+	Nullable        bool           `json:"nullable"`
+	Default         sql.NullString `json:"default"`
+	Comment         string         `json:"comment"`
+	ExtraDef        string         `json:"extra_def,omitempty" yaml:"extraDef,omitempty"`
+	ParentRelations []*Relation    `json:"-"`
+	ChildRelations  []*Relation    `json:"-"`
+}
+
 const supportGeneratedColumnSQL = `
 	SELECT column_name, column_default, is_nullable, column_type, column_comment, extra, generation_expression
 	FROM information_schema.columns

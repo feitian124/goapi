@@ -9,6 +9,18 @@ import (
 	"github.com/pkg/errors"
 )
 
+// Constraint is the struct for database constraint
+type Constraint struct {
+	Name              string   `json:"name"`
+	Type              string   `json:"type"`
+	Def               string   `json:"def"`
+	Table             *string  `json:"table"`
+	ReferencedTable   *string  `json:"referenced_table" yaml:"referencedTable"`
+	Columns           []string `json:"columns"`
+	ReferencedColumns []string `json:"referenced_columns" yaml:"referencedColumns"`
+	Comment           string   `json:"comment"`
+}
+
 const constraintSQL = `
 	SELECT
 	  kcu.constraint_name,

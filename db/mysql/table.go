@@ -1,7 +1,6 @@
 package mysql
 
 import (
-	"database/sql"
 	"time"
 
 	"github.com/pkg/errors"
@@ -26,30 +25,6 @@ type Table struct {
 	ReferencedTables []*Table      `json:"referenced_tables,omitempty" yaml:"referencedTables,omitempty"`
 }
 
-// Column is the struct for table column
-type Column struct {
-	Name            string         `json:"name"`
-	Type            string         `json:"type"`
-	Nullable        bool           `json:"nullable"`
-	Default         sql.NullString `json:"default"`
-	Comment         string         `json:"comment"`
-	ExtraDef        string         `json:"extra_def,omitempty" yaml:"extraDef,omitempty"`
-	ParentRelations []*Relation    `json:"-"`
-	ChildRelations  []*Relation    `json:"-"`
-}
-
-// Constraint is the struct for database constraint
-type Constraint struct {
-	Name              string   `json:"name"`
-	Type              string   `json:"type"`
-	Def               string   `json:"def"`
-	Table             *string  `json:"table"`
-	ReferencedTable   *string  `json:"referenced_table" yaml:"referencedTable"`
-	Columns           []string `json:"columns"`
-	ReferencedColumns []string `json:"referenced_columns" yaml:"referencedColumns"`
-	Comment           string   `json:"comment"`
-}
-
 // Relation is the struct for table relation
 type Relation struct {
 	Table         *Table    `json:"table"`
@@ -58,13 +33,6 @@ type Relation struct {
 	ParentColumns []*Column `json:"parent_columns" yaml:"parentColumns"`
 	Def           string    `json:"def"`
 	Virtual       bool      `json:"virtual"`
-}
-
-// Trigger is the struct for database trigger
-type Trigger struct {
-	Name    string `json:"name"`
-	Def     string `json:"def"`
-	Comment string `json:"comment"`
 }
 
 // FindColumnByName find column by column name
@@ -130,8 +98,8 @@ func (t *Table) HasColumnWithExtraDef() bool {
 }
 
 func (t *Table) CollectTablesAndRelations(distance int, root bool) ([]*Table, []*Relation, error) {
-	tables := []*Table{}
-	relations := []*Relation{}
+	var tables []*Table
+	var relations []*Relation
 	tables = append(tables, t)
 	if distance == 0 {
 		return tables, relations, nil
@@ -162,7 +130,7 @@ func (t *Table) CollectTablesAndRelations(distance int, root bool) ([]*Table, []
 		return tables, relations, nil
 	}
 
-	uTables := []*Table{}
+	var uTables []*Table
 	encounteredT := make(map[string]bool)
 	for _, t := range tables {
 		if !encounteredT[t.Name] {
@@ -171,7 +139,7 @@ func (t *Table) CollectTablesAndRelations(distance int, root bool) ([]*Table, []
 		}
 	}
 
-	uRelations := []*Relation{}
+	var uRelations []*Relation
 	encounteredR := make(map[*Relation]bool)
 	for _, r := range relations {
 		if !encounteredR[r] {

@@ -7,6 +7,13 @@ import (
 	"github.com/pkg/errors"
 )
 
+// Trigger is the struct for database trigger
+type Trigger struct {
+	Name    string `json:"name"`
+	Def     string `json:"def"`
+	Comment string `json:"comment"`
+}
+
 const triggerSQL = `
 	SELECT
 	  trigger_name,
