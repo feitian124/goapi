@@ -5,6 +5,7 @@ import (
 	"strings"
 
 	"github.com/aquasecurity/go-version/pkg/version"
+	// mysql driver
 	_ "github.com/go-sql-driver/mysql"
 	"github.com/pkg/errors"
 	"github.com/xo/dburl"
@@ -20,11 +21,11 @@ const (
 // function should be called just once. It is rarely necessary to
 // close a DB.
 type DB struct {
-	Name                   string  `json:"name"`
-	Version                string  `json:"version"`
-	Url                    string  `json:"url"`
-	db                     *sql.DB `json:"db"`
-	supportGeneratedColumn bool    `json:"support_generated_column"`
+	Name                   string `json:"name"`
+	Version                string `json:"version"`
+	URL                    string `json:"url"`
+	db                     *sql.DB
+	supportGeneratedColumn bool
 	Schema                 *Schema `json:"schema"`
 }
 
@@ -56,7 +57,10 @@ func Open(url string) (*DB, error) {
 				Name: parts[1],
 			},
 		}
-		d.CheckVersion()
+		err = d.CheckVersion()
+		if err != nil {
+			return nil, err
+		}
 	}
 	return d, nil
 }

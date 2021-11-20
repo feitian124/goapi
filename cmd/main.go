@@ -28,12 +28,12 @@ func main() {
 		}
 	}
 
-	//s, err := datasource.Analyze(c.DSN)
-	//if err != nil {
-	//	fmt.Println(err)
-	//	os.Exit(-1)
-	//}
-	//fmt.Printf("%+v", s)
+	// s, err := datasource.Analyze(c.DSN)
+	// if err != nil {
+	// 	 fmt.Println(err)
+	// 	 os.Exit(-1)
+	// }
+	// fmt.Printf("%+v", s)
 
 	port := os.Getenv("PORT")
 	if port == "" {

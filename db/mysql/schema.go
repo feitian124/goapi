@@ -100,7 +100,10 @@ func (d *DB) FindTableDDL(tableName string, tableType TableType) (string, error)
 			if err != nil {
 				return "", errors.WithStack(err)
 			}
-			return tableDef, nil
+			if len(tableDef) > 0 {
+				return tableDef, nil
+			}
+
 		}
 	}
 
@@ -117,7 +120,9 @@ func (d *DB) FindTableDDL(tableName string, tableType TableType) (string, error)
 			if err != nil {
 				return "", errors.WithStack(err)
 			}
-			return fmt.Sprintf("CREATE VIEW %s AS (%s)", tableName, tableDef), nil
+			if len(tableDef) > 0 {
+				return fmt.Sprintf("CREATE VIEW %s AS (%s)", tableName, tableDef), nil
+			}
 		}
 	}
 
