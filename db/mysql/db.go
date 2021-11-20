@@ -4,9 +4,14 @@ import (
 	"database/sql"
 	"strings"
 
+	"github.com/aquasecurity/go-version/pkg/version"
 	_ "github.com/go-sql-driver/mysql"
 	"github.com/pkg/errors"
 	"github.com/xo/dburl"
+)
+
+const (
+	MinMysqlVersion = "5.7.6"
 )
 
 // DB stands for a connection to database, including current schema
@@ -15,11 +20,12 @@ import (
 // function should be called just once. It is rarely necessary to
 // close a DB.
 type DB struct {
-	Name    string  `json:"name"`
-	Version string  `json:"version"`
-	Url     string  `json:"url"`
-	db      *sql.DB `json:"db"`
-	Schema  *Schema `json:"schema"`
+	Name                   string  `json:"name"`
+	Version                string  `json:"version"`
+	Url                    string  `json:"url"`
+	db                     *sql.DB `json:"db"`
+	supportGeneratedColumn bool    `json:"support_generated_column"`
+	Schema                 *Schema `json:"schema"`
 }
 
 func Open(url string) (*DB, error) {
@@ -50,6 +56,7 @@ func Open(url string) (*DB, error) {
 				Name: parts[1],
 			},
 		}
+		d.CheckVersion()
 	}
 	return d, nil
 }
@@ -59,6 +66,32 @@ func (d *DB) Close() error {
 		if err := d.db.Close(); err != nil {
 			return errors.WithStack(err)
 		}
+	}
+	return nil
+}
+
+// CheckVersion set version and supportGeneratedColumn
+func (d *DB) CheckVersion() error {
+	verGeneratedColumn, err := version.Parse(MinMysqlVersion)
+	if err != nil {
+		return errors.WithStack(err)
+	}
+
+	var v string
+	row := d.db.QueryRow(`SELECT version();`)
+	if err := row.Scan(&v); err != nil {
+		return errors.WithStack(err)
+	}
+	d.Version = v
+
+	ver, err := version.Parse(v)
+	if err != nil {
+		return errors.WithStack(err)
+	}
+	if ver.LessThan(verGeneratedColumn) {
+		d.supportGeneratedColumn = false
+	} else {
+		d.supportGeneratedColumn = true
 	}
 	return nil
 }

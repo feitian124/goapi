@@ -51,3 +51,9 @@ func TestDB_Close(t *testing.T) {
 		})
 	}
 }
+
+func TestDB_CheckVersion(t *testing.T) {
+	err := mysql80DB.CheckVersion()
+	require.NoError(t, err)
+	require.Contains(t, mysql80DB.Version, "8.")
+}
