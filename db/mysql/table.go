@@ -26,15 +26,6 @@ type Table struct {
 	ReferencedTables []*Table      `json:"referenced_tables,omitempty" yaml:"referencedTables,omitempty"`
 }
 
-// Index is the struct for database index
-type Index struct {
-	Name    string   `json:"name"`
-	Def     string   `json:"def"`
-	Table   *string  `json:"table"`
-	Columns []string `json:"columns"`
-	Comment string   `json:"comment"`
-}
-
 // Column is the struct for table column
 type Column struct {
 	Name            string         `json:"name"`
