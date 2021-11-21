@@ -10,19 +10,17 @@ goapi expose database as api, both `static` and `dynamic`:
 ## static
 
 ```go
-m := db.Open("my://root:mypass@localhost:33308/testdb")
-defer m.Close()
-
-s := m.Schema
+// connect to schema testdb
+d := db.Open("my://root:mypass@localhost:33308/testdb")
 
 // ddl
-s.Tables("pattern") // basic info of tables
-s.Table("tableName") // detail info of the table
+d.Tables("pattern") // basic info of tables
+d.Table("tableName") // detail info of the table
 
 // data
-s.FindAll("posts")
-s.FindById("posts", 1)
-s.Find("posts", "title = :title and created_at >= :time", name, time)
+d.FindAll("posts")
+d.FindById("posts", 1)
+d.Find("posts", "title = :title and created_at >= :time", name, time)
 
 // native sql
 sql := `
@@ -30,8 +28,7 @@ sql := `
       from posts
       where author = :author
 `
-s.Sql(sql, author)
-
+d.Sql(sql, author)
 ```
 
 ## dynamic
