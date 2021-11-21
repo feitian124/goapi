@@ -79,10 +79,35 @@ func (d *DB) Table(name string) (*Table, error) {
 	for _, ti := range tis {
 		if ti.Name == name {
 			tb := &Table{TableInfo: ti}
+
+			columns, err := d.Columns(name)
+			if err != nil {
+				return nil, errors.WithStack(err)
+			}
+			tb.Columns = columns
+
+			indexes, err := d.Indexes(name)
+			if err != nil {
+				return nil, errors.WithStack(err)
+			}
+			tb.Indexes = indexes
+
+			constraints, err := d.Constraints(name)
+			if err != nil {
+				return nil, errors.WithStack(err)
+			}
+			tb.Constraints = constraints
+
+			triggers, err := d.Triggers(name)
+			if err != nil {
+				return nil, errors.WithStack(err)
+			}
+			tb.Triggers = triggers
+
 			return tb, nil
 		}
 	}
-	return nil, nil
+	return nil, errors.Errorf("can not find table %s", name)
 }
 
 func (d *DB) FindTableDDL(tableName string, tableType TableType) (string, error) {

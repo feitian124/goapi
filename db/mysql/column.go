@@ -4,7 +4,6 @@ import (
 	"database/sql"
 	"fmt"
 
-	"github.com/feitian124/goapi/database/schema"
 	"github.com/pkg/errors"
 )
 
@@ -32,7 +31,7 @@ const columnSQL = `
 	WHERE table_schema = ? AND table_name = ? ORDER BY ordinal_position
 `
 
-func (d *DB) Columns(tableName string) ([]*schema.Column, error) {
+func (d *DB) Columns(tableName string) ([]*Column, error) {
 	columnStmt := supportGeneratedColumnSQL
 	if !d.supportGeneratedColumn {
 		columnStmt = columnSQL
@@ -42,7 +41,7 @@ func (d *DB) Columns(tableName string) ([]*schema.Column, error) {
 		return nil, errors.WithStack(err)
 	}
 	defer columnRows.Close()
-	var columns []*schema.Column
+	var columns []*Column
 	for columnRows.Next() {
 		var (
 			columnName     string
@@ -75,7 +74,7 @@ func (d *DB) Columns(tableName string) ([]*schema.Column, error) {
 				extraDef = fmt.Sprintf("%s:%s", extraDef, generationExpr.String)
 			}
 		}
-		column := &schema.Column{
+		column := &Column{
 			Name:     columnName,
 			Type:     columnType,
 			Nullable: convertColumnNullable(isNullable),

@@ -5,7 +5,6 @@ import (
 	"fmt"
 	"strings"
 
-	"github.com/feitian124/goapi/database/schema"
 	"github.com/pkg/errors"
 )
 
@@ -59,14 +58,14 @@ const constraintSQL = `
 	GROUP BY kcu.constraint_name, sub.costraint_type, kcu.referenced_table_name
 `
 
-func (d *DB) Constraints(tableName string) ([]*schema.Constraint, error) {
+func (d *DB) Constraints(tableName string) ([]*Constraint, error) {
 	constraintRows, err := d.db.Query(constraintSQL, tableName, d.Schema.Name, tableName)
 	if err != nil {
 		return nil, errors.WithStack(err)
 	}
 	defer constraintRows.Close()
 
-	var constraints []*schema.Constraint
+	var constraints []*Constraint
 	for constraintRows.Next() {
 		var (
 			constraintName          string
@@ -86,13 +85,13 @@ func (d *DB) Constraints(tableName string) ([]*schema.Constraint, error) {
 		case "UNIQUE":
 			constraintDef = fmt.Sprintf("UNIQUE KEY %s (%s)", constraintName, constraintColumnName)
 		case "FOREIGN KEY":
-			constraintType = schema.TypeFK
+			constraintType = TypeFK
 			constraintDef = fmt.Sprintf("FOREIGN KEY (%s) REFERENCES %s (%s)", constraintColumnName, constraintRefTableName.String, constraintRefColumnName.String)
 		case "UNKNOWN":
 			constraintDef = fmt.Sprintf("UNKNOWN CONSTRAINT (%s) (%s) (%s)", constraintColumnName, constraintRefTableName.String, constraintRefColumnName.String)
 		}
 
-		constraint := &schema.Constraint{
+		constraint := &Constraint{
 			Name:    constraintName,
 			Type:    constraintType,
 			Def:     constraintDef,

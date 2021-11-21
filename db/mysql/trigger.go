@@ -3,7 +3,6 @@ package mysql
 import (
 	"fmt"
 
-	"github.com/feitian124/goapi/database/schema"
 	"github.com/pkg/errors"
 )
 
@@ -27,13 +26,13 @@ const triggerSQL = `
 	AND event_object_table = ?
 `
 
-func (d *DB) Triggers(tableName string) ([]*schema.Trigger, error) {
+func (d *DB) Triggers(tableName string) ([]*Trigger, error) {
 	triggerRows, err := d.db.Query(triggerSQL, d.Schema.Name, tableName)
 	if err != nil {
 		return nil, errors.WithStack(err)
 	}
 	defer triggerRows.Close()
-	var triggers []*schema.Trigger
+	var triggers []*Trigger
 	for triggerRows.Next() {
 		var (
 			triggerName              string
@@ -51,7 +50,7 @@ func (d *DB) Triggers(tableName string) ([]*schema.Trigger, error) {
 		}
 		triggerDef = fmt.Sprintf("CREATE TRIGGER %s %s %s ON %s\nFOR EACH %s\n%s", triggerName, triggerActionTiming,
 			triggerEventManipulation, triggerEventObjectTable, triggerActionOrientation, triggerActionStatement)
-		trigger := &schema.Trigger{
+		trigger := &Trigger{
 			Name: triggerName,
 			Def:  triggerDef,
 		}
