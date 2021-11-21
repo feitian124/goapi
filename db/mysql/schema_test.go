@@ -51,6 +51,12 @@ func TestDB_Table(t *testing.T) {
 			got, err := mysql80DB.Table(tt.args.pattern)
 			require.NoError(t, err)
 			require.Equal(t, got.Name, tt.want)
+			require.Greater(t, len(got.Columns), 0)
+			require.Greater(t, len(got.Indexes), 0)
+			require.Greater(t, len(got.Constraints), 0)
+			if tt.want == "posts" {
+				require.Greater(t, len(got.Triggers), 0)
+			}
 		})
 	}
 }
