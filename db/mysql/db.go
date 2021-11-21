@@ -29,6 +29,8 @@ type DB struct {
 	Schema                 *Schema `json:"schema"`
 }
 
+// Open takes a URL like "protocol+transport://user:pass@host/dbname?option1=a&option2=b"
+// for example, a mysql url "my://root:mypass@localhost:33308/testdb?parseTime=true"
 func Open(url string) (*DB, error) {
 	u, err := dburl.Parse(url)
 	if err != nil {
