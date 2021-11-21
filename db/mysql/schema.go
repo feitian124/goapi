@@ -71,14 +71,15 @@ func (d *DB) Tables(pattern string) ([]TableInfo, error) {
 	return tis, nil
 }
 
-func (d *DB) Table(name string) (*TableInfo, error) {
+func (d *DB) Table(name string) (*Table, error) {
 	tis, err := d.Tables(name)
 	if err != nil {
 		return nil, err
 	}
 	for _, ti := range tis {
 		if ti.Name == name {
-			return &ti, nil
+			tb := &Table{TableInfo: ti}
+			return tb, nil
 		}
 	}
 	return nil, nil

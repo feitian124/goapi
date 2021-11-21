@@ -25,16 +25,6 @@ type Table struct {
 	ReferencedTables []*Table      `json:"referenced_tables,omitempty" yaml:"referencedTables,omitempty"`
 }
 
-// Relation is the struct for table relation
-type Relation struct {
-	Table         *Table    `json:"table"`
-	Columns       []*Column `json:"columns"`
-	ParentTable   *Table    `json:"parent_table" yaml:"parentTable"`
-	ParentColumns []*Column `json:"parent_columns" yaml:"parentColumns"`
-	Def           string    `json:"def"`
-	Virtual       bool      `json:"virtual"`
-}
-
 // FindColumnByName find column by column name
 func (t *Table) FindColumnByName(name string) (*Column, error) {
 	for _, c := range t.Columns {
@@ -77,7 +67,7 @@ func (t *Table) FindTriggerByName(name string) (*Trigger, error) {
 
 // FindConstrainsByColumnName find constraint by column name
 func (t *Table) FindConstrainsByColumnName(name string) []*Constraint {
-	cts := []*Constraint{}
+	var cts []*Constraint
 	for _, ct := range t.Constraints {
 		for _, ctc := range ct.Columns {
 			if ctc == name {
