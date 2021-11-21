@@ -82,28 +82,32 @@ func (d *DB) Table(name string) (*Table, error) {
 
 			columns, err := d.Columns(name)
 			if err != nil {
-				return nil, errors.WithStack(err)
+				return nil, err
 			}
 			tb.Columns = columns
 
 			indexes, err := d.Indexes(name)
 			if err != nil {
-				return nil, errors.WithStack(err)
+				return nil, err
 			}
 			tb.Indexes = indexes
 
 			constraints, err := d.Constraints(name)
 			if err != nil {
-				return nil, errors.WithStack(err)
+				return nil, err
 			}
 			tb.Constraints = constraints
 
 			triggers, err := d.Triggers(name)
 			if err != nil {
-				return nil, errors.WithStack(err)
+				return nil, err
 			}
 			tb.Triggers = triggers
 
+			err = d.ReferencedTables(tb)
+			if err != nil {
+				return nil, err
+			}
 			return tb, nil
 		}
 	}

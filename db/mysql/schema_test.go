@@ -33,29 +33,31 @@ func TestDB_Tables(t *testing.T) {
 
 func TestDB_Table(t *testing.T) {
 	t.Parallel()
-	type args struct {
-		pattern string
-	}
 	tests := []struct {
 		name    string
-		args    args
 		want    string
 		wantErr bool
 	}{
-		{"mysql80 table ddl", args{"posts"}, "posts", false},
-		{"mysql80 table ddl", args{"comments"}, "comments", false},
+		{"mysql80 table posts", "posts", false},
+		{"mysql80 table comments", "comments", false},
+		{"mysql80 view post_comments", "post_comments", false},
 	}
 
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			got, err := mysql80DB.Table(tt.args.pattern)
+			got, err := mysql80DB.Table(tt.want)
 			require.NoError(t, err)
 			require.Equal(t, got.Name, tt.want)
 			require.Greater(t, len(got.Columns), 0)
-			require.Greater(t, len(got.Indexes), 0)
-			require.Greater(t, len(got.Constraints), 0)
+			if tt.want != "post_comments" {
+				require.Greater(t, len(got.Indexes), 0)
+				require.Greater(t, len(got.Constraints), 0)
+			}
 			if tt.want == "posts" {
 				require.Greater(t, len(got.Triggers), 0)
+			}
+			if tt.want == "post_comments" {
+				require.Greater(t, len(got.ReferencedTables), 0)
 			}
 		})
 	}

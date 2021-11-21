@@ -8,7 +8,7 @@ import (
 
 type TableInfo struct {
 	Name      string    `json:"name"`
-	Type      string    `json:"type"`
+	Type      TableType `json:"type"`
 	Comment   string    `json:"comment"`
 	Def       string    `json:"def"`
 	CreatedAt time.Time `json:"createdAt"`
@@ -18,11 +18,12 @@ type TableInfo struct {
 // Table is the struct for database table
 type Table struct {
 	TableInfo
-	Columns          []*Column     `json:"columns"`
-	Indexes          []*Index      `json:"indexes"`
-	Constraints      []*Constraint `json:"constraints"`
-	Triggers         []*Trigger    `json:"triggers"`
-	ReferencedTables []*Table      `json:"referenced_tables,omitempty" yaml:"referencedTables,omitempty"`
+	Columns     []*Column     `json:"columns"`
+	Indexes     []*Index      `json:"indexes"`
+	Constraints []*Constraint `json:"constraints"`
+	Triggers    []*Trigger    `json:"triggers"`
+	// only used for view
+	ReferencedTables []*Table `json:"referenced_tables,omitempty" yaml:"referencedTables,omitempty"`
 }
 
 // FindColumnByName find column by column name
