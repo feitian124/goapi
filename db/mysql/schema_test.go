@@ -18,8 +18,8 @@ func TestDB_Tables(t *testing.T) {
 		want    int
 		wantErr bool
 	}{
-		{"mysql80 table ddl", args{"post"}, 2, false},
-		{"mysql80 table ddl", args{"posts"}, 1, false},
+		{"post", args{"post"}, 2, false},
+		{"posts", args{"posts"}, 1, false},
 	}
 
 	for _, tt := range tests {
@@ -38,9 +38,9 @@ func TestDB_Table(t *testing.T) {
 		want    string
 		wantErr bool
 	}{
-		{"mysql80 table posts", "posts", false},
-		{"mysql80 table comments", "comments", false},
-		{"mysql80 view post_comments", "post_comments", false},
+		{"table posts", "posts", false},
+		{"table comments", "comments", false},
+		{"view post_comments", "post_comments", false},
 	}
 
 	for _, tt := range tests {
@@ -75,9 +75,9 @@ func TestDB_FindTableDDL(t *testing.T) {
 		want    string
 		wantErr bool
 	}{
-		{"mysql80 table ddl", args{"posts", mysql.BaseTable}, "CREATE TABLE `posts`", false},
-		{"mysql80 view ddl", args{"post_comments", mysql.View}, "CREATE VIEW post_comments AS ", false},
-		{"mysql80 not exist ddl", args{"a_table_not_exists", mysql.BaseTable}, "", true},
+		{"table posts", args{"posts", mysql.BaseTable}, "CREATE TABLE `posts`", false},
+		{"view post_comments", args{"post_comments", mysql.View}, "CREATE VIEW post_comments AS ", false},
+		{"table a_table_not_exists", args{"a_table_not_exists", mysql.BaseTable}, "", true},
 	}
 
 	for _, tt := range tests {

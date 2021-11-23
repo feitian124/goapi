@@ -1,8 +1,7 @@
 package mysql
 
 import (
-	"time"
-
+	"database/sql"
 	"github.com/pkg/errors"
 )
 
@@ -11,7 +10,7 @@ type TableInfo struct {
 	Type      TableType `json:"type"`
 	Comment   string    `json:"comment"`
 	Def       string    `json:"def"`
-	CreatedAt time.Time `json:"createdAt"`
+	CreatedAt sql.NullTime `json:"createdAt"`
 	External  bool      `json:"-"` // Table external to the schema
 }
 

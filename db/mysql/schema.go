@@ -1,9 +1,8 @@
 package mysql
 
 import (
+	"database/sql"
 	"fmt"
-	"time"
-
 	"github.com/pkg/errors"
 )
 
@@ -47,7 +46,7 @@ func (d *DB) Tables(pattern string) ([]TableInfo, error) {
 			tableName    string
 			tableType    string
 			tableComment string
-			createTime   time.Time
+			createTime   sql.NullTime
 		)
 		err := tableRows.Scan(&tableName, &tableType, &tableComment, &createTime)
 		if err != nil {
