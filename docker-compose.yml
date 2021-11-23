@@ -50,3 +50,8 @@ services:
     environment:
       - MYSQL_DATABASE=testdb
       - MYSQL_ROOT_PASSWORD=mypass
+  adminer:
+    image: adminer
+    restart: always
+    ports:
+      - "38080:8080"

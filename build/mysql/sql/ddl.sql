@@ -1,13 +1,10 @@
-CREATE
-DATABASE IF NOT EXISTS `testdb` DEFAULT CHARACTER SET utf8mb4;
+CREATE DATABASE IF NOT EXISTS `testdb` DEFAULT CHARACTER SET utf8mb4;
 
-USE
-testdb;
+USE testdb;
 
 SET NAMES utf8mb4;
 
-SET
-FOREIGN_KEY_CHECKS = 0;
+SET FOREIGN_KEY_CHECKS = 0;
 
 DROP TRIGGER IF EXISTS update_posts_updated;
 DROP VIEW IF EXISTS post_comments;
@@ -25,8 +22,8 @@ CREATE TABLE users
     id       int PRIMARY KEY AUTO_INCREMENT,
     username varchar(50) UNIQUE  NOT NULL,
     password varchar(50)         NOT NULL,
-    email    varchar(355) UNIQUE NOT NULL COMMENT 'ex. user@example.com',
-    created  timestamp           NOT NULL,
+    email    varchar(150) UNIQUE NOT NULL COMMENT 'ex. user@example.com',
+    created  timestamp           NOT NULL DEFAULT CURRENT_TIMESTAMP,
     updated  timestamp
 ) COMMENT = 'Users table' AUTO_INCREMENT = 100;
 
@@ -34,7 +31,7 @@ CREATE TABLE user_options
 (
     user_id    int PRIMARY KEY,
     show_email boolean   NOT NULL DEFAULT false,
-    created    timestamp NOT NULL,
+    created    timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
     updated    timestamp,
     UNIQUE (user_id),
     CONSTRAINT user_options_user_id_fk FOREIGN KEY (user_id) REFERENCES users (id) ON UPDATE NO ACTION ON DELETE CASCADE
@@ -44,10 +41,10 @@ CREATE TABLE posts
 (
     id        bigint AUTO_INCREMENT,
     user_id   int          NOT NULL,
-    title     varchar(255) NOT NULL DEFAULT 'Untitled',
+    title     varchar(180) NOT NULL DEFAULT 'Untitled',
     body      text         NOT NULL,
     post_type enum('public', 'private', 'draft') NOT NULL COMMENT 'public/private/draft',
-    created   datetime     NOT NULL,
+    created   datetime     NOT NULL DEFAULT CURRENT_TIMESTAMP,
     updated   datetime,
     CONSTRAINT posts_id_pk PRIMARY KEY (id),
     CONSTRAINT posts_user_id_fk FOREIGN KEY (user_id) REFERENCES users (id) ON UPDATE NO ACTION ON DELETE CASCADE,
@@ -62,7 +59,7 @@ CREATE TABLE comments
     user_id      int      NOT NULL,
     comment      text     NOT NULL COMMENT 'Comment\nMulti-line\r\ncolumn\rcomment',
     post_id_desc bigint GENERATED ALWAYS AS (post_id * -1) VIRTUAL,
-    created      datetime NOT NULL,
+    created      datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
     updated      datetime,
     CONSTRAINT comments_id_pk PRIMARY KEY (id),
     CONSTRAINT comments_post_id_fk FOREIGN KEY (post_id) REFERENCES posts (id),
@@ -77,7 +74,7 @@ CREATE TABLE comment_stars
     user_id         int       NOT NULL,
     comment_post_id bigint    NOT NULL,
     comment_user_id int       NOT NULL,
-    created         timestamp NOT NULL,
+    created         timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
     updated         timestamp,
     CONSTRAINT comment_stars_id_pk PRIMARY KEY (id),
     CONSTRAINT comment_stars_user_id_post_id_fk FOREIGN KEY (comment_post_id, comment_user_id) REFERENCES comments (post_id, user_id),
@@ -93,7 +90,7 @@ CREATE TABLE logs
     comment_id      bigint,
     comment_star_id bigint,
     payload         text,
-    created         datetime NOT NULL
+    created         datetime NOT NULL DEFAULT CURRENT_TIMESTAMP
 ) COMMENT = 'Auditログ';
 
 CREATE VIEW post_comments AS
@@ -108,14 +105,14 @@ FROM posts AS p
 CREATE TABLE CamelizeTable
 (
     id      bigint PRIMARY KEY AUTO_INCREMENT,
-    created datetime NOT NULL
+    created datetime NOT NULL DEFAULT CURRENT_TIMESTAMP
 );
 
 CREATE TABLE `hyphen-table`
 (
     id              bigint PRIMARY KEY AUTO_INCREMENT,
     `hyphen-column` text     NOT NULL,
-    created         datetime NOT NULL
+    created         datetime NOT NULL DEFAULT CURRENT_TIMESTAMP
 );
 
 CREATE TRIGGER update_posts_updated
