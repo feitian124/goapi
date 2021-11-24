@@ -2,10 +2,14 @@
 
 package model
 
-type Table struct {
-	Name      string `json:"name"`
-	Type      string `json:"type"`
-	Comment   string `json:"comment"`
-	Def       string `json:"def"`
-	CreatedAt string `json:"createdAt"`
+import (
+	"time"
+)
+
+type TableInfo struct {
+	Name      string     `json:"name"`
+	Type      string     `json:"type"`
+	Comment   *string    `json:"comment"`
+	Def       string     `json:"def"`
+	CreatedAt *time.Time `json:"createdAt"`
 }

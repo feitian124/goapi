@@ -1,18 +1,18 @@
 package mysql
 
 import (
-	"database/sql"
+	"time"
 
 	"github.com/pkg/errors"
 )
 
 type TableInfo struct {
-	Name      string       `json:"name"`
-	Type      TableType    `json:"type"`
-	Comment   string       `json:"comment"`
-	Def       string       `json:"def"`
-	CreatedAt sql.NullTime `json:"createdAt"`
-	External  bool         `json:"-"` // Table external to the schema
+	Name      string     `json:"name"`
+	Type      TableType  `json:"type"`
+	Comment   *string    `json:"comment"`
+	Def       string     `json:"def"`
+	CreatedAt *time.Time `json:"createdAt"`
+	External  bool       `json:"-"` // Table external to the schema
 }
 
 // Table is the struct for database table

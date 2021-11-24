@@ -9,6 +9,7 @@ import (
 	"strconv"
 	"sync"
 	"sync/atomic"
+	"time"
 
 	"github.com/99designs/gqlgen/graphql"
 	"github.com/99designs/gqlgen/graphql/introspection"
@@ -46,7 +47,7 @@ type ComplexityRoot struct {
 		Tables func(childComplexity int) int
 	}
 
-	Table struct {
+	TableInfo struct {
 		Comment   func(childComplexity int) int
 		CreatedAt func(childComplexity int) int
 		Def       func(childComplexity int) int
@@ -56,7 +57,7 @@ type ComplexityRoot struct {
 }
 
 type QueryResolver interface {
-	Tables(ctx context.Context) ([]*model.Table, error)
+	Tables(ctx context.Context) ([]*model.TableInfo, error)
 }
 
 type executableSchema struct {
@@ -81,40 +82,40 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 
 		return e.complexity.Query.Tables(childComplexity), true
 
-	case "Table.comment":
-		if e.complexity.Table.Comment == nil {
+	case "TableInfo.comment":
+		if e.complexity.TableInfo.Comment == nil {
 			break
 		}
 
-		return e.complexity.Table.Comment(childComplexity), true
+		return e.complexity.TableInfo.Comment(childComplexity), true
 
-	case "Table.createdAt":
-		if e.complexity.Table.CreatedAt == nil {
+	case "TableInfo.createdAt":
+		if e.complexity.TableInfo.CreatedAt == nil {
 			break
 		}
 
-		return e.complexity.Table.CreatedAt(childComplexity), true
+		return e.complexity.TableInfo.CreatedAt(childComplexity), true
 
-	case "Table.def":
-		if e.complexity.Table.Def == nil {
+	case "TableInfo.def":
+		if e.complexity.TableInfo.Def == nil {
 			break
 		}
 
-		return e.complexity.Table.Def(childComplexity), true
+		return e.complexity.TableInfo.Def(childComplexity), true
 
-	case "Table.name":
-		if e.complexity.Table.Name == nil {
+	case "TableInfo.name":
+		if e.complexity.TableInfo.Name == nil {
 			break
 		}
 
-		return e.complexity.Table.Name(childComplexity), true
+		return e.complexity.TableInfo.Name(childComplexity), true
 
-	case "Table.type":
-		if e.complexity.Table.Type == nil {
+	case "TableInfo.type":
+		if e.complexity.TableInfo.Type == nil {
 			break
 		}
 
-		return e.complexity.Table.Type(childComplexity), true
+		return e.complexity.TableInfo.Type(childComplexity), true
 
 	}
 	return 0, false
@@ -167,15 +168,17 @@ func (ec *executionContext) introspectType(name string) (*introspection.Type, er
 
 var sources = []*ast.Source{
 	{Name: "graph/schema.graphqls", Input: `type Query {
-  tables: [Table!]!
+  tables: [TableInfo!]!
 }
 
-type Table {
+scalar Time
+
+type TableInfo {
   name: ID!
   type: String!
-  comment: String!
+  comment: String
   def: String!
-  createdAt: String!
+  createdAt: Time
 }
 `, BuiltIn: false},
 }
@@ -268,9 +271,9 @@ func (ec *executionContext) _Query_tables(ctx context.Context, field graphql.Col
 		}
 		return graphql.Null
 	}
-	res := resTmp.([]*model.Table)
+	res := resTmp.([]*model.TableInfo)
 	fc.Result = res
-	return ec.marshalNTable2ᚕᚖgithubᚗcomᚋfeitian124ᚋgoapiᚋgraphᚋmodelᚐTableᚄ(ctx, field.Selections, res)
+	return ec.marshalNTableInfo2ᚕᚖgithubᚗcomᚋfeitian124ᚋgoapiᚋgraphᚋmodelᚐTableInfoᚄ(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) _Query___type(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
@@ -344,7 +347,7 @@ func (ec *executionContext) _Query___schema(ctx context.Context, field graphql.C
 	return ec.marshalO__Schema2ᚖgithubᚗcomᚋ99designsᚋgqlgenᚋgraphqlᚋintrospectionᚐSchema(ctx, field.Selections, res)
 }
 
-func (ec *executionContext) _Table_name(ctx context.Context, field graphql.CollectedField, obj *model.Table) (ret graphql.Marshaler) {
+func (ec *executionContext) _TableInfo_name(ctx context.Context, field graphql.CollectedField, obj *model.TableInfo) (ret graphql.Marshaler) {
 	defer func() {
 		if r := recover(); r != nil {
 			ec.Error(ctx, ec.Recover(ctx, r))
@@ -352,7 +355,7 @@ func (ec *executionContext) _Table_name(ctx context.Context, field graphql.Colle
 		}
 	}()
 	fc := &graphql.FieldContext{
-		Object:     "Table",
+		Object:     "TableInfo",
 		Field:      field,
 		Args:       nil,
 		IsMethod:   false,
@@ -379,7 +382,7 @@ func (ec *executionContext) _Table_name(ctx context.Context, field graphql.Colle
 	return ec.marshalNID2string(ctx, field.Selections, res)
 }
 
-func (ec *executionContext) _Table_type(ctx context.Context, field graphql.CollectedField, obj *model.Table) (ret graphql.Marshaler) {
+func (ec *executionContext) _TableInfo_type(ctx context.Context, field graphql.CollectedField, obj *model.TableInfo) (ret graphql.Marshaler) {
 	defer func() {
 		if r := recover(); r != nil {
 			ec.Error(ctx, ec.Recover(ctx, r))
@@ -387,7 +390,7 @@ func (ec *executionContext) _Table_type(ctx context.Context, field graphql.Colle
 		}
 	}()
 	fc := &graphql.FieldContext{
-		Object:     "Table",
+		Object:     "TableInfo",
 		Field:      field,
 		Args:       nil,
 		IsMethod:   false,
@@ -414,7 +417,7 @@ func (ec *executionContext) _Table_type(ctx context.Context, field graphql.Colle
 	return ec.marshalNString2string(ctx, field.Selections, res)
 }
 
-func (ec *executionContext) _Table_comment(ctx context.Context, field graphql.CollectedField, obj *model.Table) (ret graphql.Marshaler) {
+func (ec *executionContext) _TableInfo_comment(ctx context.Context, field graphql.CollectedField, obj *model.TableInfo) (ret graphql.Marshaler) {
 	defer func() {
 		if r := recover(); r != nil {
 			ec.Error(ctx, ec.Recover(ctx, r))
@@ -422,7 +425,7 @@ func (ec *executionContext) _Table_comment(ctx context.Context, field graphql.Co
 		}
 	}()
 	fc := &graphql.FieldContext{
-		Object:     "Table",
+		Object:     "TableInfo",
 		Field:      field,
 		Args:       nil,
 		IsMethod:   false,
@@ -439,17 +442,14 @@ func (ec *executionContext) _Table_comment(ctx context.Context, field graphql.Co
 		return graphql.Null
 	}
 	if resTmp == nil {
-		if !graphql.HasFieldError(ctx, fc) {
-			ec.Errorf(ctx, "must not be null")
-		}
 		return graphql.Null
 	}
-	res := resTmp.(string)
+	res := resTmp.(*string)
 	fc.Result = res
-	return ec.marshalNString2string(ctx, field.Selections, res)
+	return ec.marshalOString2ᚖstring(ctx, field.Selections, res)
 }
 
-func (ec *executionContext) _Table_def(ctx context.Context, field graphql.CollectedField, obj *model.Table) (ret graphql.Marshaler) {
+func (ec *executionContext) _TableInfo_def(ctx context.Context, field graphql.CollectedField, obj *model.TableInfo) (ret graphql.Marshaler) {
 	defer func() {
 		if r := recover(); r != nil {
 			ec.Error(ctx, ec.Recover(ctx, r))
@@ -457,7 +457,7 @@ func (ec *executionContext) _Table_def(ctx context.Context, field graphql.Collec
 		}
 	}()
 	fc := &graphql.FieldContext{
-		Object:     "Table",
+		Object:     "TableInfo",
 		Field:      field,
 		Args:       nil,
 		IsMethod:   false,
@@ -484,7 +484,7 @@ func (ec *executionContext) _Table_def(ctx context.Context, field graphql.Collec
 	return ec.marshalNString2string(ctx, field.Selections, res)
 }
 
-func (ec *executionContext) _Table_createdAt(ctx context.Context, field graphql.CollectedField, obj *model.Table) (ret graphql.Marshaler) {
+func (ec *executionContext) _TableInfo_createdAt(ctx context.Context, field graphql.CollectedField, obj *model.TableInfo) (ret graphql.Marshaler) {
 	defer func() {
 		if r := recover(); r != nil {
 			ec.Error(ctx, ec.Recover(ctx, r))
@@ -492,7 +492,7 @@ func (ec *executionContext) _Table_createdAt(ctx context.Context, field graphql.
 		}
 	}()
 	fc := &graphql.FieldContext{
-		Object:     "Table",
+		Object:     "TableInfo",
 		Field:      field,
 		Args:       nil,
 		IsMethod:   false,
@@ -509,14 +509,11 @@ func (ec *executionContext) _Table_createdAt(ctx context.Context, field graphql.
 		return graphql.Null
 	}
 	if resTmp == nil {
-		if !graphql.HasFieldError(ctx, fc) {
-			ec.Errorf(ctx, "must not be null")
-		}
 		return graphql.Null
 	}
-	res := resTmp.(string)
+	res := resTmp.(*time.Time)
 	fc.Result = res
-	return ec.marshalNString2string(ctx, field.Selections, res)
+	return ec.marshalOTime2ᚖtimeᚐTime(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) ___Directive_name(ctx context.Context, field graphql.CollectedField, obj *introspection.Directive) (ret graphql.Marshaler) {
@@ -1693,42 +1690,36 @@ func (ec *executionContext) _Query(ctx context.Context, sel ast.SelectionSet) gr
 	return out
 }
 
-var tableImplementors = []string{"Table"}
+var tableInfoImplementors = []string{"TableInfo"}
 
-func (ec *executionContext) _Table(ctx context.Context, sel ast.SelectionSet, obj *model.Table) graphql.Marshaler {
-	fields := graphql.CollectFields(ec.OperationContext, sel, tableImplementors)
+func (ec *executionContext) _TableInfo(ctx context.Context, sel ast.SelectionSet, obj *model.TableInfo) graphql.Marshaler {
+	fields := graphql.CollectFields(ec.OperationContext, sel, tableInfoImplementors)
 
 	out := graphql.NewFieldSet(fields)
 	var invalids uint32
 	for i, field := range fields {
 		switch field.Name {
 		case "__typename":
-			out.Values[i] = graphql.MarshalString("Table")
+			out.Values[i] = graphql.MarshalString("TableInfo")
 		case "name":
-			out.Values[i] = ec._Table_name(ctx, field, obj)
+			out.Values[i] = ec._TableInfo_name(ctx, field, obj)
 			if out.Values[i] == graphql.Null {
 				invalids++
 			}
 		case "type":
-			out.Values[i] = ec._Table_type(ctx, field, obj)
+			out.Values[i] = ec._TableInfo_type(ctx, field, obj)
 			if out.Values[i] == graphql.Null {
 				invalids++
 			}
 		case "comment":
-			out.Values[i] = ec._Table_comment(ctx, field, obj)
-			if out.Values[i] == graphql.Null {
-				invalids++
-			}
+			out.Values[i] = ec._TableInfo_comment(ctx, field, obj)
 		case "def":
-			out.Values[i] = ec._Table_def(ctx, field, obj)
+			out.Values[i] = ec._TableInfo_def(ctx, field, obj)
 			if out.Values[i] == graphql.Null {
 				invalids++
 			}
 		case "createdAt":
-			out.Values[i] = ec._Table_createdAt(ctx, field, obj)
-			if out.Values[i] == graphql.Null {
-				invalids++
-			}
+			out.Values[i] = ec._TableInfo_createdAt(ctx, field, obj)
 		default:
 			panic("unknown field " + strconv.Quote(field.Name))
 		}
@@ -2035,7 +2026,7 @@ func (ec *executionContext) marshalNString2string(ctx context.Context, sel ast.S
 	return res
 }
 
-func (ec *executionContext) marshalNTable2ᚕᚖgithubᚗcomᚋfeitian124ᚋgoapiᚋgraphᚋmodelᚐTableᚄ(ctx context.Context, sel ast.SelectionSet, v []*model.Table) graphql.Marshaler {
+func (ec *executionContext) marshalNTableInfo2ᚕᚖgithubᚗcomᚋfeitian124ᚋgoapiᚋgraphᚋmodelᚐTableInfoᚄ(ctx context.Context, sel ast.SelectionSet, v []*model.TableInfo) graphql.Marshaler {
 	ret := make(graphql.Array, len(v))
 	var wg sync.WaitGroup
 	isLen1 := len(v) == 1
@@ -2059,7 +2050,7 @@ func (ec *executionContext) marshalNTable2ᚕᚖgithubᚗcomᚋfeitian124ᚋgoap
 			if !isLen1 {
 				defer wg.Done()
 			}
-			ret[i] = ec.marshalNTable2ᚖgithubᚗcomᚋfeitian124ᚋgoapiᚋgraphᚋmodelᚐTable(ctx, sel, v[i])
+			ret[i] = ec.marshalNTableInfo2ᚖgithubᚗcomᚋfeitian124ᚋgoapiᚋgraphᚋmodelᚐTableInfo(ctx, sel, v[i])
 		}
 		if isLen1 {
 			f(i)
@@ -2079,14 +2070,14 @@ func (ec *executionContext) marshalNTable2ᚕᚖgithubᚗcomᚋfeitian124ᚋgoap
 	return ret
 }
 
-func (ec *executionContext) marshalNTable2ᚖgithubᚗcomᚋfeitian124ᚋgoapiᚋgraphᚋmodelᚐTable(ctx context.Context, sel ast.SelectionSet, v *model.Table) graphql.Marshaler {
+func (ec *executionContext) marshalNTableInfo2ᚖgithubᚗcomᚋfeitian124ᚋgoapiᚋgraphᚋmodelᚐTableInfo(ctx context.Context, sel ast.SelectionSet, v *model.TableInfo) graphql.Marshaler {
 	if v == nil {
 		if !graphql.HasFieldError(ctx, graphql.GetFieldContext(ctx)) {
 			ec.Errorf(ctx, "must not be null")
 		}
 		return graphql.Null
 	}
-	return ec._Table(ctx, sel, v)
+	return ec._TableInfo(ctx, sel, v)
 }
 
 func (ec *executionContext) marshalN__Directive2githubᚗcomᚋ99designsᚋgqlgenᚋgraphqlᚋintrospectionᚐDirective(ctx context.Context, sel ast.SelectionSet, v introspection.Directive) graphql.Marshaler {
@@ -2392,6 +2383,21 @@ func (ec *executionContext) marshalOString2ᚖstring(ctx context.Context, sel as
 		return graphql.Null
 	}
 	return graphql.MarshalString(*v)
+}
+
+func (ec *executionContext) unmarshalOTime2ᚖtimeᚐTime(ctx context.Context, v interface{}) (*time.Time, error) {
+	if v == nil {
+		return nil, nil
+	}
+	res, err := graphql.UnmarshalTime(v)
+	return &res, graphql.ErrorOnPath(ctx, err)
+}
+
+func (ec *executionContext) marshalOTime2ᚖtimeᚐTime(ctx context.Context, sel ast.SelectionSet, v *time.Time) graphql.Marshaler {
+	if v == nil {
+		return graphql.Null
+	}
+	return graphql.MarshalTime(*v)
 }
 
 func (ec *executionContext) marshalO__EnumValue2ᚕgithubᚗcomᚋ99designsᚋgqlgenᚋgraphqlᚋintrospectionᚐEnumValueᚄ(ctx context.Context, sel ast.SelectionSet, v []introspection.EnumValue) graphql.Marshaler {

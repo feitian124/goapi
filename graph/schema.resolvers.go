@@ -10,18 +10,19 @@ import (
 	"github.com/feitian124/goapi/graph/model"
 )
 
-func (r *queryResolver) Tables(ctx context.Context) ([]*model.Table, error) {
+func (r *queryResolver) Tables(ctx context.Context) ([]*model.TableInfo, error) {
 	ts, err := r.DB.Tables("")
 	if err != nil {
 		return nil, err
 	}
-	var tbs []*model.Table
+	var tbs []*model.TableInfo
 	for _, t := range ts {
-		tb := &model.Table{
-			Name:    t.Name,
-			Type:    t.Type,
-			Comment: t.Comment,
-			Def:     t.Def,
+		tb := &model.TableInfo{
+			Name:      t.Name,
+			Type:      t.Type,
+			Comment:   t.Comment,
+			Def:       t.Def,
+			CreatedAt: t.CreatedAt,
 		}
 		tbs = append(tbs, tb)
 	}

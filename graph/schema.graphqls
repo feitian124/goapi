@@ -1,11 +1,13 @@
 type Query {
-  tables: [Table!]!
+  tables: [TableInfo!]!
 }
 
-type Table {
+scalar Time
+
+type TableInfo {
   name: ID!
   type: String!
-  comment: String!
+  comment: String
   def: String!
-  createdAt: String!
+  createdAt: Time
 }
