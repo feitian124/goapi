@@ -2,7 +2,6 @@ package graph
 
 import (
 	"github.com/feitian124/goapi/db/mysql"
-	"github.com/feitian124/goapi/graph/model"
 )
 
 //go:generate go run github.com/99designs/gqlgen
@@ -13,5 +12,4 @@ import (
 
 type Resolver struct {
 	DB     *mysql.DB
-	tables []*model.Table
 }
