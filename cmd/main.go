@@ -6,6 +6,8 @@ import (
 	"net/http"
 	"os"
 
+	"github.com/feitian124/goapi/db/mysql"
+
 	"github.com/99designs/gqlgen/graphql/handler"
 	"github.com/99designs/gqlgen/graphql/playground"
 	"github.com/feitian124/goapi/graph"
@@ -24,7 +26,12 @@ func main() {
 		port = "8080"
 	}
 
-	srv := handler.NewDefaultServer(generated.NewExecutableSchema(generated.Config{Resolvers: &graph.Resolver{}}))
+	db, err := mysql.Open("my://root:mypass@localhost:33308/testdb?parseTime=true")
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	srv := handler.NewDefaultServer(generated.NewExecutableSchema(generated.Config{Resolvers: &graph.Resolver{DB: db}}))
 
 	http.Handle("/", playground.Handler("GraphQL playground", "/query"))
 	http.Handle("/query", srv)

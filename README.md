@@ -11,7 +11,7 @@ goapi expose database as api, both `static` and `dynamic`:
 
 ```go
 // connect to schema testdb
-d := db.Open("my://root:mypass@localhost:33308/testdb")
+d := mysql.Open("my://root:mypass@localhost:33308/testdb")
 
 // ddl
 d.Tables("pattern") // basic info of tables
