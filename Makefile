@@ -17,12 +17,12 @@ GO_FILES=`find . -name "*.go" -type f -not -path "./vendor/*"`
 
 BUILD_LDFLAGS = -X $(PKG).commit=$(COMMIT) -X $(PKG).date=$(DATE)
 
-default: fmt lint test
+default: test
 
 fmt:
 	gofumpt -l -w .
 
-lint:
+lint: fmt
 	golangci-lint run --timeout "5m"
 
 test:
@@ -38,6 +38,7 @@ dev:
 	@air
 
 install:
+	go mod tidy
 	go install mvdan.cc/gofumpt@latest
 	go install github.com/golangci/golangci-lint/cmd/golangci-lint@v1.43.0
 	go install github.com/99designs/gqlgen@v0.14.0
