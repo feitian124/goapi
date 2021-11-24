@@ -24,7 +24,7 @@ linters:
 #    - lll
     - nolintlint
 #    - paralleltest
-    - prealloc
+#    - prealloc
     - predeclared
     - revive
     - stylecheck
@@ -49,3 +49,5 @@ linters-settings:
       - .WithStack(
     ignoreSigRegexps:
       - \.New.*Error\(
+    ignorePackageGlobs:
+      - github.com/feitian124/goapi/*
