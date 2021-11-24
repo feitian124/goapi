@@ -34,10 +34,14 @@ generate:
 build:
 	@go build -ldflags="$(BUILD_LDFLAGS)"
 
+dev:
+	@air
+
 install:
 	go install mvdan.cc/gofumpt@latest
 	go install github.com/golangci/golangci-lint/cmd/golangci-lint@v1.43.0
 	go install github.com/99designs/gqlgen@v0.14.0
+	go install github.com/cosmtrek/air@v1.27.4
 	# go install github.com/xo/usql@v0.9.4
 
 mysql:
@@ -69,4 +73,4 @@ info:
 	@echo ${GO_FILES}
 	@echo -e "\ngolangci-lint:"
 
-.PHONY: default fmt lint test build install mysql postgres sqlite info
+.PHONY: default fmt lint test build install mysql postgres sqlite info air
