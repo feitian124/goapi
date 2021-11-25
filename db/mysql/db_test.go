@@ -15,11 +15,11 @@ func TestOpen(t *testing.T) {
 		url  string
 		want *mysql.DB
 	}{
-		{"mysql80", mysql80Url, &mysql.DB{Name: "mysql", Schema: &mysql.Schema{Name: "testdb"}}},
+		{"mysql80", "", &mysql.DB{Name: "mysql", Schema: &mysql.Schema{Name: "testdb"}}},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			got, err := mysql.Open(tt.url)
+			got, err := mysql.Open(mysql.DriverName, mysql.DataSourceName)
 			require.NoError(t, err)
 			require.Equal(t, tt.want.Name, got.Name)
 			require.Equal(t, tt.want.Schema.Name, got.Schema.Name)
@@ -38,11 +38,11 @@ func TestDB_Close(t *testing.T) {
 		name string
 		url  string
 	}{
-		{"mysql80", mysql80Url},
+		{"mysql80", ""},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			d, err := mysql.Open(tt.url)
+			d, err := mysql.Open(mysql.DriverName, mysql.DataSourceName)
 			require.NoError(t, err)
 			require.Equal(t, d.Schema.Name, "testdb")
 

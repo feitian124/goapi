@@ -26,7 +26,7 @@ func main() {
 		port = "8080"
 	}
 
-	db, err := mysql.Open("my://root:mypass@localhost:33308/testdb?parseTime=true")
+	db, err := mysql.Open(mysql.DriverName, mysql.DataSourceName)
 	if err != nil {
 		log.Fatal(err)
 	}
