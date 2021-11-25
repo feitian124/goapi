@@ -14,7 +14,6 @@ import (
 	"github.com/99designs/gqlgen/graphql"
 	"github.com/99designs/gqlgen/graphql/introspection"
 	"github.com/feitian124/goapi/db/mysql"
-	"github.com/feitian124/goapi/graph/model"
 	gqlparser "github.com/vektah/gqlparser/v2"
 	"github.com/vektah/gqlparser/v2/ast"
 )
@@ -119,7 +118,7 @@ type ComplexityRoot struct {
 
 type QueryResolver interface {
 	Tables(ctx context.Context, pattern *string) ([]*mysql.TableInfo, error)
-	Table(ctx context.Context, name string) (*model.Table, error)
+	Table(ctx context.Context, name string) (*mysql.Table, error)
 }
 
 type executableSchema struct {
@@ -603,8 +602,8 @@ type Relation {
     columns:       [Column]
     parentTable:   Table
     parentColumns: [Column]
-    def:           String
-    virtual:       Boolean
+    def:           String!
+    virtual:       Boolean!
 }
 `, BuiltIn: false},
 }
@@ -697,7 +696,7 @@ func (ec *executionContext) field___Type_fields_args(ctx context.Context, rawArg
 
 // region    **************************** field.gotpl *****************************
 
-func (ec *executionContext) _Column_name(ctx context.Context, field graphql.CollectedField, obj *model.Column) (ret graphql.Marshaler) {
+func (ec *executionContext) _Column_name(ctx context.Context, field graphql.CollectedField, obj *mysql.Column) (ret graphql.Marshaler) {
 	defer func() {
 		if r := recover(); r != nil {
 			ec.Error(ctx, ec.Recover(ctx, r))
@@ -732,7 +731,7 @@ func (ec *executionContext) _Column_name(ctx context.Context, field graphql.Coll
 	return ec.marshalNID2string(ctx, field.Selections, res)
 }
 
-func (ec *executionContext) _Column_type(ctx context.Context, field graphql.CollectedField, obj *model.Column) (ret graphql.Marshaler) {
+func (ec *executionContext) _Column_type(ctx context.Context, field graphql.CollectedField, obj *mysql.Column) (ret graphql.Marshaler) {
 	defer func() {
 		if r := recover(); r != nil {
 			ec.Error(ctx, ec.Recover(ctx, r))
@@ -767,7 +766,7 @@ func (ec *executionContext) _Column_type(ctx context.Context, field graphql.Coll
 	return ec.marshalNString2string(ctx, field.Selections, res)
 }
 
-func (ec *executionContext) _Column_nullable(ctx context.Context, field graphql.CollectedField, obj *model.Column) (ret graphql.Marshaler) {
+func (ec *executionContext) _Column_nullable(ctx context.Context, field graphql.CollectedField, obj *mysql.Column) (ret graphql.Marshaler) {
 	defer func() {
 		if r := recover(); r != nil {
 			ec.Error(ctx, ec.Recover(ctx, r))
@@ -802,7 +801,7 @@ func (ec *executionContext) _Column_nullable(ctx context.Context, field graphql.
 	return ec.marshalNBoolean2bool(ctx, field.Selections, res)
 }
 
-func (ec *executionContext) _Column_default(ctx context.Context, field graphql.CollectedField, obj *model.Column) (ret graphql.Marshaler) {
+func (ec *executionContext) _Column_default(ctx context.Context, field graphql.CollectedField, obj *mysql.Column) (ret graphql.Marshaler) {
 	defer func() {
 		if r := recover(); r != nil {
 			ec.Error(ctx, ec.Recover(ctx, r))
@@ -834,7 +833,7 @@ func (ec *executionContext) _Column_default(ctx context.Context, field graphql.C
 	return ec.marshalOString2ᚖstring(ctx, field.Selections, res)
 }
 
-func (ec *executionContext) _Column_comment(ctx context.Context, field graphql.CollectedField, obj *model.Column) (ret graphql.Marshaler) {
+func (ec *executionContext) _Column_comment(ctx context.Context, field graphql.CollectedField, obj *mysql.Column) (ret graphql.Marshaler) {
 	defer func() {
 		if r := recover(); r != nil {
 			ec.Error(ctx, ec.Recover(ctx, r))
@@ -866,7 +865,7 @@ func (ec *executionContext) _Column_comment(ctx context.Context, field graphql.C
 	return ec.marshalOString2ᚖstring(ctx, field.Selections, res)
 }
 
-func (ec *executionContext) _Column_extraDef(ctx context.Context, field graphql.CollectedField, obj *model.Column) (ret graphql.Marshaler) {
+func (ec *executionContext) _Column_extraDef(ctx context.Context, field graphql.CollectedField, obj *mysql.Column) (ret graphql.Marshaler) {
 	defer func() {
 		if r := recover(); r != nil {
 			ec.Error(ctx, ec.Recover(ctx, r))
@@ -898,7 +897,7 @@ func (ec *executionContext) _Column_extraDef(ctx context.Context, field graphql.
 	return ec.marshalOString2ᚖstring(ctx, field.Selections, res)
 }
 
-func (ec *executionContext) _Column_parentRelations(ctx context.Context, field graphql.CollectedField, obj *model.Column) (ret graphql.Marshaler) {
+func (ec *executionContext) _Column_parentRelations(ctx context.Context, field graphql.CollectedField, obj *mysql.Column) (ret graphql.Marshaler) {
 	defer func() {
 		if r := recover(); r != nil {
 			ec.Error(ctx, ec.Recover(ctx, r))
@@ -925,12 +924,12 @@ func (ec *executionContext) _Column_parentRelations(ctx context.Context, field g
 	if resTmp == nil {
 		return graphql.Null
 	}
-	res := resTmp.([]*model.Relation)
+	res := resTmp.([]*mysql.Relation)
 	fc.Result = res
-	return ec.marshalORelation2ᚕᚖgithubᚗcomᚋfeitian124ᚋgoapiᚋgraphᚋmodelᚐRelation(ctx, field.Selections, res)
+	return ec.marshalORelation2ᚕᚖgithubᚗcomᚋfeitian124ᚋgoapiᚋdbᚋmysqlᚐRelation(ctx, field.Selections, res)
 }
 
-func (ec *executionContext) _Column_childRelations(ctx context.Context, field graphql.CollectedField, obj *model.Column) (ret graphql.Marshaler) {
+func (ec *executionContext) _Column_childRelations(ctx context.Context, field graphql.CollectedField, obj *mysql.Column) (ret graphql.Marshaler) {
 	defer func() {
 		if r := recover(); r != nil {
 			ec.Error(ctx, ec.Recover(ctx, r))
@@ -957,12 +956,12 @@ func (ec *executionContext) _Column_childRelations(ctx context.Context, field gr
 	if resTmp == nil {
 		return graphql.Null
 	}
-	res := resTmp.([]*model.Relation)
+	res := resTmp.([]*mysql.Relation)
 	fc.Result = res
-	return ec.marshalORelation2ᚕᚖgithubᚗcomᚋfeitian124ᚋgoapiᚋgraphᚋmodelᚐRelation(ctx, field.Selections, res)
+	return ec.marshalORelation2ᚕᚖgithubᚗcomᚋfeitian124ᚋgoapiᚋdbᚋmysqlᚐRelation(ctx, field.Selections, res)
 }
 
-func (ec *executionContext) _Constraint_name(ctx context.Context, field graphql.CollectedField, obj *model.Constraint) (ret graphql.Marshaler) {
+func (ec *executionContext) _Constraint_name(ctx context.Context, field graphql.CollectedField, obj *mysql.Constraint) (ret graphql.Marshaler) {
 	defer func() {
 		if r := recover(); r != nil {
 			ec.Error(ctx, ec.Recover(ctx, r))
@@ -997,7 +996,7 @@ func (ec *executionContext) _Constraint_name(ctx context.Context, field graphql.
 	return ec.marshalNString2string(ctx, field.Selections, res)
 }
 
-func (ec *executionContext) _Constraint_type(ctx context.Context, field graphql.CollectedField, obj *model.Constraint) (ret graphql.Marshaler) {
+func (ec *executionContext) _Constraint_type(ctx context.Context, field graphql.CollectedField, obj *mysql.Constraint) (ret graphql.Marshaler) {
 	defer func() {
 		if r := recover(); r != nil {
 			ec.Error(ctx, ec.Recover(ctx, r))
@@ -1032,7 +1031,7 @@ func (ec *executionContext) _Constraint_type(ctx context.Context, field graphql.
 	return ec.marshalNString2string(ctx, field.Selections, res)
 }
 
-func (ec *executionContext) _Constraint_def(ctx context.Context, field graphql.CollectedField, obj *model.Constraint) (ret graphql.Marshaler) {
+func (ec *executionContext) _Constraint_def(ctx context.Context, field graphql.CollectedField, obj *mysql.Constraint) (ret graphql.Marshaler) {
 	defer func() {
 		if r := recover(); r != nil {
 			ec.Error(ctx, ec.Recover(ctx, r))
@@ -1067,7 +1066,7 @@ func (ec *executionContext) _Constraint_def(ctx context.Context, field graphql.C
 	return ec.marshalNString2string(ctx, field.Selections, res)
 }
 
-func (ec *executionContext) _Constraint_table(ctx context.Context, field graphql.CollectedField, obj *model.Constraint) (ret graphql.Marshaler) {
+func (ec *executionContext) _Constraint_table(ctx context.Context, field graphql.CollectedField, obj *mysql.Constraint) (ret graphql.Marshaler) {
 	defer func() {
 		if r := recover(); r != nil {
 			ec.Error(ctx, ec.Recover(ctx, r))
@@ -1099,7 +1098,7 @@ func (ec *executionContext) _Constraint_table(ctx context.Context, field graphql
 	return ec.marshalOString2ᚖstring(ctx, field.Selections, res)
 }
 
-func (ec *executionContext) _Constraint_referencedTable(ctx context.Context, field graphql.CollectedField, obj *model.Constraint) (ret graphql.Marshaler) {
+func (ec *executionContext) _Constraint_referencedTable(ctx context.Context, field graphql.CollectedField, obj *mysql.Constraint) (ret graphql.Marshaler) {
 	defer func() {
 		if r := recover(); r != nil {
 			ec.Error(ctx, ec.Recover(ctx, r))
@@ -1131,7 +1130,7 @@ func (ec *executionContext) _Constraint_referencedTable(ctx context.Context, fie
 	return ec.marshalOString2ᚖstring(ctx, field.Selections, res)
 }
 
-func (ec *executionContext) _Constraint_columns(ctx context.Context, field graphql.CollectedField, obj *model.Constraint) (ret graphql.Marshaler) {
+func (ec *executionContext) _Constraint_columns(ctx context.Context, field graphql.CollectedField, obj *mysql.Constraint) (ret graphql.Marshaler) {
 	defer func() {
 		if r := recover(); r != nil {
 			ec.Error(ctx, ec.Recover(ctx, r))
@@ -1163,7 +1162,7 @@ func (ec *executionContext) _Constraint_columns(ctx context.Context, field graph
 	return ec.marshalOString2ᚕstringᚄ(ctx, field.Selections, res)
 }
 
-func (ec *executionContext) _Constraint_referencedColumns(ctx context.Context, field graphql.CollectedField, obj *model.Constraint) (ret graphql.Marshaler) {
+func (ec *executionContext) _Constraint_referencedColumns(ctx context.Context, field graphql.CollectedField, obj *mysql.Constraint) (ret graphql.Marshaler) {
 	defer func() {
 		if r := recover(); r != nil {
 			ec.Error(ctx, ec.Recover(ctx, r))
@@ -1195,7 +1194,7 @@ func (ec *executionContext) _Constraint_referencedColumns(ctx context.Context, f
 	return ec.marshalOString2ᚕstringᚄ(ctx, field.Selections, res)
 }
 
-func (ec *executionContext) _Constraint_comment(ctx context.Context, field graphql.CollectedField, obj *model.Constraint) (ret graphql.Marshaler) {
+func (ec *executionContext) _Constraint_comment(ctx context.Context, field graphql.CollectedField, obj *mysql.Constraint) (ret graphql.Marshaler) {
 	defer func() {
 		if r := recover(); r != nil {
 			ec.Error(ctx, ec.Recover(ctx, r))
@@ -1222,12 +1221,12 @@ func (ec *executionContext) _Constraint_comment(ctx context.Context, field graph
 	if resTmp == nil {
 		return graphql.Null
 	}
-	res := resTmp.(*string)
+	res := resTmp.(string)
 	fc.Result = res
-	return ec.marshalOString2ᚖstring(ctx, field.Selections, res)
+	return ec.marshalOString2string(ctx, field.Selections, res)
 }
 
-func (ec *executionContext) _Index_name(ctx context.Context, field graphql.CollectedField, obj *model.Index) (ret graphql.Marshaler) {
+func (ec *executionContext) _Index_name(ctx context.Context, field graphql.CollectedField, obj *mysql.Index) (ret graphql.Marshaler) {
 	defer func() {
 		if r := recover(); r != nil {
 			ec.Error(ctx, ec.Recover(ctx, r))
@@ -1262,7 +1261,7 @@ func (ec *executionContext) _Index_name(ctx context.Context, field graphql.Colle
 	return ec.marshalNString2string(ctx, field.Selections, res)
 }
 
-func (ec *executionContext) _Index_def(ctx context.Context, field graphql.CollectedField, obj *model.Index) (ret graphql.Marshaler) {
+func (ec *executionContext) _Index_def(ctx context.Context, field graphql.CollectedField, obj *mysql.Index) (ret graphql.Marshaler) {
 	defer func() {
 		if r := recover(); r != nil {
 			ec.Error(ctx, ec.Recover(ctx, r))
@@ -1297,7 +1296,7 @@ func (ec *executionContext) _Index_def(ctx context.Context, field graphql.Collec
 	return ec.marshalNString2string(ctx, field.Selections, res)
 }
 
-func (ec *executionContext) _Index_table(ctx context.Context, field graphql.CollectedField, obj *model.Index) (ret graphql.Marshaler) {
+func (ec *executionContext) _Index_table(ctx context.Context, field graphql.CollectedField, obj *mysql.Index) (ret graphql.Marshaler) {
 	defer func() {
 		if r := recover(); r != nil {
 			ec.Error(ctx, ec.Recover(ctx, r))
@@ -1329,7 +1328,7 @@ func (ec *executionContext) _Index_table(ctx context.Context, field graphql.Coll
 	return ec.marshalOString2ᚖstring(ctx, field.Selections, res)
 }
 
-func (ec *executionContext) _Index_columns(ctx context.Context, field graphql.CollectedField, obj *model.Index) (ret graphql.Marshaler) {
+func (ec *executionContext) _Index_columns(ctx context.Context, field graphql.CollectedField, obj *mysql.Index) (ret graphql.Marshaler) {
 	defer func() {
 		if r := recover(); r != nil {
 			ec.Error(ctx, ec.Recover(ctx, r))
@@ -1356,12 +1355,12 @@ func (ec *executionContext) _Index_columns(ctx context.Context, field graphql.Co
 	if resTmp == nil {
 		return graphql.Null
 	}
-	res := resTmp.([]*string)
+	res := resTmp.([]string)
 	fc.Result = res
-	return ec.marshalOString2ᚕᚖstring(ctx, field.Selections, res)
+	return ec.marshalOString2ᚕstring(ctx, field.Selections, res)
 }
 
-func (ec *executionContext) _Index_comment(ctx context.Context, field graphql.CollectedField, obj *model.Index) (ret graphql.Marshaler) {
+func (ec *executionContext) _Index_comment(ctx context.Context, field graphql.CollectedField, obj *mysql.Index) (ret graphql.Marshaler) {
 	defer func() {
 		if r := recover(); r != nil {
 			ec.Error(ctx, ec.Recover(ctx, r))
@@ -1388,9 +1387,9 @@ func (ec *executionContext) _Index_comment(ctx context.Context, field graphql.Co
 	if resTmp == nil {
 		return graphql.Null
 	}
-	res := resTmp.(*string)
+	res := resTmp.(string)
 	fc.Result = res
-	return ec.marshalOString2ᚖstring(ctx, field.Selections, res)
+	return ec.marshalOString2string(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) _Query_tables(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
@@ -1469,9 +1468,9 @@ func (ec *executionContext) _Query_table(ctx context.Context, field graphql.Coll
 	if resTmp == nil {
 		return graphql.Null
 	}
-	res := resTmp.(*model.Table)
+	res := resTmp.(*mysql.Table)
 	fc.Result = res
-	return ec.marshalOTable2ᚖgithubᚗcomᚋfeitian124ᚋgoapiᚋgraphᚋmodelᚐTable(ctx, field.Selections, res)
+	return ec.marshalOTable2ᚖgithubᚗcomᚋfeitian124ᚋgoapiᚋdbᚋmysqlᚐTable(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) _Query___type(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
@@ -1545,7 +1544,7 @@ func (ec *executionContext) _Query___schema(ctx context.Context, field graphql.C
 	return ec.marshalO__Schema2ᚖgithubᚗcomᚋ99designsᚋgqlgenᚋgraphqlᚋintrospectionᚐSchema(ctx, field.Selections, res)
 }
 
-func (ec *executionContext) _Relation_table(ctx context.Context, field graphql.CollectedField, obj *model.Relation) (ret graphql.Marshaler) {
+func (ec *executionContext) _Relation_table(ctx context.Context, field graphql.CollectedField, obj *mysql.Relation) (ret graphql.Marshaler) {
 	defer func() {
 		if r := recover(); r != nil {
 			ec.Error(ctx, ec.Recover(ctx, r))
@@ -1572,12 +1571,12 @@ func (ec *executionContext) _Relation_table(ctx context.Context, field graphql.C
 	if resTmp == nil {
 		return graphql.Null
 	}
-	res := resTmp.(*model.Table)
+	res := resTmp.(*mysql.Table)
 	fc.Result = res
-	return ec.marshalOTable2ᚖgithubᚗcomᚋfeitian124ᚋgoapiᚋgraphᚋmodelᚐTable(ctx, field.Selections, res)
+	return ec.marshalOTable2ᚖgithubᚗcomᚋfeitian124ᚋgoapiᚋdbᚋmysqlᚐTable(ctx, field.Selections, res)
 }
 
-func (ec *executionContext) _Relation_columns(ctx context.Context, field graphql.CollectedField, obj *model.Relation) (ret graphql.Marshaler) {
+func (ec *executionContext) _Relation_columns(ctx context.Context, field graphql.CollectedField, obj *mysql.Relation) (ret graphql.Marshaler) {
 	defer func() {
 		if r := recover(); r != nil {
 			ec.Error(ctx, ec.Recover(ctx, r))
@@ -1604,12 +1603,12 @@ func (ec *executionContext) _Relation_columns(ctx context.Context, field graphql
 	if resTmp == nil {
 		return graphql.Null
 	}
-	res := resTmp.([]*model.Column)
+	res := resTmp.([]*mysql.Column)
 	fc.Result = res
-	return ec.marshalOColumn2ᚕᚖgithubᚗcomᚋfeitian124ᚋgoapiᚋgraphᚋmodelᚐColumn(ctx, field.Selections, res)
+	return ec.marshalOColumn2ᚕᚖgithubᚗcomᚋfeitian124ᚋgoapiᚋdbᚋmysqlᚐColumn(ctx, field.Selections, res)
 }
 
-func (ec *executionContext) _Relation_parentTable(ctx context.Context, field graphql.CollectedField, obj *model.Relation) (ret graphql.Marshaler) {
+func (ec *executionContext) _Relation_parentTable(ctx context.Context, field graphql.CollectedField, obj *mysql.Relation) (ret graphql.Marshaler) {
 	defer func() {
 		if r := recover(); r != nil {
 			ec.Error(ctx, ec.Recover(ctx, r))
@@ -1636,12 +1635,12 @@ func (ec *executionContext) _Relation_parentTable(ctx context.Context, field gra
 	if resTmp == nil {
 		return graphql.Null
 	}
-	res := resTmp.(*model.Table)
+	res := resTmp.(*mysql.Table)
 	fc.Result = res
-	return ec.marshalOTable2ᚖgithubᚗcomᚋfeitian124ᚋgoapiᚋgraphᚋmodelᚐTable(ctx, field.Selections, res)
+	return ec.marshalOTable2ᚖgithubᚗcomᚋfeitian124ᚋgoapiᚋdbᚋmysqlᚐTable(ctx, field.Selections, res)
 }
 
-func (ec *executionContext) _Relation_parentColumns(ctx context.Context, field graphql.CollectedField, obj *model.Relation) (ret graphql.Marshaler) {
+func (ec *executionContext) _Relation_parentColumns(ctx context.Context, field graphql.CollectedField, obj *mysql.Relation) (ret graphql.Marshaler) {
 	defer func() {
 		if r := recover(); r != nil {
 			ec.Error(ctx, ec.Recover(ctx, r))
@@ -1668,12 +1667,12 @@ func (ec *executionContext) _Relation_parentColumns(ctx context.Context, field g
 	if resTmp == nil {
 		return graphql.Null
 	}
-	res := resTmp.([]*model.Column)
+	res := resTmp.([]*mysql.Column)
 	fc.Result = res
-	return ec.marshalOColumn2ᚕᚖgithubᚗcomᚋfeitian124ᚋgoapiᚋgraphᚋmodelᚐColumn(ctx, field.Selections, res)
+	return ec.marshalOColumn2ᚕᚖgithubᚗcomᚋfeitian124ᚋgoapiᚋdbᚋmysqlᚐColumn(ctx, field.Selections, res)
 }
 
-func (ec *executionContext) _Relation_def(ctx context.Context, field graphql.CollectedField, obj *model.Relation) (ret graphql.Marshaler) {
+func (ec *executionContext) _Relation_def(ctx context.Context, field graphql.CollectedField, obj *mysql.Relation) (ret graphql.Marshaler) {
 	defer func() {
 		if r := recover(); r != nil {
 			ec.Error(ctx, ec.Recover(ctx, r))
@@ -1698,14 +1697,17 @@ func (ec *executionContext) _Relation_def(ctx context.Context, field graphql.Col
 		return graphql.Null
 	}
 	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
 		return graphql.Null
 	}
-	res := resTmp.(*string)
+	res := resTmp.(string)
 	fc.Result = res
-	return ec.marshalOString2ᚖstring(ctx, field.Selections, res)
+	return ec.marshalNString2string(ctx, field.Selections, res)
 }
 
-func (ec *executionContext) _Relation_virtual(ctx context.Context, field graphql.CollectedField, obj *model.Relation) (ret graphql.Marshaler) {
+func (ec *executionContext) _Relation_virtual(ctx context.Context, field graphql.CollectedField, obj *mysql.Relation) (ret graphql.Marshaler) {
 	defer func() {
 		if r := recover(); r != nil {
 			ec.Error(ctx, ec.Recover(ctx, r))
@@ -1730,14 +1732,17 @@ func (ec *executionContext) _Relation_virtual(ctx context.Context, field graphql
 		return graphql.Null
 	}
 	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
 		return graphql.Null
 	}
-	res := resTmp.(*bool)
+	res := resTmp.(bool)
 	fc.Result = res
-	return ec.marshalOBoolean2ᚖbool(ctx, field.Selections, res)
+	return ec.marshalNBoolean2bool(ctx, field.Selections, res)
 }
 
-func (ec *executionContext) _Table_name(ctx context.Context, field graphql.CollectedField, obj *model.Table) (ret graphql.Marshaler) {
+func (ec *executionContext) _Table_name(ctx context.Context, field graphql.CollectedField, obj *mysql.Table) (ret graphql.Marshaler) {
 	defer func() {
 		if r := recover(); r != nil {
 			ec.Error(ctx, ec.Recover(ctx, r))
@@ -1772,7 +1777,7 @@ func (ec *executionContext) _Table_name(ctx context.Context, field graphql.Colle
 	return ec.marshalNID2string(ctx, field.Selections, res)
 }
 
-func (ec *executionContext) _Table_type(ctx context.Context, field graphql.CollectedField, obj *model.Table) (ret graphql.Marshaler) {
+func (ec *executionContext) _Table_type(ctx context.Context, field graphql.CollectedField, obj *mysql.Table) (ret graphql.Marshaler) {
 	defer func() {
 		if r := recover(); r != nil {
 			ec.Error(ctx, ec.Recover(ctx, r))
@@ -1807,7 +1812,7 @@ func (ec *executionContext) _Table_type(ctx context.Context, field graphql.Colle
 	return ec.marshalNString2string(ctx, field.Selections, res)
 }
 
-func (ec *executionContext) _Table_comment(ctx context.Context, field graphql.CollectedField, obj *model.Table) (ret graphql.Marshaler) {
+func (ec *executionContext) _Table_comment(ctx context.Context, field graphql.CollectedField, obj *mysql.Table) (ret graphql.Marshaler) {
 	defer func() {
 		if r := recover(); r != nil {
 			ec.Error(ctx, ec.Recover(ctx, r))
@@ -1839,7 +1844,7 @@ func (ec *executionContext) _Table_comment(ctx context.Context, field graphql.Co
 	return ec.marshalOString2ᚖstring(ctx, field.Selections, res)
 }
 
-func (ec *executionContext) _Table_def(ctx context.Context, field graphql.CollectedField, obj *model.Table) (ret graphql.Marshaler) {
+func (ec *executionContext) _Table_def(ctx context.Context, field graphql.CollectedField, obj *mysql.Table) (ret graphql.Marshaler) {
 	defer func() {
 		if r := recover(); r != nil {
 			ec.Error(ctx, ec.Recover(ctx, r))
@@ -1874,7 +1879,7 @@ func (ec *executionContext) _Table_def(ctx context.Context, field graphql.Collec
 	return ec.marshalNString2string(ctx, field.Selections, res)
 }
 
-func (ec *executionContext) _Table_createdAt(ctx context.Context, field graphql.CollectedField, obj *model.Table) (ret graphql.Marshaler) {
+func (ec *executionContext) _Table_createdAt(ctx context.Context, field graphql.CollectedField, obj *mysql.Table) (ret graphql.Marshaler) {
 	defer func() {
 		if r := recover(); r != nil {
 			ec.Error(ctx, ec.Recover(ctx, r))
@@ -1906,7 +1911,7 @@ func (ec *executionContext) _Table_createdAt(ctx context.Context, field graphql.
 	return ec.marshalOTime2ᚖtimeᚐTime(ctx, field.Selections, res)
 }
 
-func (ec *executionContext) _Table_columns(ctx context.Context, field graphql.CollectedField, obj *model.Table) (ret graphql.Marshaler) {
+func (ec *executionContext) _Table_columns(ctx context.Context, field graphql.CollectedField, obj *mysql.Table) (ret graphql.Marshaler) {
 	defer func() {
 		if r := recover(); r != nil {
 			ec.Error(ctx, ec.Recover(ctx, r))
@@ -1933,12 +1938,12 @@ func (ec *executionContext) _Table_columns(ctx context.Context, field graphql.Co
 	if resTmp == nil {
 		return graphql.Null
 	}
-	res := resTmp.([]*model.Column)
+	res := resTmp.([]*mysql.Column)
 	fc.Result = res
-	return ec.marshalOColumn2ᚕᚖgithubᚗcomᚋfeitian124ᚋgoapiᚋgraphᚋmodelᚐColumn(ctx, field.Selections, res)
+	return ec.marshalOColumn2ᚕᚖgithubᚗcomᚋfeitian124ᚋgoapiᚋdbᚋmysqlᚐColumn(ctx, field.Selections, res)
 }
 
-func (ec *executionContext) _Table_indexes(ctx context.Context, field graphql.CollectedField, obj *model.Table) (ret graphql.Marshaler) {
+func (ec *executionContext) _Table_indexes(ctx context.Context, field graphql.CollectedField, obj *mysql.Table) (ret graphql.Marshaler) {
 	defer func() {
 		if r := recover(); r != nil {
 			ec.Error(ctx, ec.Recover(ctx, r))
@@ -1965,12 +1970,12 @@ func (ec *executionContext) _Table_indexes(ctx context.Context, field graphql.Co
 	if resTmp == nil {
 		return graphql.Null
 	}
-	res := resTmp.([]*model.Index)
+	res := resTmp.([]*mysql.Index)
 	fc.Result = res
-	return ec.marshalOIndex2ᚕᚖgithubᚗcomᚋfeitian124ᚋgoapiᚋgraphᚋmodelᚐIndex(ctx, field.Selections, res)
+	return ec.marshalOIndex2ᚕᚖgithubᚗcomᚋfeitian124ᚋgoapiᚋdbᚋmysqlᚐIndex(ctx, field.Selections, res)
 }
 
-func (ec *executionContext) _Table_constraints(ctx context.Context, field graphql.CollectedField, obj *model.Table) (ret graphql.Marshaler) {
+func (ec *executionContext) _Table_constraints(ctx context.Context, field graphql.CollectedField, obj *mysql.Table) (ret graphql.Marshaler) {
 	defer func() {
 		if r := recover(); r != nil {
 			ec.Error(ctx, ec.Recover(ctx, r))
@@ -1997,12 +2002,12 @@ func (ec *executionContext) _Table_constraints(ctx context.Context, field graphq
 	if resTmp == nil {
 		return graphql.Null
 	}
-	res := resTmp.([]*model.Constraint)
+	res := resTmp.([]*mysql.Constraint)
 	fc.Result = res
-	return ec.marshalOConstraint2ᚕᚖgithubᚗcomᚋfeitian124ᚋgoapiᚋgraphᚋmodelᚐConstraint(ctx, field.Selections, res)
+	return ec.marshalOConstraint2ᚕᚖgithubᚗcomᚋfeitian124ᚋgoapiᚋdbᚋmysqlᚐConstraint(ctx, field.Selections, res)
 }
 
-func (ec *executionContext) _Table_triggers(ctx context.Context, field graphql.CollectedField, obj *model.Table) (ret graphql.Marshaler) {
+func (ec *executionContext) _Table_triggers(ctx context.Context, field graphql.CollectedField, obj *mysql.Table) (ret graphql.Marshaler) {
 	defer func() {
 		if r := recover(); r != nil {
 			ec.Error(ctx, ec.Recover(ctx, r))
@@ -2029,12 +2034,12 @@ func (ec *executionContext) _Table_triggers(ctx context.Context, field graphql.C
 	if resTmp == nil {
 		return graphql.Null
 	}
-	res := resTmp.([]*model.Trigger)
+	res := resTmp.([]*mysql.Trigger)
 	fc.Result = res
-	return ec.marshalOTrigger2ᚕᚖgithubᚗcomᚋfeitian124ᚋgoapiᚋgraphᚋmodelᚐTrigger(ctx, field.Selections, res)
+	return ec.marshalOTrigger2ᚕᚖgithubᚗcomᚋfeitian124ᚋgoapiᚋdbᚋmysqlᚐTrigger(ctx, field.Selections, res)
 }
 
-func (ec *executionContext) _Table_referencedTables(ctx context.Context, field graphql.CollectedField, obj *model.Table) (ret graphql.Marshaler) {
+func (ec *executionContext) _Table_referencedTables(ctx context.Context, field graphql.CollectedField, obj *mysql.Table) (ret graphql.Marshaler) {
 	defer func() {
 		if r := recover(); r != nil {
 			ec.Error(ctx, ec.Recover(ctx, r))
@@ -2061,9 +2066,9 @@ func (ec *executionContext) _Table_referencedTables(ctx context.Context, field g
 	if resTmp == nil {
 		return graphql.Null
 	}
-	res := resTmp.([]*model.Table)
+	res := resTmp.([]*mysql.Table)
 	fc.Result = res
-	return ec.marshalOTable2ᚕᚖgithubᚗcomᚋfeitian124ᚋgoapiᚋgraphᚋmodelᚐTable(ctx, field.Selections, res)
+	return ec.marshalOTable2ᚕᚖgithubᚗcomᚋfeitian124ᚋgoapiᚋdbᚋmysqlᚐTable(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) _TableInfo_name(ctx context.Context, field graphql.CollectedField, obj *mysql.TableInfo) (ret graphql.Marshaler) {
@@ -2270,7 +2275,7 @@ func (ec *executionContext) _TableInfo_external(ctx context.Context, field graph
 	return ec.marshalNBoolean2bool(ctx, field.Selections, res)
 }
 
-func (ec *executionContext) _Trigger_name(ctx context.Context, field graphql.CollectedField, obj *model.Trigger) (ret graphql.Marshaler) {
+func (ec *executionContext) _Trigger_name(ctx context.Context, field graphql.CollectedField, obj *mysql.Trigger) (ret graphql.Marshaler) {
 	defer func() {
 		if r := recover(); r != nil {
 			ec.Error(ctx, ec.Recover(ctx, r))
@@ -2305,7 +2310,7 @@ func (ec *executionContext) _Trigger_name(ctx context.Context, field graphql.Col
 	return ec.marshalNString2string(ctx, field.Selections, res)
 }
 
-func (ec *executionContext) _Trigger_def(ctx context.Context, field graphql.CollectedField, obj *model.Trigger) (ret graphql.Marshaler) {
+func (ec *executionContext) _Trigger_def(ctx context.Context, field graphql.CollectedField, obj *mysql.Trigger) (ret graphql.Marshaler) {
 	defer func() {
 		if r := recover(); r != nil {
 			ec.Error(ctx, ec.Recover(ctx, r))
@@ -2340,7 +2345,7 @@ func (ec *executionContext) _Trigger_def(ctx context.Context, field graphql.Coll
 	return ec.marshalNString2string(ctx, field.Selections, res)
 }
 
-func (ec *executionContext) _Trigger_comment(ctx context.Context, field graphql.CollectedField, obj *model.Trigger) (ret graphql.Marshaler) {
+func (ec *executionContext) _Trigger_comment(ctx context.Context, field graphql.CollectedField, obj *mysql.Trigger) (ret graphql.Marshaler) {
 	defer func() {
 		if r := recover(); r != nil {
 			ec.Error(ctx, ec.Recover(ctx, r))
@@ -2367,9 +2372,9 @@ func (ec *executionContext) _Trigger_comment(ctx context.Context, field graphql.
 	if resTmp == nil {
 		return graphql.Null
 	}
-	res := resTmp.(*string)
+	res := resTmp.(string)
 	fc.Result = res
-	return ec.marshalOString2ᚖstring(ctx, field.Selections, res)
+	return ec.marshalOString2string(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) ___Directive_name(ctx context.Context, field graphql.CollectedField, obj *introspection.Directive) (ret graphql.Marshaler) {
@@ -3504,7 +3509,7 @@ func (ec *executionContext) ___Type_ofType(ctx context.Context, field graphql.Co
 
 var columnImplementors = []string{"Column"}
 
-func (ec *executionContext) _Column(ctx context.Context, sel ast.SelectionSet, obj *model.Column) graphql.Marshaler {
+func (ec *executionContext) _Column(ctx context.Context, sel ast.SelectionSet, obj *mysql.Column) graphql.Marshaler {
 	fields := graphql.CollectFields(ec.OperationContext, sel, columnImplementors)
 
 	out := graphql.NewFieldSet(fields)
@@ -3551,7 +3556,7 @@ func (ec *executionContext) _Column(ctx context.Context, sel ast.SelectionSet, o
 
 var constraintImplementors = []string{"Constraint"}
 
-func (ec *executionContext) _Constraint(ctx context.Context, sel ast.SelectionSet, obj *model.Constraint) graphql.Marshaler {
+func (ec *executionContext) _Constraint(ctx context.Context, sel ast.SelectionSet, obj *mysql.Constraint) graphql.Marshaler {
 	fields := graphql.CollectFields(ec.OperationContext, sel, constraintImplementors)
 
 	out := graphql.NewFieldSet(fields)
@@ -3598,7 +3603,7 @@ func (ec *executionContext) _Constraint(ctx context.Context, sel ast.SelectionSe
 
 var indexImplementors = []string{"Index"}
 
-func (ec *executionContext) _Index(ctx context.Context, sel ast.SelectionSet, obj *model.Index) graphql.Marshaler {
+func (ec *executionContext) _Index(ctx context.Context, sel ast.SelectionSet, obj *mysql.Index) graphql.Marshaler {
 	fields := graphql.CollectFields(ec.OperationContext, sel, indexImplementors)
 
 	out := graphql.NewFieldSet(fields)
@@ -3691,7 +3696,7 @@ func (ec *executionContext) _Query(ctx context.Context, sel ast.SelectionSet) gr
 
 var relationImplementors = []string{"Relation"}
 
-func (ec *executionContext) _Relation(ctx context.Context, sel ast.SelectionSet, obj *model.Relation) graphql.Marshaler {
+func (ec *executionContext) _Relation(ctx context.Context, sel ast.SelectionSet, obj *mysql.Relation) graphql.Marshaler {
 	fields := graphql.CollectFields(ec.OperationContext, sel, relationImplementors)
 
 	out := graphql.NewFieldSet(fields)
@@ -3710,8 +3715,14 @@ func (ec *executionContext) _Relation(ctx context.Context, sel ast.SelectionSet,
 			out.Values[i] = ec._Relation_parentColumns(ctx, field, obj)
 		case "def":
 			out.Values[i] = ec._Relation_def(ctx, field, obj)
+			if out.Values[i] == graphql.Null {
+				invalids++
+			}
 		case "virtual":
 			out.Values[i] = ec._Relation_virtual(ctx, field, obj)
+			if out.Values[i] == graphql.Null {
+				invalids++
+			}
 		default:
 			panic("unknown field " + strconv.Quote(field.Name))
 		}
@@ -3725,7 +3736,7 @@ func (ec *executionContext) _Relation(ctx context.Context, sel ast.SelectionSet,
 
 var tableImplementors = []string{"Table"}
 
-func (ec *executionContext) _Table(ctx context.Context, sel ast.SelectionSet, obj *model.Table) graphql.Marshaler {
+func (ec *executionContext) _Table(ctx context.Context, sel ast.SelectionSet, obj *mysql.Table) graphql.Marshaler {
 	fields := graphql.CollectFields(ec.OperationContext, sel, tableImplementors)
 
 	out := graphql.NewFieldSet(fields)
@@ -3822,7 +3833,7 @@ func (ec *executionContext) _TableInfo(ctx context.Context, sel ast.SelectionSet
 
 var triggerImplementors = []string{"Trigger"}
 
-func (ec *executionContext) _Trigger(ctx context.Context, sel ast.SelectionSet, obj *model.Trigger) graphql.Marshaler {
+func (ec *executionContext) _Trigger(ctx context.Context, sel ast.SelectionSet, obj *mysql.Trigger) graphql.Marshaler {
 	fields := graphql.CollectFields(ec.OperationContext, sel, triggerImplementors)
 
 	out := graphql.NewFieldSet(fields)
@@ -4484,7 +4495,7 @@ func (ec *executionContext) marshalOBoolean2ᚖbool(ctx context.Context, sel ast
 	return graphql.MarshalBoolean(*v)
 }
 
-func (ec *executionContext) marshalOColumn2ᚕᚖgithubᚗcomᚋfeitian124ᚋgoapiᚋgraphᚋmodelᚐColumn(ctx context.Context, sel ast.SelectionSet, v []*model.Column) graphql.Marshaler {
+func (ec *executionContext) marshalOColumn2ᚕᚖgithubᚗcomᚋfeitian124ᚋgoapiᚋdbᚋmysqlᚐColumn(ctx context.Context, sel ast.SelectionSet, v []*mysql.Column) graphql.Marshaler {
 	if v == nil {
 		return graphql.Null
 	}
@@ -4511,7 +4522,7 @@ func (ec *executionContext) marshalOColumn2ᚕᚖgithubᚗcomᚋfeitian124ᚋgoa
 			if !isLen1 {
 				defer wg.Done()
 			}
-			ret[i] = ec.marshalOColumn2ᚖgithubᚗcomᚋfeitian124ᚋgoapiᚋgraphᚋmodelᚐColumn(ctx, sel, v[i])
+			ret[i] = ec.marshalOColumn2ᚖgithubᚗcomᚋfeitian124ᚋgoapiᚋdbᚋmysqlᚐColumn(ctx, sel, v[i])
 		}
 		if isLen1 {
 			f(i)
@@ -4525,14 +4536,14 @@ func (ec *executionContext) marshalOColumn2ᚕᚖgithubᚗcomᚋfeitian124ᚋgoa
 	return ret
 }
 
-func (ec *executionContext) marshalOColumn2ᚖgithubᚗcomᚋfeitian124ᚋgoapiᚋgraphᚋmodelᚐColumn(ctx context.Context, sel ast.SelectionSet, v *model.Column) graphql.Marshaler {
+func (ec *executionContext) marshalOColumn2ᚖgithubᚗcomᚋfeitian124ᚋgoapiᚋdbᚋmysqlᚐColumn(ctx context.Context, sel ast.SelectionSet, v *mysql.Column) graphql.Marshaler {
 	if v == nil {
 		return graphql.Null
 	}
 	return ec._Column(ctx, sel, v)
 }
 
-func (ec *executionContext) marshalOConstraint2ᚕᚖgithubᚗcomᚋfeitian124ᚋgoapiᚋgraphᚋmodelᚐConstraint(ctx context.Context, sel ast.SelectionSet, v []*model.Constraint) graphql.Marshaler {
+func (ec *executionContext) marshalOConstraint2ᚕᚖgithubᚗcomᚋfeitian124ᚋgoapiᚋdbᚋmysqlᚐConstraint(ctx context.Context, sel ast.SelectionSet, v []*mysql.Constraint) graphql.Marshaler {
 	if v == nil {
 		return graphql.Null
 	}
@@ -4559,7 +4570,7 @@ func (ec *executionContext) marshalOConstraint2ᚕᚖgithubᚗcomᚋfeitian124�
 			if !isLen1 {
 				defer wg.Done()
 			}
-			ret[i] = ec.marshalOConstraint2ᚖgithubᚗcomᚋfeitian124ᚋgoapiᚋgraphᚋmodelᚐConstraint(ctx, sel, v[i])
+			ret[i] = ec.marshalOConstraint2ᚖgithubᚗcomᚋfeitian124ᚋgoapiᚋdbᚋmysqlᚐConstraint(ctx, sel, v[i])
 		}
 		if isLen1 {
 			f(i)
@@ -4573,14 +4584,14 @@ func (ec *executionContext) marshalOConstraint2ᚕᚖgithubᚗcomᚋfeitian124�
 	return ret
 }
 
-func (ec *executionContext) marshalOConstraint2ᚖgithubᚗcomᚋfeitian124ᚋgoapiᚋgraphᚋmodelᚐConstraint(ctx context.Context, sel ast.SelectionSet, v *model.Constraint) graphql.Marshaler {
+func (ec *executionContext) marshalOConstraint2ᚖgithubᚗcomᚋfeitian124ᚋgoapiᚋdbᚋmysqlᚐConstraint(ctx context.Context, sel ast.SelectionSet, v *mysql.Constraint) graphql.Marshaler {
 	if v == nil {
 		return graphql.Null
 	}
 	return ec._Constraint(ctx, sel, v)
 }
 
-func (ec *executionContext) marshalOIndex2ᚕᚖgithubᚗcomᚋfeitian124ᚋgoapiᚋgraphᚋmodelᚐIndex(ctx context.Context, sel ast.SelectionSet, v []*model.Index) graphql.Marshaler {
+func (ec *executionContext) marshalOIndex2ᚕᚖgithubᚗcomᚋfeitian124ᚋgoapiᚋdbᚋmysqlᚐIndex(ctx context.Context, sel ast.SelectionSet, v []*mysql.Index) graphql.Marshaler {
 	if v == nil {
 		return graphql.Null
 	}
@@ -4607,7 +4618,7 @@ func (ec *executionContext) marshalOIndex2ᚕᚖgithubᚗcomᚋfeitian124ᚋgoap
 			if !isLen1 {
 				defer wg.Done()
 			}
-			ret[i] = ec.marshalOIndex2ᚖgithubᚗcomᚋfeitian124ᚋgoapiᚋgraphᚋmodelᚐIndex(ctx, sel, v[i])
+			ret[i] = ec.marshalOIndex2ᚖgithubᚗcomᚋfeitian124ᚋgoapiᚋdbᚋmysqlᚐIndex(ctx, sel, v[i])
 		}
 		if isLen1 {
 			f(i)
@@ -4621,14 +4632,14 @@ func (ec *executionContext) marshalOIndex2ᚕᚖgithubᚗcomᚋfeitian124ᚋgoap
 	return ret
 }
 
-func (ec *executionContext) marshalOIndex2ᚖgithubᚗcomᚋfeitian124ᚋgoapiᚋgraphᚋmodelᚐIndex(ctx context.Context, sel ast.SelectionSet, v *model.Index) graphql.Marshaler {
+func (ec *executionContext) marshalOIndex2ᚖgithubᚗcomᚋfeitian124ᚋgoapiᚋdbᚋmysqlᚐIndex(ctx context.Context, sel ast.SelectionSet, v *mysql.Index) graphql.Marshaler {
 	if v == nil {
 		return graphql.Null
 	}
 	return ec._Index(ctx, sel, v)
 }
 
-func (ec *executionContext) marshalORelation2ᚕᚖgithubᚗcomᚋfeitian124ᚋgoapiᚋgraphᚋmodelᚐRelation(ctx context.Context, sel ast.SelectionSet, v []*model.Relation) graphql.Marshaler {
+func (ec *executionContext) marshalORelation2ᚕᚖgithubᚗcomᚋfeitian124ᚋgoapiᚋdbᚋmysqlᚐRelation(ctx context.Context, sel ast.SelectionSet, v []*mysql.Relation) graphql.Marshaler {
 	if v == nil {
 		return graphql.Null
 	}
@@ -4655,7 +4666,7 @@ func (ec *executionContext) marshalORelation2ᚕᚖgithubᚗcomᚋfeitian124ᚋg
 			if !isLen1 {
 				defer wg.Done()
 			}
-			ret[i] = ec.marshalORelation2ᚖgithubᚗcomᚋfeitian124ᚋgoapiᚋgraphᚋmodelᚐRelation(ctx, sel, v[i])
+			ret[i] = ec.marshalORelation2ᚖgithubᚗcomᚋfeitian124ᚋgoapiᚋdbᚋmysqlᚐRelation(ctx, sel, v[i])
 		}
 		if isLen1 {
 			f(i)
@@ -4669,7 +4680,7 @@ func (ec *executionContext) marshalORelation2ᚕᚖgithubᚗcomᚋfeitian124ᚋg
 	return ret
 }
 
-func (ec *executionContext) marshalORelation2ᚖgithubᚗcomᚋfeitian124ᚋgoapiᚋgraphᚋmodelᚐRelation(ctx context.Context, sel ast.SelectionSet, v *model.Relation) graphql.Marshaler {
+func (ec *executionContext) marshalORelation2ᚖgithubᚗcomᚋfeitian124ᚋgoapiᚋdbᚋmysqlᚐRelation(ctx context.Context, sel ast.SelectionSet, v *mysql.Relation) graphql.Marshaler {
 	if v == nil {
 		return graphql.Null
 	}
@@ -4683,6 +4694,42 @@ func (ec *executionContext) unmarshalOString2string(ctx context.Context, v inter
 
 func (ec *executionContext) marshalOString2string(ctx context.Context, sel ast.SelectionSet, v string) graphql.Marshaler {
 	return graphql.MarshalString(v)
+}
+
+func (ec *executionContext) unmarshalOString2ᚕstring(ctx context.Context, v interface{}) ([]string, error) {
+	if v == nil {
+		return nil, nil
+	}
+	var vSlice []interface{}
+	if v != nil {
+		if tmp1, ok := v.([]interface{}); ok {
+			vSlice = tmp1
+		} else {
+			vSlice = []interface{}{v}
+		}
+	}
+	var err error
+	res := make([]string, len(vSlice))
+	for i := range vSlice {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithIndex(i))
+		res[i], err = ec.unmarshalOString2string(ctx, vSlice[i])
+		if err != nil {
+			return nil, err
+		}
+	}
+	return res, nil
+}
+
+func (ec *executionContext) marshalOString2ᚕstring(ctx context.Context, sel ast.SelectionSet, v []string) graphql.Marshaler {
+	if v == nil {
+		return graphql.Null
+	}
+	ret := make(graphql.Array, len(v))
+	for i := range v {
+		ret[i] = ec.marshalOString2string(ctx, sel, v[i])
+	}
+
+	return ret
 }
 
 func (ec *executionContext) unmarshalOString2ᚕstringᚄ(ctx context.Context, v interface{}) ([]string, error) {
@@ -4727,42 +4774,6 @@ func (ec *executionContext) marshalOString2ᚕstringᚄ(ctx context.Context, sel
 	return ret
 }
 
-func (ec *executionContext) unmarshalOString2ᚕᚖstring(ctx context.Context, v interface{}) ([]*string, error) {
-	if v == nil {
-		return nil, nil
-	}
-	var vSlice []interface{}
-	if v != nil {
-		if tmp1, ok := v.([]interface{}); ok {
-			vSlice = tmp1
-		} else {
-			vSlice = []interface{}{v}
-		}
-	}
-	var err error
-	res := make([]*string, len(vSlice))
-	for i := range vSlice {
-		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithIndex(i))
-		res[i], err = ec.unmarshalOString2ᚖstring(ctx, vSlice[i])
-		if err != nil {
-			return nil, err
-		}
-	}
-	return res, nil
-}
-
-func (ec *executionContext) marshalOString2ᚕᚖstring(ctx context.Context, sel ast.SelectionSet, v []*string) graphql.Marshaler {
-	if v == nil {
-		return graphql.Null
-	}
-	ret := make(graphql.Array, len(v))
-	for i := range v {
-		ret[i] = ec.marshalOString2ᚖstring(ctx, sel, v[i])
-	}
-
-	return ret
-}
-
 func (ec *executionContext) unmarshalOString2ᚖstring(ctx context.Context, v interface{}) (*string, error) {
 	if v == nil {
 		return nil, nil
@@ -4778,7 +4789,7 @@ func (ec *executionContext) marshalOString2ᚖstring(ctx context.Context, sel as
 	return graphql.MarshalString(*v)
 }
 
-func (ec *executionContext) marshalOTable2ᚕᚖgithubᚗcomᚋfeitian124ᚋgoapiᚋgraphᚋmodelᚐTable(ctx context.Context, sel ast.SelectionSet, v []*model.Table) graphql.Marshaler {
+func (ec *executionContext) marshalOTable2ᚕᚖgithubᚗcomᚋfeitian124ᚋgoapiᚋdbᚋmysqlᚐTable(ctx context.Context, sel ast.SelectionSet, v []*mysql.Table) graphql.Marshaler {
 	if v == nil {
 		return graphql.Null
 	}
@@ -4805,7 +4816,7 @@ func (ec *executionContext) marshalOTable2ᚕᚖgithubᚗcomᚋfeitian124ᚋgoap
 			if !isLen1 {
 				defer wg.Done()
 			}
-			ret[i] = ec.marshalOTable2ᚖgithubᚗcomᚋfeitian124ᚋgoapiᚋgraphᚋmodelᚐTable(ctx, sel, v[i])
+			ret[i] = ec.marshalOTable2ᚖgithubᚗcomᚋfeitian124ᚋgoapiᚋdbᚋmysqlᚐTable(ctx, sel, v[i])
 		}
 		if isLen1 {
 			f(i)
@@ -4819,7 +4830,7 @@ func (ec *executionContext) marshalOTable2ᚕᚖgithubᚗcomᚋfeitian124ᚋgoap
 	return ret
 }
 
-func (ec *executionContext) marshalOTable2ᚖgithubᚗcomᚋfeitian124ᚋgoapiᚋgraphᚋmodelᚐTable(ctx context.Context, sel ast.SelectionSet, v *model.Table) graphql.Marshaler {
+func (ec *executionContext) marshalOTable2ᚖgithubᚗcomᚋfeitian124ᚋgoapiᚋdbᚋmysqlᚐTable(ctx context.Context, sel ast.SelectionSet, v *mysql.Table) graphql.Marshaler {
 	if v == nil {
 		return graphql.Null
 	}
@@ -4841,7 +4852,7 @@ func (ec *executionContext) marshalOTime2ᚖtimeᚐTime(ctx context.Context, sel
 	return graphql.MarshalTime(*v)
 }
 
-func (ec *executionContext) marshalOTrigger2ᚕᚖgithubᚗcomᚋfeitian124ᚋgoapiᚋgraphᚋmodelᚐTrigger(ctx context.Context, sel ast.SelectionSet, v []*model.Trigger) graphql.Marshaler {
+func (ec *executionContext) marshalOTrigger2ᚕᚖgithubᚗcomᚋfeitian124ᚋgoapiᚋdbᚋmysqlᚐTrigger(ctx context.Context, sel ast.SelectionSet, v []*mysql.Trigger) graphql.Marshaler {
 	if v == nil {
 		return graphql.Null
 	}
@@ -4868,7 +4879,7 @@ func (ec *executionContext) marshalOTrigger2ᚕᚖgithubᚗcomᚋfeitian124ᚋgo
 			if !isLen1 {
 				defer wg.Done()
 			}
-			ret[i] = ec.marshalOTrigger2ᚖgithubᚗcomᚋfeitian124ᚋgoapiᚋgraphᚋmodelᚐTrigger(ctx, sel, v[i])
+			ret[i] = ec.marshalOTrigger2ᚖgithubᚗcomᚋfeitian124ᚋgoapiᚋdbᚋmysqlᚐTrigger(ctx, sel, v[i])
 		}
 		if isLen1 {
 			f(i)
@@ -4882,7 +4893,7 @@ func (ec *executionContext) marshalOTrigger2ᚕᚖgithubᚗcomᚋfeitian124ᚋgo
 	return ret
 }
 
-func (ec *executionContext) marshalOTrigger2ᚖgithubᚗcomᚋfeitian124ᚋgoapiᚋgraphᚋmodelᚐTrigger(ctx context.Context, sel ast.SelectionSet, v *model.Trigger) graphql.Marshaler {
+func (ec *executionContext) marshalOTrigger2ᚖgithubᚗcomᚋfeitian124ᚋgoapiᚋdbᚋmysqlᚐTrigger(ctx context.Context, sel ast.SelectionSet, v *mysql.Trigger) graphql.Marshaler {
 	if v == nil {
 		return graphql.Null
 	}

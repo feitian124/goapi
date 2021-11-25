@@ -66,3 +66,5 @@ models:
     model: github.com/feitian124/goapi/db/mysql.Constraint
   Trigger:
     model: github.com/feitian124/goapi/db/mysql.Trigger
+  Relation:
+    model: github.com/feitian124/goapi/db/mysql.Relation

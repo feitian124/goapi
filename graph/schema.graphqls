@@ -68,6 +68,6 @@ type Relation {
     columns:       [Column]
     parentTable:   Table
     parentColumns: [Column]
-    def:           String
-    virtual:       Boolean
+    def:           String!
+    virtual:       Boolean!
 }
