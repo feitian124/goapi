@@ -1,5 +1,5 @@
 type Query {
-  tables: [TableInfo!]!
+  tables(pattern: String): [TableInfo!]!
 }
 
 scalar Time

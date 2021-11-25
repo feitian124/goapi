@@ -44,7 +44,7 @@ type DirectiveRoot struct {
 
 type ComplexityRoot struct {
 	Query struct {
-		Tables func(childComplexity int) int
+		Tables func(childComplexity int, pattern *string) int
 	}
 
 	TableInfo struct {
@@ -57,7 +57,7 @@ type ComplexityRoot struct {
 }
 
 type QueryResolver interface {
-	Tables(ctx context.Context) ([]*model.TableInfo, error)
+	Tables(ctx context.Context, pattern *string) ([]*model.TableInfo, error)
 }
 
 type executableSchema struct {
@@ -80,7 +80,12 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 			break
 		}
 
-		return e.complexity.Query.Tables(childComplexity), true
+		args, err := ec.field_Query_tables_args(context.TODO(), rawArgs)
+		if err != nil {
+			return 0, false
+		}
+
+		return e.complexity.Query.Tables(childComplexity, args["pattern"].(*string)), true
 
 	case "TableInfo.comment":
 		if e.complexity.TableInfo.Comment == nil {
@@ -168,7 +173,7 @@ func (ec *executionContext) introspectType(name string) (*introspection.Type, er
 
 var sources = []*ast.Source{
 	{Name: "graph/schema.graphqls", Input: `type Query {
-  tables: [TableInfo!]!
+  tables(pattern: String): [TableInfo!]!
 }
 
 scalar Time
@@ -200,6 +205,21 @@ func (ec *executionContext) field_Query___type_args(ctx context.Context, rawArgs
 		}
 	}
 	args["name"] = arg0
+	return args, nil
+}
+
+func (ec *executionContext) field_Query_tables_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
+	var err error
+	args := map[string]interface{}{}
+	var arg0 *string
+	if tmp, ok := rawArgs["pattern"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("pattern"))
+		arg0, err = ec.unmarshalOString2ᚖstring(ctx, tmp)
+		if err != nil {
+			return nil, err
+		}
+	}
+	args["pattern"] = arg0
 	return args, nil
 }
 
@@ -257,9 +277,16 @@ func (ec *executionContext) _Query_tables(ctx context.Context, field graphql.Col
 	}
 
 	ctx = graphql.WithFieldContext(ctx, fc)
+	rawArgs := field.ArgumentMap(ec.Variables)
+	args, err := ec.field_Query_tables_args(ctx, rawArgs)
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	fc.Args = args
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
 		ctx = rctx // use context from middleware stack in children
-		return ec.resolvers.Query().Tables(rctx)
+		return ec.resolvers.Query().Tables(rctx, args["pattern"].(*string))
 	})
 	if err != nil {
 		ec.Error(ctx, err)

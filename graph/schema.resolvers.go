@@ -6,12 +6,15 @@ package graph
 import (
 	"context"
 
+	"github.com/feitian124/goapi/nils"
+
 	"github.com/feitian124/goapi/graph/generated"
 	"github.com/feitian124/goapi/graph/model"
 )
 
-func (r *queryResolver) Tables(ctx context.Context) ([]*model.TableInfo, error) {
-	ts, err := r.DB.Tables("")
+func (r *queryResolver) Tables(ctx context.Context, pattern *string) ([]*model.TableInfo, error) {
+	p := nils.String(pattern)
+	ts, err := r.DB.Tables(p)
 	if err != nil {
 		return nil, err
 	}
