@@ -5,31 +5,25 @@ package graph
 
 import (
 	"context"
+	"fmt"
 
-	"github.com/feitian124/goapi/nils"
-
+	"github.com/feitian124/goapi/db/mysql"
 	"github.com/feitian124/goapi/graph/generated"
 	"github.com/feitian124/goapi/graph/model"
+	"github.com/feitian124/goapi/nils"
 )
 
-func (r *queryResolver) Tables(ctx context.Context, pattern *string) ([]*model.TableInfo, error) {
+func (r *queryResolver) Tables(ctx context.Context, pattern *string) ([]*mysql.TableInfo, error) {
 	p := nils.String(pattern)
 	ts, err := r.DB.Tables(p)
 	if err != nil {
 		return nil, err
 	}
-	var tbs []*model.TableInfo
-	for _, t := range ts {
-		tb := &model.TableInfo{
-			Name:      t.Name,
-			Type:      t.Type,
-			Comment:   t.Comment,
-			Def:       t.Def,
-			CreatedAt: t.CreatedAt,
-		}
-		tbs = append(tbs, tb)
-	}
-	return tbs, nil
+	return ts, nil
+}
+
+func (r *queryResolver) Table(ctx context.Context, name string) (*model.Table, error) {
+	panic(fmt.Errorf("not implemented"))
 }
 
 // Query returns generated.QueryResolver implementation.

@@ -35,8 +35,8 @@ const (
 )
 
 // Tables get table infos using query like "%pattern%" in table name or table comment
-func (d *DB) Tables(pattern string) ([]TableInfo, error) {
-	var tis []TableInfo
+func (d *DB) Tables(pattern string) ([]*TableInfo, error) {
+	var tis []*TableInfo
 	tableRows, err := d.db.Query(queryTablesByLike, d.Schema.Name, pattern, pattern)
 	if err != nil {
 		return nil, errors.WithStack(err)
@@ -54,7 +54,7 @@ func (d *DB) Tables(pattern string) ([]TableInfo, error) {
 			return nil, errors.WithStack(err)
 		}
 
-		ti := TableInfo{
+		ti := &TableInfo{
 			Name:      tableName,
 			Type:      tableType,
 			Comment:   tableComment,
@@ -78,7 +78,7 @@ func (d *DB) Table(name string) (*Table, error) {
 	}
 	for _, ti := range tis {
 		if ti.Name == name {
-			tb := &Table{TableInfo: ti}
+			tb := &Table{TableInfo: *ti}
 
 			columns, err := d.Columns(name)
 			if err != nil {

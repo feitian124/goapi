@@ -11,6 +11,7 @@ type TableInfo {
     comment: String
     def: String!
     createdAt: Time
+    external: Boolean!
 }
 
 type Table {
