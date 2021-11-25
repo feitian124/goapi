@@ -1,13 +1,71 @@
 type Query {
-  tables(pattern: String): [TableInfo!]!
+    tables(pattern: String): [TableInfo!]!
 }
 
 scalar Time
 
 type TableInfo {
-  name: ID!
-  type: String!
-  comment: String
-  def: String!
-  createdAt: Time
+    name: ID!
+    type: String!
+    comment: String
+    def: String!
+    createdAt: Time
+}
+
+type Table {
+    name: ID!
+    type: String!
+    comment: String
+    def: String!
+    createdAt: Time
+    columns:     [Column]
+    indexes:     [Index]
+    constraints: [Constraint]
+    triggers:    [Trigger]
+    referencedTables: [Table]
+}
+
+type Column {
+    name:           ID!
+    type:            String!
+    nullable:        Boolean!
+    default:          String
+    comment:         String
+    extraDef:        String
+    parentRelations: [Relation]
+    childRelations:  [Relation]
+}
+
+type Index {
+    name:    String!
+    def:     String!
+    table:   String
+    columns: [String]
+    comment: String
+}
+
+type Constraint {
+    name:              String!
+    type:              String!
+    def:               String!
+    table:             String
+    referencedTable:   String
+    columns:           [String!]
+    referencedColumns: [String!]
+    comment:           String
+}
+
+type Trigger {
+    name:    String!
+    def:     String!
+    comment: String
+}
+
+type Relation {
+    table:         Table
+    columns:       [Column]
+    parentTable:   Table
+    parentColumns: [Column]
+    def:           String
+    virtual:       Boolean
 }
