@@ -12,8 +12,8 @@ type Column struct {
 	Type            string      `json:"type"`
 	Nullable        bool        `json:"nullable"`
 	Default         *string     `json:"default"`
-	Comment         *string      `json:"comment"`
-	ExtraDef        *string      `json:"extra_def,omitempty" yaml:"extraDef,omitempty"`
+	Comment         *string     `json:"comment"`
+	ExtraDef        *string     `json:"extra_def,omitempty" yaml:"extraDef,omitempty"`
 	ParentRelations []*Relation `json:"-"`
 	ChildRelations  []*Relation `json:"-"`
 }

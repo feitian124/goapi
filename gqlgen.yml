@@ -56,3 +56,13 @@ models:
       - github.com/99designs/gqlgen/graphql.Int32
   TableInfo:
     model: github.com/feitian124/goapi/db/mysql.TableInfo
+  Table:
+    model: github.com/feitian124/goapi/db/mysql.Table
+  Column:
+    model: github.com/feitian124/goapi/db/mysql.Column
+  Index:
+    model: github.com/feitian124/goapi/db/mysql.Index
+  Constraint:
+    model: github.com/feitian124/goapi/db/mysql.Constraint
+  Trigger:
+    model: github.com/feitian124/goapi/db/mysql.Trigger
