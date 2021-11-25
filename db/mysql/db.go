@@ -2,6 +2,7 @@ package mysql
 
 import (
 	"database/sql"
+	"time"
 
 	"github.com/aquasecurity/go-version/pkg/version"
 	// mysql driver
@@ -34,7 +35,6 @@ type DB struct {
 
 // Open takes a dataSourceName like "root:mypass@tcp(127.0.0.1:33308)/testdb?parseTime=true"
 func Open(driverName string, dataSourceName string) (*DB, error) {
-	// dsn := "root:mypass@tcp(127.0.0.1:33308)/testdb?parseTime=true"
 	db, err := sqlx.Open(driverName, dataSourceName)
 	if err != nil {
 		return nil, errors.WithStack(err)
@@ -49,11 +49,11 @@ func Open(driverName string, dataSourceName string) (*DB, error) {
 		db:     db,
 		Schema: &Schema{},
 	}
-	logger, err := zap.NewDevelopment()
+	logger, err := InitLogger()
 	if err != nil {
 		return nil, errors.WithStack(err)
 	}
-	d.logger = logger.Sugar()
+	d.logger = logger
 	err = d.CheckVersion()
 	if err != nil {
 		return nil, err
@@ -112,8 +112,13 @@ func (db *DB) CheckSchema() error {
 }
 
 func (db *DB) Query(query string, args ...interface{}) (*sql.Rows, error) {
-	db.logger.Infof(query, args...)
+	start := time.Now() // 获取当前时间
+	db.logger.Infof("-------------------------------- sql: %s\n", query)
+	db.logger.Infof("---args: %+v\n", args)
 	rows, err := db.db.Query(query, args...)
+	elapsed := time.Since(start)
+	db.logger.Infof("---time: %s\n", elapsed.String())
+	// db.logger.Info("|--rows: %d\n", len(rows))
 	if err != nil {
 		return nil, errors.WithStack(err)
 	}
@@ -133,4 +138,13 @@ func (db *DB) QueryRowx(query string, args ...interface{}) (*sqlx.Row, error) {
 	db.logger.Infof(query, args...)
 	rows := db.db.QueryRowx(query, args...)
 	return rows, nil
+}
+
+func InitLogger() (*zap.SugaredLogger, error) {
+	logger, err := zap.NewDevelopment()
+	if err != nil {
+		return nil, errors.WithStack(err)
+	}
+	sugarLogger := logger.Sugar()
+	return sugarLogger, nil
 }
