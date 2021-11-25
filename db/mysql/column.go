@@ -1,7 +1,6 @@
 package mysql
 
 import (
-	"database/sql"
 	"fmt"
 
 	"github.com/pkg/errors"
@@ -9,14 +8,14 @@ import (
 
 // Column is the struct for table column
 type Column struct {
-	Name            string         `json:"name"`
-	Type            string         `json:"type"`
-	Nullable        bool           `json:"nullable"`
-	Default         sql.NullString `json:"default"`
-	Comment         string         `json:"comment"`
-	ExtraDef        string         `json:"extra_def,omitempty" yaml:"extraDef,omitempty"`
-	ParentRelations []*Relation    `json:"-"`
-	ChildRelations  []*Relation    `json:"-"`
+	Name            string      `json:"name"`
+	Type            string      `json:"type"`
+	Nullable        bool        `json:"nullable"`
+	Default         *string     `json:"default"`
+	Comment         *string      `json:"comment"`
+	ExtraDef        *string      `json:"extra_def,omitempty" yaml:"extraDef,omitempty"`
+	ParentRelations []*Relation `json:"-"`
+	ChildRelations  []*Relation `json:"-"`
 }
 
 const supportGeneratedColumnSQL = `
@@ -45,12 +44,12 @@ func (d *DB) Columns(tableName string) ([]*Column, error) {
 	for columnRows.Next() {
 		var (
 			columnName     string
-			columnDefault  sql.NullString
+			columnDefault  *string
 			isNullable     string
 			columnType     string
-			columnComment  sql.NullString
-			extra          sql.NullString
-			generationExpr sql.NullString
+			columnComment  *string
+			extra          *string
+			generationExpr *string
 		)
 		if d.supportGeneratedColumn {
 			err = columnRows.Scan(&columnName, &columnDefault, &isNullable, &columnType, &columnComment, &extra, &generationExpr)
@@ -63,15 +62,15 @@ func (d *DB) Columns(tableName string) ([]*Column, error) {
 				return nil, errors.WithStack(err)
 			}
 		}
-		extraDef := extra.String
-		if generationExpr.String != "" {
-			switch extraDef {
+		extraDef := ""
+		if generationExpr != nil {
+			switch *extra {
 			case "VIRTUAL GENERATED":
-				extraDef = fmt.Sprintf("GENERATED ALWAYS AS %s VIRTUAL", generationExpr.String)
+				extraDef = fmt.Sprintf("GENERATED ALWAYS AS %s VIRTUAL", *generationExpr)
 			case "STORED GENERATED":
-				extraDef = fmt.Sprintf("GENERATED ALWAYS AS %s STORED", generationExpr.String)
+				extraDef = fmt.Sprintf("GENERATED ALWAYS AS %s STORED", *generationExpr)
 			default:
-				extraDef = fmt.Sprintf("%s:%s", extraDef, generationExpr.String)
+				extraDef = fmt.Sprintf("%s:%s", extraDef, *generationExpr)
 			}
 		}
 		column := &Column{
@@ -79,8 +78,8 @@ func (d *DB) Columns(tableName string) ([]*Column, error) {
 			Type:     columnType,
 			Nullable: convertColumnNullable(isNullable),
 			Default:  columnDefault,
-			Comment:  columnComment.String,
-			ExtraDef: extraDef,
+			Comment:  columnComment,
+			ExtraDef: &extraDef,
 		}
 
 		columns = append(columns, column)

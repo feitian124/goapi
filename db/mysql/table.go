@@ -81,7 +81,7 @@ func (t *Table) FindConstrainsByColumnName(name string) []*Constraint {
 
 func (t *Table) HasColumnWithExtraDef() bool {
 	for _, c := range t.Columns {
-		if c.ExtraDef != "" {
+		if c.ExtraDef != nil {
 			return true
 		}
 	}
