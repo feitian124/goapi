@@ -65,9 +65,9 @@ func Open(driverName string, dataSourceName string) (*DB, error) {
 	return d, nil
 }
 
-func (d *DB) Close() error {
-	if d != nil && d.db != nil {
-		if err := d.db.Close(); err != nil {
+func (db *DB) Close() error {
+	if db != nil && db.db != nil {
+		if err := db.db.Close(); err != nil {
 			return errors.WithStack(err)
 		}
 	}
@@ -75,62 +75,62 @@ func (d *DB) Close() error {
 }
 
 // CheckVersion set version and supportGeneratedColumn
-func (d *DB) CheckVersion() error {
+func (db *DB) CheckVersion() error {
 	verGeneratedColumn, err := version.Parse(MinMysqlVersion)
 	if err != nil {
 		return errors.WithStack(err)
 	}
 
 	var v string
-	row := d.db.QueryRowx(`SELECT version();`)
+	row := db.db.QueryRowx(`SELECT version();`)
 	if err := row.Scan(&v); err != nil {
 		return errors.WithStack(err)
 	}
-	d.Version = v
+	db.Version = v
 
 	ver, err := version.Parse(v)
 	if err != nil {
 		return errors.WithStack(err)
 	}
 	if ver.LessThan(verGeneratedColumn) {
-		d.supportGeneratedColumn = false
+		db.supportGeneratedColumn = false
 	} else {
-		d.supportGeneratedColumn = true
+		db.supportGeneratedColumn = true
 	}
 	return nil
 }
 
 // CheckSchema set schema
-func (d *DB) CheckSchema() error {
+func (db *DB) CheckSchema() error {
 	var name string
-	row := d.db.QueryRowx(`SELECT database();`)
+	row := db.db.QueryRowx(`SELECT database();`)
 	if err := row.Scan(&name); err != nil {
 		return errors.WithStack(err)
 	}
-	d.Schema.Name = name
+	db.Schema.Name = name
 	return nil
 }
 
-func (d *DB) Query(query string, args ...interface{}) (*sql.Rows, error) {
-	d.logger.Infof(query, args...)
-	rows, err := d.db.Query(query, args...)
+func (db *DB) Query(query string, args ...interface{}) (*sql.Rows, error) {
+	db.logger.Infof(query, args...)
+	rows, err := db.db.Query(query, args...)
 	if err != nil {
 		return nil, errors.WithStack(err)
 	}
 	return rows, nil
 }
 
-func (d *DB) Queryx(query string, args ...interface{}) (*sqlx.Rows, error) {
-	d.logger.Infof(query, args...)
-	rows, err := d.db.Queryx(query, args...)
+func (db *DB) Queryx(query string, args ...interface{}) (*sqlx.Rows, error) {
+	db.logger.Infof(query, args...)
+	rows, err := db.db.Queryx(query, args...)
 	if err != nil {
 		return nil, errors.WithStack(err)
 	}
 	return rows, nil
 }
 
-func (d *DB) QueryRowx(query string, args ...interface{}) (*sqlx.Row, error) {
-	d.logger.Infof(query, args...)
-	rows := d.db.QueryRowx(query, args...)
+func (db *DB) QueryRowx(query string, args ...interface{}) (*sqlx.Row, error) {
+	db.logger.Infof(query, args...)
+	rows := db.db.QueryRowx(query, args...)
 	return rows, nil
 }

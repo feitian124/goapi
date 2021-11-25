@@ -58,8 +58,8 @@ const constraintSQL = `
 	GROUP BY kcu.constraint_name, sub.costraint_type, kcu.referenced_table_name
 `
 
-func (d *DB) Constraints(tableName string) ([]*Constraint, error) {
-	constraintRows, err := d.Query(constraintSQL, tableName, d.Schema.Name, tableName)
+func (db *DB) Constraints(tableName string) ([]*Constraint, error) {
+	constraintRows, err := db.Query(constraintSQL, tableName, db.Schema.Name, tableName)
 	if err != nil {
 		return nil, errors.WithStack(err)
 	}

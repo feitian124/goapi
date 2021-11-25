@@ -22,11 +22,11 @@ const TypeFK = "FOREIGN KEY"
 var reFK = regexp.MustCompile(`FOREIGN KEY \((.+)\) REFERENCES ([^\s]+)\s?\((.+)\)`)
 
 // TableRelations get table's relations from its constraints
-func (d *DB) TableRelations(tb *Table) ([]*Relation, error) {
+func (db *DB) TableRelations(tb *Table) ([]*Relation, error) {
 	var relations []*Relation
 	for _, c := range tb.Constraints {
 		if c.Type == TypeFK {
-			relation, err := d.Relation(tb, c)
+			relation, err := db.Relation(tb, c)
 			if err != nil {
 				return nil, errors.WithStack(err)
 			}
@@ -37,7 +37,7 @@ func (d *DB) TableRelations(tb *Table) ([]*Relation, error) {
 }
 
 // Relation get one relation from one constraint
-func (d *DB) Relation(tb *Table, c *Constraint) (*Relation, error) {
+func (db *DB) Relation(tb *Table, c *Constraint) (*Relation, error) {
 	r := &Relation{
 		Table: tb,
 		Def:   c.Def,
@@ -57,7 +57,7 @@ func (d *DB) Relation(tb *Table, c *Constraint) (*Relation, error) {
 		r.Columns = append(r.Columns, column)
 		column.ParentRelations = append(column.ParentRelations, r)
 	}
-	parentTable, err := d.Table(strParentTable)
+	parentTable, err := db.Table(strParentTable)
 	if err != nil {
 		return nil, errors.WithStack(err)
 	}

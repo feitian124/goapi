@@ -144,10 +144,10 @@ func unique(in []string) []string {
 }
 
 // ReferencedTables get referenced tables for view
-func (d *DB) ReferencedTables(tb *Table) error {
+func (db *DB) ReferencedTables(tb *Table) error {
 	if tb.Type == View {
 		for _, rts := range ParseReferencedTables(tb.Def) {
-			rt, err := d.Table(strings.TrimPrefix(rts, fmt.Sprintf("%s.", d.Schema.Name)))
+			rt, err := db.Table(strings.TrimPrefix(rts, fmt.Sprintf("%s.", db.Schema.Name)))
 			if err != nil {
 				return err
 			}

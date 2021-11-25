@@ -26,8 +26,8 @@ const triggerSQL = `
 	AND event_object_table = ?
 `
 
-func (d *DB) Triggers(tableName string) ([]*Trigger, error) {
-	triggerRows, err := d.Query(triggerSQL, d.Schema.Name, tableName)
+func (db *DB) Triggers(tableName string) ([]*Trigger, error) {
+	triggerRows, err := db.Query(triggerSQL, db.Schema.Name, tableName)
 	if err != nil {
 		return nil, errors.WithStack(err)
 	}

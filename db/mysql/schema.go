@@ -35,9 +35,9 @@ const (
 )
 
 // Tables get table infos using query like "%pattern%" in table name or table comment
-func (d *DB) Tables(pattern string) ([]*TableInfo, error) {
+func (db *DB) Tables(pattern string) ([]*TableInfo, error) {
 	var tis []*TableInfo
-	tableRows, err := d.Query(queryTablesByLike, d.Schema.Name, pattern, pattern)
+	tableRows, err := db.Query(queryTablesByLike, db.Schema.Name, pattern, pattern)
 	if err != nil {
 		return nil, errors.WithStack(err)
 	}
@@ -61,7 +61,7 @@ func (d *DB) Tables(pattern string) ([]*TableInfo, error) {
 			CreatedAt: createTime,
 		}
 
-		ti.Def, err = d.FindTableDDL(tableName, tableType)
+		ti.Def, err = db.FindTableDDL(tableName, tableType)
 		if err != nil {
 			return nil, err
 		}
@@ -71,8 +71,8 @@ func (d *DB) Tables(pattern string) ([]*TableInfo, error) {
 	return tis, nil
 }
 
-func (d *DB) Table(name string) (*Table, error) {
-	tis, err := d.Tables(name)
+func (db *DB) Table(name string) (*Table, error) {
+	tis, err := db.Tables(name)
 	if err != nil {
 		return nil, err
 	}
@@ -80,31 +80,31 @@ func (d *DB) Table(name string) (*Table, error) {
 		if ti.Name == name {
 			tb := &Table{TableInfo: *ti}
 
-			columns, err := d.Columns(name)
+			columns, err := db.Columns(name)
 			if err != nil {
 				return nil, err
 			}
 			tb.Columns = columns
 
-			indexes, err := d.Indexes(name)
+			indexes, err := db.Indexes(name)
 			if err != nil {
 				return nil, err
 			}
 			tb.Indexes = indexes
 
-			constraints, err := d.Constraints(name)
+			constraints, err := db.Constraints(name)
 			if err != nil {
 				return nil, err
 			}
 			tb.Constraints = constraints
 
-			triggers, err := d.Triggers(name)
+			triggers, err := db.Triggers(name)
 			if err != nil {
 				return nil, err
 			}
 			tb.Triggers = triggers
 
-			err = d.ReferencedTables(tb)
+			err = db.ReferencedTables(tb)
 			if err != nil {
 				return nil, err
 			}
@@ -114,9 +114,9 @@ func (d *DB) Table(name string) (*Table, error) {
 	return nil, errors.Errorf("can not find table %s", name)
 }
 
-func (d *DB) FindTableDDL(tableName string, tableType TableType) (string, error) {
+func (db *DB) FindTableDDL(tableName string, tableType TableType) (string, error) {
 	if tableType == BaseTable {
-		tableDefRows, err := d.Query(fmt.Sprintf("SHOW CREATE TABLE `%s`", tableName))
+		tableDefRows, err := db.Query(fmt.Sprintf("SHOW CREATE TABLE `%s`", tableName))
 		if err != nil {
 			return "", errors.WithStack(err)
 		}
@@ -139,7 +139,7 @@ func (d *DB) FindTableDDL(tableName string, tableType TableType) (string, error)
 
 	// view definition
 	if tableType == View {
-		viewDefRows, err := d.Query(mysqlViewSQL, d.Schema.Name, tableName)
+		viewDefRows, err := db.Query(mysqlViewSQL, db.Schema.Name, tableName)
 		if err != nil {
 			return "", errors.WithStack(err)
 		}

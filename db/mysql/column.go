@@ -30,12 +30,12 @@ const columnSQL = `
 	WHERE table_schema = ? AND table_name = ? ORDER BY ordinal_position
 `
 
-func (d *DB) Columns(tableName string) ([]*Column, error) {
+func (db *DB) Columns(tableName string) ([]*Column, error) {
 	columnStmt := supportGeneratedColumnSQL
-	if !d.supportGeneratedColumn {
+	if !db.supportGeneratedColumn {
 		columnStmt = columnSQL
 	}
-	columnRows, err := d.Query(columnStmt, d.Schema.Name, tableName)
+	columnRows, err := db.Query(columnStmt, db.Schema.Name, tableName)
 	if err != nil {
 		return nil, errors.WithStack(err)
 	}
@@ -51,7 +51,7 @@ func (d *DB) Columns(tableName string) ([]*Column, error) {
 			extra          *string
 			generationExpr *string
 		)
-		if d.supportGeneratedColumn {
+		if db.supportGeneratedColumn {
 			err = columnRows.Scan(&columnName, &columnDefault, &isNullable, &columnType, &columnComment, &extra, &generationExpr)
 			if err != nil {
 				return nil, errors.WithStack(err)
