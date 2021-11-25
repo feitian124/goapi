@@ -36,7 +36,7 @@ const indexSQL = `
 
 // Indexes get a table's indexes
 func (d *DB) Indexes(tableName string) ([]*Index, error) {
-	indexRows, err := d.db.Query(indexSQL, d.Schema.Name, tableName)
+	indexRows, err := d.Query(indexSQL, d.Schema.Name, tableName)
 	if err != nil {
 		return nil, errors.WithStack(err)
 	}

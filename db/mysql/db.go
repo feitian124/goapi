@@ -8,6 +8,7 @@ import (
 	_ "github.com/go-sql-driver/mysql"
 	"github.com/jmoiron/sqlx"
 	"github.com/pkg/errors"
+	"go.uber.org/zap"
 )
 
 const (
@@ -28,6 +29,7 @@ type DB struct {
 	db                     *sqlx.DB
 	supportGeneratedColumn bool
 	Schema                 *Schema `json:"schema"`
+	logger                 *zap.SugaredLogger
 }
 
 // Open takes a dataSourceName like "root:mypass@tcp(127.0.0.1:33308)/testdb?parseTime=true"
@@ -47,6 +49,11 @@ func Open(driverName string, dataSourceName string) (*DB, error) {
 		db:     db,
 		Schema: &Schema{},
 	}
+	logger, err := zap.NewDevelopment()
+	if err != nil {
+		return nil, errors.WithStack(err)
+	}
+	d.logger = logger.Sugar()
 	err = d.CheckVersion()
 	if err != nil {
 		return nil, err
@@ -105,7 +112,7 @@ func (d *DB) CheckSchema() error {
 }
 
 func (d *DB) Query(query string, args ...interface{}) (*sql.Rows, error) {
-	// d.logger.Print(query, args...)
+	d.logger.Infof(query, args...)
 	rows, err := d.db.Query(query, args...)
 	if err != nil {
 		return nil, errors.WithStack(err)
@@ -114,7 +121,7 @@ func (d *DB) Query(query string, args ...interface{}) (*sql.Rows, error) {
 }
 
 func (d *DB) Queryx(query string, args ...interface{}) (*sqlx.Rows, error) {
-	// d.logger.Print(query, args...)
+	d.logger.Infof(query, args...)
 	rows, err := d.db.Queryx(query, args...)
 	if err != nil {
 		return nil, errors.WithStack(err)
@@ -123,7 +130,7 @@ func (d *DB) Queryx(query string, args ...interface{}) (*sqlx.Rows, error) {
 }
 
 func (d *DB) QueryRowx(query string, args ...interface{}) (*sqlx.Row, error) {
-	// d.logger.Print(query, args...)
+	d.logger.Infof(query, args...)
 	rows := d.db.QueryRowx(query, args...)
 	return rows, nil
 }

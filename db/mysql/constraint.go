@@ -59,7 +59,7 @@ const constraintSQL = `
 `
 
 func (d *DB) Constraints(tableName string) ([]*Constraint, error) {
-	constraintRows, err := d.db.Query(constraintSQL, tableName, d.Schema.Name, tableName)
+	constraintRows, err := d.Query(constraintSQL, tableName, d.Schema.Name, tableName)
 	if err != nil {
 		return nil, errors.WithStack(err)
 	}

@@ -35,7 +35,7 @@ func (d *DB) Columns(tableName string) ([]*Column, error) {
 	if !d.supportGeneratedColumn {
 		columnStmt = columnSQL
 	}
-	columnRows, err := d.db.Query(columnStmt, d.Schema.Name, tableName)
+	columnRows, err := d.Query(columnStmt, d.Schema.Name, tableName)
 	if err != nil {
 		return nil, errors.WithStack(err)
 	}

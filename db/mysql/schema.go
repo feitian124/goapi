@@ -37,7 +37,7 @@ const (
 // Tables get table infos using query like "%pattern%" in table name or table comment
 func (d *DB) Tables(pattern string) ([]*TableInfo, error) {
 	var tis []*TableInfo
-	tableRows, err := d.db.Query(queryTablesByLike, d.Schema.Name, pattern, pattern)
+	tableRows, err := d.Query(queryTablesByLike, d.Schema.Name, pattern, pattern)
 	if err != nil {
 		return nil, errors.WithStack(err)
 	}
@@ -116,7 +116,7 @@ func (d *DB) Table(name string) (*Table, error) {
 
 func (d *DB) FindTableDDL(tableName string, tableType TableType) (string, error) {
 	if tableType == BaseTable {
-		tableDefRows, err := d.db.Query(fmt.Sprintf("SHOW CREATE TABLE `%s`", tableName))
+		tableDefRows, err := d.Query(fmt.Sprintf("SHOW CREATE TABLE `%s`", tableName))
 		if err != nil {
 			return "", errors.WithStack(err)
 		}
@@ -139,7 +139,7 @@ func (d *DB) FindTableDDL(tableName string, tableType TableType) (string, error)
 
 	// view definition
 	if tableType == View {
-		viewDefRows, err := d.db.Query(mysqlViewSQL, d.Schema.Name, tableName)
+		viewDefRows, err := d.Query(mysqlViewSQL, d.Schema.Name, tableName)
 		if err != nil {
 			return "", errors.WithStack(err)
 		}

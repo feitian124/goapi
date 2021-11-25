@@ -27,7 +27,7 @@ const triggerSQL = `
 `
 
 func (d *DB) Triggers(tableName string) ([]*Trigger, error) {
-	triggerRows, err := d.db.Query(triggerSQL, d.Schema.Name, tableName)
+	triggerRows, err := d.Query(triggerSQL, d.Schema.Name, tableName)
 	if err != nil {
 		return nil, errors.WithStack(err)
 	}
