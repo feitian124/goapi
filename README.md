@@ -1,11 +1,11 @@
-# goapi
+# tigql
 
-![test workflow](https://github.com/feitian124/goapi/actions/workflows/test.yml/badge.svg)
+![test result](https://github.com/tigql/tigql/actions/workflows/test.yml/badge.svg)
 
-goapi expose database as api, both `static` and `dynamic`:
+tigql is a graphql engine for tidb and mysql, help expose your database as static or dynamic api easier.
 
 - **static** means you can easily write CRUD code.
-- **dynamic** means you can expose database data directly as graphql or rpc call.
+- **dynamic** means you can expose database data directly as graphql(like hasura) or rpc call.
 
 ## dev
 ```
