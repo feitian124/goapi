@@ -6,7 +6,6 @@ import (
 	"testing"
 
 	"github.com/feitian124/goapi/db"
-
 	"github.com/feitian124/goapi/db/mysql"
 )
 
@@ -30,14 +29,13 @@ func TestMain(m *testing.M) {
 		mariadb10,
 	}
 
-	for i := 0; i < len(testDss); i++ {
-		currentTestDatasource = testDss[i]
-		currentTestDB, err = mysql.Open(currentTestDatasource)
-		if err != nil {
-			log.Fatal(err)
-		}
-		if exitCode := m.Run(); exitCode != 0 {
-			os.Exit(1)
-		}
+	// change index from 0 to 3 to test different target
+	currentTestDatasource = testDss[3]
+	currentTestDB, err = mysql.Open(currentTestDatasource)
+	if err != nil {
+		log.Fatal(err)
+	}
+	if exitCode := m.Run(); exitCode != 0 {
+		os.Exit(1)
 	}
 }
