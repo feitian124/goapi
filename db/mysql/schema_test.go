@@ -24,7 +24,7 @@ func TestDB_Tables(t *testing.T) {
 
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			got, err := mysql80DB.Tables(tt.args.pattern)
+			got, err := currentTestDB.Tables(tt.args.pattern)
 			require.NoError(t, err)
 			require.Equal(t, len(got), tt.want)
 		})
@@ -45,7 +45,7 @@ func TestDB_Table(t *testing.T) {
 
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			got, err := mysql80DB.Table(tt.want)
+			got, err := currentTestDB.Table(tt.want)
 			require.NoError(t, err)
 			require.Equal(t, got.Name, tt.want)
 			require.Greater(t, len(got.Columns), 0)
@@ -82,7 +82,7 @@ func TestDB_FindTableDDL(t *testing.T) {
 
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			got, err := mysql80DB.FindTableDDL(tt.args.tableName, tt.args.tableType)
+			got, err := currentTestDB.FindTableDDL(tt.args.tableName, tt.args.tableType)
 			if tt.wantErr {
 				require.Error(t, err)
 				require.Contains(t, err.Error(), tt.args.tableName)

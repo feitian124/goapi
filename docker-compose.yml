@@ -1,37 +1,9 @@
 version: '3.4'
-
 services:
-  postgres95:
-    image: postgres:9.5
-    ports:
-      - "55432:5432"
-    environment:
-      - POSTGRES_USER=postgres
-      - POSTGRES_PASSWORD=pgpass
-      - POSTGRES_DB=testdb
-  postgres13:
-    image: postgres:13.1
-    ports:
-      - "55413:5432"
-    environment:
-      - POSTGRES_USER=postgres
-      - POSTGRES_PASSWORD=pgpass
-      - POSTGRES_DB=testdb
-  mysql57:
-    image: mysql:5.7
-    ports:
-      - "33308:3306"
-    environment:
-      - MYSQL_DATABASE=testdb
-      - MYSQL_ROOT_PASSWORD=mypass
-    volumes:
-      - './build/mysql/conf.d:/etc/mysql/conf.d'
-      - './build/mysql/docker-entrypoint-initdb.d:/docker-entrypoint-initdb.d'
-      - './build/mysql/sql:/opt/sql'
   mysql80:
     image: mysql:8.0
     ports:
-      - "33308:3306"
+      - "33306:3306"
     environment:
       - MYSQL_DATABASE=testdb
       - MYSQL_ROOT_PASSWORD=mypass
@@ -43,15 +15,30 @@ services:
       - './build/mysql/conf.d:/etc/mysql/conf.d'
       - './build/mysql/docker-entrypoint-initdb.d:/docker-entrypoint-initdb.d'
       - './build/mysql/sql:/opt/sql'
-  mariadb:
-    image: mariadb:10.5
+  mysql57:
+    image: mysql:5.7
     ports:
-      - "33309:3306"
+      - "33307:3306"
     environment:
       - MYSQL_DATABASE=testdb
       - MYSQL_ROOT_PASSWORD=mypass
-  adminer:
-    image: adminer
-    restart: always
+    volumes:
+      - './build/mysql/conf.d:/etc/mysql/conf.d'
+      - './build/mysql/docker-entrypoint-initdb.d:/docker-entrypoint-initdb.d'
+      - './build/mysql/sql:/opt/sql'
+  mariadb:
+    image: mariadb:10.5
     ports:
-      - "38080:8080"
+      - "33308:3306"
+    environment:
+      - MYSQL_DATABASE=testdb
+      - MYSQL_ROOT_PASSWORD=mypass
+    volumes:
+      - './build/mysql/conf.d:/etc/mysql/conf.d'
+      - './build/mysql/docker-entrypoint-initdb.d:/docker-entrypoint-initdb.d'
+      - './build/mysql/sql:/opt/sql'
+#  adminer:
+#    image: adminer
+#    restart: always
+#    ports:
+#      - "38080:8080"

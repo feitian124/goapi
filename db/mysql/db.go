@@ -4,6 +4,8 @@ import (
 	"database/sql"
 	"time"
 
+	"github.com/feitian124/goapi/db"
+
 	"github.com/aquasecurity/go-version/pkg/version"
 	// mysql driver
 	_ "github.com/go-sql-driver/mysql"
@@ -15,7 +17,6 @@ import (
 const (
 	MinMysqlVersion = "5.7.6"
 	DriverName      = "mysql"
-	DataSourceName  = "root:mypass@tcp(127.0.0.1:33308)/testdb?parseTime=true"
 )
 
 // DB stands for a connection to database, including current schema
@@ -24,6 +25,7 @@ const (
 // function should be called just once. It is rarely necessary to
 // close a DB.
 type DB struct {
+	// Name for database driver, such as mysql
 	Name                   string `json:"name"`
 	Version                string `json:"version"`
 	URL                    string `json:"url"`
@@ -34,8 +36,8 @@ type DB struct {
 }
 
 // Open takes a dataSourceName like "root:mypass@tcp(127.0.0.1:33308)/testdb?parseTime=true"
-func Open(driverName string, dataSourceName string) (*DB, error) {
-	db, err := sqlx.Open(driverName, dataSourceName)
+func Open(ds *db.Datasource) (*DB, error) {
+	db, err := sqlx.Open("mysql", ds.ConnectString())
 	if err != nil {
 		return nil, errors.WithStack(err)
 	}
@@ -45,7 +47,7 @@ func Open(driverName string, dataSourceName string) (*DB, error) {
 	}
 
 	d := &DB{
-		Name:   driverName,
+		Name:   "mysql",
 		db:     db,
 		Schema: &Schema{},
 	}
@@ -113,11 +115,11 @@ func (db *DB) CheckSchema() error {
 
 func (db *DB) Query(query string, args ...interface{}) (*sql.Rows, error) {
 	start := time.Now() // 获取当前时间
-	db.logger.Infof("-------------------------------- sql: %s\n", query)
-	db.logger.Infof("---args: %+v\n", args)
+	db.logger.Debugf("-------------------------------- sql: %s\n", query)
+	db.logger.Debugf("---args: %+v\n", args)
 	rows, err := db.db.Query(query, args...)
 	elapsed := time.Since(start)
-	db.logger.Infof("---time: %s\n", elapsed.String())
+	db.logger.Debugf("---time: %s\n", elapsed.String())
 	// db.logger.Info("|--rows: %d\n", len(rows))
 	if err != nil {
 		return nil, errors.WithStack(err)
@@ -126,7 +128,7 @@ func (db *DB) Query(query string, args ...interface{}) (*sql.Rows, error) {
 }
 
 func (db *DB) Queryx(query string, args ...interface{}) (*sqlx.Rows, error) {
-	db.logger.Infof(query, args...)
+	db.logger.Debugf(query, args...)
 	rows, err := db.db.Queryx(query, args...)
 	if err != nil {
 		return nil, errors.WithStack(err)
@@ -135,13 +137,14 @@ func (db *DB) Queryx(query string, args ...interface{}) (*sqlx.Rows, error) {
 }
 
 func (db *DB) QueryRowx(query string, args ...interface{}) (*sqlx.Row, error) {
-	db.logger.Infof(query, args...)
+	db.logger.Debugf(query, args...)
 	rows := db.db.QueryRowx(query, args...)
 	return rows, nil
 }
 
 func InitLogger() (*zap.SugaredLogger, error) {
-	logger, err := zap.NewDevelopment()
+	// logger, err := zap.NewDevelopment()
+	logger, err := zap.NewProduction()
 	if err != nil {
 		return nil, errors.WithStack(err)
 	}

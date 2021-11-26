@@ -7,7 +7,7 @@ import (
 )
 
 func TestMysql_Triggers(t *testing.T) {
-	triggers, err := mysql80DB.Triggers("posts")
+	triggers, err := currentTestDB.Triggers("posts")
 
 	require.NoError(t, err)
 	require.Len(t, triggers, 1)

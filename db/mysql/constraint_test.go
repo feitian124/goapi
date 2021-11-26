@@ -7,7 +7,7 @@ import (
 )
 
 func TestMysql_Constraints(t *testing.T) {
-	constraints, err := mysql80DB.Constraints("posts")
+	constraints, err := currentTestDB.Constraints("posts")
 	require.NoError(t, err)
 	// pk, fk and user defined
 	require.Len(t, constraints, 3)

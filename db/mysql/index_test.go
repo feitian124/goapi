@@ -7,7 +7,7 @@ import (
 )
 
 func TestDB_Indexes(t *testing.T) {
-	indexes, err := mysql80DB.Indexes("posts")
+	indexes, err := currentTestDB.Indexes("posts")
 	require.NoError(t, err)
 	// pk, fk and user defined
 	require.Len(t, indexes, 3)

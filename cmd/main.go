@@ -6,6 +6,8 @@ import (
 	"net/http"
 	"os"
 
+	"github.com/feitian124/goapi/db"
+
 	"github.com/feitian124/goapi/db/mysql"
 
 	"github.com/99designs/gqlgen/graphql/handler"
@@ -26,7 +28,8 @@ func main() {
 		port = "8080"
 	}
 
-	db, err := mysql.Open(mysql.DriverName, mysql.DataSourceName)
+	ds := &db.Datasource{UserName: "root", Passwd: "mypass", Host: "127.0.0.1", Port: 33306, DBName: "testdb"}
+	db, err := mysql.Open(ds)
 	if err != nil {
 		log.Fatal(err)
 	}

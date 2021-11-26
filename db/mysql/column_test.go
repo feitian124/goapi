@@ -8,7 +8,7 @@ import (
 
 func TestDB_Columns(t *testing.T) {
 	t.Parallel()
-	columns, err := mysql80DB.Columns("posts")
+	columns, err := currentTestDB.Columns("posts")
 	require.NoError(t, err)
 
 	require.NoError(t, err)
