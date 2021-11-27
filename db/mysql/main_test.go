@@ -17,25 +17,19 @@ var (
 func TestMain(m *testing.M) {
 	var err error
 
-	tidb52 := &db.Datasource{UserName: "root", Passwd: "mypass", Host: "127.0.0.1", Port: 4000, DBName: "testdb", Comment: "tidb 5.2"}
-	mysql80 := &db.Datasource{UserName: "root", Passwd: "mypass", Host: "127.0.0.1", Port: 33306, DBName: "testdb", Comment: "mysql 8.0"}
-	mysql57 := &db.Datasource{UserName: "root", Passwd: "mypass", Host: "127.0.0.1", Port: 33307, DBName: "testdb", Comment: "mysql 5.7"}
-	mariadb10 := &db.Datasource{UserName: "root", Passwd: "mypass", Host: "127.0.0.1", Port: 33308, DBName: "testdb", Comment: "mariadb 10.5"}
-
-	testDss := []*db.Datasource{
-		tidb52,
-		mysql80,
-		mysql57,
-		mariadb10,
+	// if test multiple packages(test ./...), any flags you provide must be valid in all of them.
+	// so here use env instead of flag
+	comment := os.Getenv("DATASOURCE")
+	if len(comment) == 0 {
+		comment = db.CurrentDB
 	}
-
-	// change index from 0 to 3 to test different target
-	currentTestDatasource = testDss[3]
+	currentTestDatasource, err = db.PredefinedDatasource(comment)
+	if err != nil {
+		log.Fatal(err)
+	}
 	currentTestDB, err = mysql.Open(currentTestDatasource)
 	if err != nil {
 		log.Fatal(err)
 	}
-	if exitCode := m.Run(); exitCode != 0 {
-		os.Exit(1)
-	}
+	os.Exit(m.Run())
 }

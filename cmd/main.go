@@ -23,12 +23,17 @@ func main() {
 	flag.StringVar(&dsn, "dsn", "my://root:mypass@localhost:33308/testdb", "数据库连接符")
 	flag.Parse()
 
+	//
 	port := os.Getenv("PORT")
 	if port == "" {
 		port = "8080"
 	}
 
-	ds := &db.Datasource{UserName: "root", Passwd: "mypass", Host: "127.0.0.1", Port: 33306, DBName: "testdb"}
+	ds, err := db.PredefinedDatasource(db.CurrentDB)
+	if err != nil {
+		log.Fatal(err)
+	}
+
 	db, err := mysql.Open(ds)
 	if err != nil {
 		log.Fatal(err)

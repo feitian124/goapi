@@ -26,7 +26,12 @@ lint: fmt
 	golangci-lint run --timeout "5m"
 
 test:
-	@go test ./... --cover -count=1
+	export DATASOURCE=mysql_5_7 && go test ./... --cover -count=1
+
+testAll:
+	export DATASOURCE=mysql_8_0 && go test ./... --cover -count=1
+	export DATASOURCE=mysql_5_7 && go test ./... --cover -count=1
+	export DATASOURCE=mariadb_10_5 && go test ./... --cover -count=1
 
 generate:
 	@go generate ./...
