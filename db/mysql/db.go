@@ -2,6 +2,7 @@ package mysql
 
 import (
 	"database/sql"
+	"strings"
 	"time"
 
 	"github.com/feitian124/goapi/db"
@@ -88,12 +89,15 @@ func (db *DB) CheckVersion() error {
 	if err := row.Scan(&v); err != nil {
 		return errors.WithStack(err)
 	}
+	v = formatMariaVersion(v)
 	db.Version = v
 
 	ver, err := version.Parse(v)
 	if err != nil {
 		return errors.WithStack(err)
 	}
+
+	// TODO here meant only for mysql. mariadb and tidb should update
 	if ver.LessThan(verGeneratedColumn) {
 		db.supportGeneratedColumn = false
 	} else {
@@ -150,4 +154,13 @@ func InitLogger() (*zap.SugaredLogger, error) {
 	}
 	sugarLogger := logger.Sugar()
 	return sugarLogger, nil
+}
+
+// formatMariaVersion given 10.5.13-MariaDB-1:10.5.13+maria~focal return 10.5.13
+func formatMariaVersion(v string) string {
+	if strings.Contains(strings.ToLower(v), "maria") {
+		parts := strings.Split(v, "-")
+		return parts[0]
+	}
+	return v
 }
