@@ -22,27 +22,34 @@ default: test
 fmt:
 	gofumpt -l -w .
 
+## lint: fmt then lint.
 lint: fmt
 	golangci-lint run --timeout "5m"
 
+## test: test default database mysql_5_7.
 test:
 	export DATASOURCE=mysql_5_7 && go test ./... --cover -count=1
 
+## testAll: test all supported databases one by one, currently mysql_8_0, mysql_5_7, mariadb_10_5, tidb_5_2.
 testAll:
 	export DATASOURCE=mysql_8_0 && go test ./... --cover -count=1
 	export DATASOURCE=mysql_5_7 && go test ./... --cover -count=1
 	export DATASOURCE=mariadb_10_5 && go test ./... --cover -count=1
 
+## generate: generate graphql struct based on schema.
 generate:
 	@go generate ./...
 
 build:
 	@go build -ldflags="$(BUILD_LDFLAGS)"
 
+## dev: start server with live reload. Runs `air` internally.
 dev:
 	@air
 
+## install: install go modules and tools used by this project.
 install:
+	@echo " > install..."
 	go mod tidy
 	go install mvdan.cc/gofumpt@latest
 	go install github.com/golangci/golangci-lint/cmd/golangci-lint@v1.43.0
@@ -66,6 +73,7 @@ postgres:
 sqlite:
 	sqlite3 $(PWD)/testdata/testdb.sqlite3 < testdata/ddl/sqlite.sql
 
+## info: show make file environments.
 info:
 	@echo "PKG：${PKG}"
 	@echo "COMMIT：${COMMIT}"
@@ -79,4 +87,11 @@ info:
 	@echo ${GO_FILES}
 	@echo -e "\ngolangci-lint:"
 
-.PHONY: default fmt lint test build install mysql postgres sqlite info air
+# comments start with 2 # will available in help
+help: Makefile
+	@echo
+	@echo "Choose a command to run:"
+	@sed -n 's/^##//p' $< | column -t -s ':' |  sed -e 's/^/ /'
+	@echo
+
+.PHONY: default fmt lint test build install mysql postgres sqlite info air help
