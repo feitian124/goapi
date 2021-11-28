@@ -6,7 +6,7 @@ import (
 	"github.com/pkg/errors"
 )
 
-const CurrentDB = "mysql_5_7"
+const CurrentDB = "tidb_5_2"
 
 type Datasource struct {
 	UserName string
@@ -24,7 +24,7 @@ func (ds *Datasource) ConnectString() string {
 }
 
 func PredefinedDatasource(comment string) (*Datasource, error) {
-	tidb52 := &Datasource{UserName: "root", Passwd: "mypass", Host: "127.0.0.1", Port: 4000, DBName: "testdb", Comment: "tidb_5_2"}
+	tidb52 := &Datasource{UserName: "root", Passwd: "", Host: "192.168.135.154", Port: 4000, DBName: "testdb", Comment: "tidb_5_2"}
 	mysql80 := &Datasource{UserName: "root", Passwd: "mypass", Host: "127.0.0.1", Port: 33306, DBName: "testdb", Comment: "mysql_8_0"}
 	mysql57 := &Datasource{UserName: "root", Passwd: "mypass", Host: "127.0.0.1", Port: 33307, DBName: "testdb", Comment: "mysql_5_7"}
 	mariadb10 := &Datasource{UserName: "root", Passwd: "mypass", Host: "127.0.0.1", Port: 33308, DBName: "testdb", Comment: "mariadb_10_5"}
