@@ -29,7 +29,9 @@ func TestMain(m *testing.M) {
 	}
 	currentTestDB, err = mysql.Open(currentTestDatasource)
 	if err != nil {
+		currentTestDB.Close()
 		log.Fatal(err)
 	}
 	os.Exit(m.Run())
+	currentTestDB.Close()
 }

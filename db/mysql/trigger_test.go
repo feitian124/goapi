@@ -6,7 +6,7 @@ import (
 	"github.com/stretchr/testify/require"
 )
 
-func TestMysql_Triggers(t *testing.T) {
+func TestDB_Triggers(t *testing.T) {
 	triggers, err := currentTestDB.Triggers("posts")
 
 	require.NoError(t, err)
