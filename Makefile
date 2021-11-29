@@ -55,10 +55,12 @@ install:
 	go install github.com/golangci/golangci-lint/cmd/golangci-lint@v1.43.0
 	go install github.com/99designs/gqlgen@v0.14.0
 	go install github.com/cosmtrek/air@v1.27.4
-	#go install github.com/xo/usql@v0.9.5
+	go install -tags 'no_postgres no_oracle no_sqlserver no_sqlite3' github.com/xo/usql@v0.9.5
 
+## tidb: init tidb. create database testdb and run ddl.
 tidb:
-	usql my://root@192.168.135.154:4000/testdb -f testdata/ddl/tidb52.sql
+	usql my://root@192.168.135.154:4000 -c "CREATE DATABASE IF NOT EXISTS testdb;"
+	usql my://root@192.168.135.154:4000/testdb -f testdata/ddl/tidb_5_2.sql
 
 mysql:
 	usql my://root:mypass@localhost:33306/testdb -f testdata/ddl/mysql56.sql
