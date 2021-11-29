@@ -13,10 +13,10 @@ func TestDB_Constraints(t *testing.T) {
 	require.NoError(t, err)
 	// pk, fk and user defined
 	require.Len(t, constraints, 3)
-	require.True(t, contains(constraints, "posts_user_id_fk"))
+	require.True(t, containsConstraint(constraints, "posts_user_id_fk"))
 }
 
-func contains(cs []*mysql.Constraint, name string) bool {
+func containsConstraint(cs []*mysql.Constraint, name string) bool {
 	for _, c := range cs {
 		if c.Name == name {
 			return true
