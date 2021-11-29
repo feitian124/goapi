@@ -1,7 +1,7 @@
 package graph
 
 import (
-	"github.com/feitian124/goapi/db/mysql"
+	"github.com/tigql/tigql/db/mysql"
 )
 
 //go:generate go run github.com/99designs/gqlgen

@@ -1,4 +1,4 @@
-module github.com/feitian124/goapi
+module github.com/tigql/tigql
 
 go 1.17
 

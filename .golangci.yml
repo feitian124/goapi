@@ -50,4 +50,4 @@ linters-settings:
     ignoreSigRegexps:
       - \.New.*Error\(
     ignorePackageGlobs:
-      - github.com/feitian124/goapi/*
+      - github.com/tigql/tigql/*

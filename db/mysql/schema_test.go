@@ -3,8 +3,8 @@ package mysql_test
 import (
 	"testing"
 
-	"github.com/feitian124/goapi/db/mysql"
 	"github.com/stretchr/testify/require"
+	"github.com/tigql/tigql/db/mysql"
 )
 
 func TestDB_Tables(t *testing.T) {

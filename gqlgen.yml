@@ -35,7 +35,7 @@ resolver:
 # gqlgen will search for any type names in the schema in these go packages
 # if they match it will use them, otherwise it will generate them.
 autobind:
-  - "github.com/feitian124/goapi/graph/model"
+  - "github.com/tigql/tigql/graph/model"
 
 # This section declares type mapping between the GraphQL and go type systems
 #
@@ -55,16 +55,16 @@ models:
       - github.com/99designs/gqlgen/graphql.Int64
       - github.com/99designs/gqlgen/graphql.Int32
   TableInfo:
-    model: github.com/feitian124/goapi/db/mysql.TableInfo
+    model: github.com/tigql/tigql/db/mysql.TableInfo
   Table:
-    model: github.com/feitian124/goapi/db/mysql.Table
+    model: github.com/tigql/tigql/db/mysql.Table
   Column:
-    model: github.com/feitian124/goapi/db/mysql.Column
+    model: github.com/tigql/tigql/db/mysql.Column
   Index:
-    model: github.com/feitian124/goapi/db/mysql.Index
+    model: github.com/tigql/tigql/db/mysql.Index
   Constraint:
-    model: github.com/feitian124/goapi/db/mysql.Constraint
+    model: github.com/tigql/tigql/db/mysql.Constraint
   Trigger:
-    model: github.com/feitian124/goapi/db/mysql.Trigger
+    model: github.com/tigql/tigql/db/mysql.Trigger
   Relation:
-    model: github.com/feitian124/goapi/db/mysql.Relation
+    model: github.com/tigql/tigql/db/mysql.Relation

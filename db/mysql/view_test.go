@@ -3,7 +3,7 @@ package mysql_test
 import (
 	"testing"
 
-	"github.com/feitian124/goapi/db/mysql"
+	"github.com/tigql/tigql/db/mysql"
 
 	"github.com/google/go-cmp/cmp"
 )

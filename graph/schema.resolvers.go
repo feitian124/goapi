@@ -6,9 +6,9 @@ package graph
 import (
 	"context"
 
-	"github.com/feitian124/goapi/db/mysql"
-	"github.com/feitian124/goapi/graph/generated"
-	"github.com/feitian124/goapi/nils"
+	"github.com/tigql/tigql/db/mysql"
+	"github.com/tigql/tigql/graph/generated"
+	"github.com/tigql/tigql/nils"
 )
 
 func (r *queryResolver) Tables(ctx context.Context, pattern *string) ([]*mysql.TableInfo, error) {

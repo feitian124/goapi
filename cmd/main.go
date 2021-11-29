@@ -6,16 +6,16 @@ import (
 	"net/http"
 	"os"
 
-	"github.com/feitian124/goapi/db"
+	"github.com/tigql/tigql/db"
 
-	"github.com/feitian124/goapi/db/mysql"
+	"github.com/tigql/tigql/db/mysql"
 
 	"github.com/99designs/gqlgen/graphql/handler"
 	"github.com/99designs/gqlgen/graphql/playground"
-	"github.com/feitian124/goapi/graph"
-	"github.com/feitian124/goapi/graph/generated"
 	_ "github.com/go-sql-driver/mysql"
 	_ "github.com/lib/pq"
+	"github.com/tigql/tigql/graph"
+	"github.com/tigql/tigql/graph/generated"
 )
 
 func main() {

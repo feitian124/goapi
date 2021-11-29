@@ -5,8 +5,8 @@ import (
 	"os"
 	"testing"
 
-	"github.com/feitian124/goapi/db"
-	"github.com/feitian124/goapi/db/mysql"
+	"github.com/tigql/tigql/db"
+	"github.com/tigql/tigql/db/mysql"
 )
 
 var (

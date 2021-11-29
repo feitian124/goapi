@@ -5,7 +5,7 @@ import (
 	"strings"
 	"time"
 
-	"github.com/feitian124/goapi/db"
+	"github.com/tigql/tigql/db"
 
 	"github.com/aquasecurity/go-version/pkg/version"
 	// mysql driver
