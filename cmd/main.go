@@ -8,8 +8,6 @@ import (
 
 	"github.com/tigql/tigql/db"
 
-	"github.com/tigql/tigql/db/mysql"
-
 	"github.com/99designs/gqlgen/graphql/handler"
 	"github.com/99designs/gqlgen/graphql/playground"
 	_ "github.com/go-sql-driver/mysql"
@@ -34,7 +32,7 @@ func main() {
 		log.Fatal(err)
 	}
 
-	db, err := mysql.Open(ds)
+	db, err := db.Open(ds)
 	if err != nil {
 		log.Fatal(err)
 	}

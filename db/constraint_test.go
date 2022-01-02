@@ -1,9 +1,9 @@
-package mysql_test
+package db_test
 
 import (
 	"testing"
 
-	"github.com/tigql/tigql/db/mysql"
+	"github.com/tigql/tigql/db"
 
 	"github.com/stretchr/testify/require"
 )
@@ -16,7 +16,7 @@ func TestDB_Constraints(t *testing.T) {
 	require.True(t, containsConstraint(constraints, "posts_user_id_fk"))
 }
 
-func containsConstraint(cs []*mysql.Constraint, name string) bool {
+func containsConstraint(cs []*db.Constraint, name string) bool {
 	for _, c := range cs {
 		if c.Name == name {
 			return true

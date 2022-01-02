@@ -1,7 +1,7 @@
 package graph
 
 import (
-	"github.com/tigql/tigql/db/mysql"
+	"github.com/tigql/tigql/db"
 )
 
 //go:generate go run github.com/99designs/gqlgen
@@ -11,5 +11,5 @@ import (
 // It serves as dependency injection for your app, add any dependencies you require here.
 
 type Resolver struct {
-	DB *mysql.DB
+	DB *db.DB
 }

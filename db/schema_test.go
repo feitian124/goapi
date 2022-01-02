@@ -1,10 +1,11 @@
-package mysql_test
+package db_test
 
 import (
 	"testing"
 
+	"github.com/tigql/tigql/db"
+
 	"github.com/stretchr/testify/require"
-	"github.com/tigql/tigql/db/mysql"
 )
 
 func TestDB_Tables(t *testing.T) {
@@ -67,7 +68,7 @@ func TestDB_FindTableDDL(t *testing.T) {
 	t.Parallel()
 	type args struct {
 		tableName string
-		tableType mysql.TableType
+		tableType db.TableType
 	}
 	tests := []struct {
 		name    string
@@ -75,9 +76,9 @@ func TestDB_FindTableDDL(t *testing.T) {
 		want    string
 		wantErr bool
 	}{
-		{"table posts", args{"posts", mysql.BaseTable}, "CREATE TABLE `posts`", false},
-		{"view post_comments", args{"post_comments", mysql.View}, "CREATE VIEW post_comments AS ", false},
-		{"table a_table_not_exists", args{"a_table_not_exists", mysql.BaseTable}, "", true},
+		{"table posts", args{"posts", db.BaseTable}, "CREATE TABLE `posts`", false},
+		{"view post_comments", args{"post_comments", db.View}, "CREATE VIEW post_comments AS ", false},
+		{"table a_table_not_exists", args{"a_table_not_exists", db.BaseTable}, "", true},
 	}
 
 	for _, tt := range tests {

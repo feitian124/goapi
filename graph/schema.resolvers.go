@@ -6,12 +6,13 @@ package graph
 import (
 	"context"
 
-	"github.com/tigql/tigql/db/mysql"
+	"github.com/tigql/tigql/db"
+
 	"github.com/tigql/tigql/graph/generated"
 	"github.com/tigql/tigql/nils"
 )
 
-func (r *queryResolver) Tables(ctx context.Context, pattern *string) ([]*mysql.TableInfo, error) {
+func (r *queryResolver) Tables(ctx context.Context, pattern *string) ([]*db.TableInfo, error) {
 	p := nils.String(pattern)
 	ts, err := r.DB.Tables(p)
 	if err != nil {
@@ -20,7 +21,7 @@ func (r *queryResolver) Tables(ctx context.Context, pattern *string) ([]*mysql.T
 	return ts, nil
 }
 
-func (r *queryResolver) Table(ctx context.Context, name string) (*mysql.Table, error) {
+func (r *queryResolver) Table(ctx context.Context, name string) (*db.Table, error) {
 	tb, err := r.DB.Table(name)
 	if err != nil {
 		return nil, err

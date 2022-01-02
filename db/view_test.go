@@ -1,9 +1,9 @@
-package mysql_test
+package db_test
 
 import (
 	"testing"
 
-	"github.com/tigql/tigql/db/mysql"
+	"github.com/tigql/tigql/db"
 
 	"github.com/google/go-cmp/cmp"
 )
@@ -51,7 +51,7 @@ SELECT * FROM posts WHERE user_id IN (SELECT id FROM k1low)
 		},
 	}
 	for _, tt := range tests {
-		got := mysql.ParseReferencedTables(tt.in)
+		got := db.ParseReferencedTables(tt.in)
 		if diff := cmp.Diff(got, tt.want, nil); diff != "" {
 			t.Errorf("%s", diff)
 		}

@@ -1,4 +1,4 @@
-package mysql_test
+package db_test
 
 import (
 	"log"
@@ -6,12 +6,11 @@ import (
 	"testing"
 
 	"github.com/tigql/tigql/db"
-	"github.com/tigql/tigql/db/mysql"
 )
 
 var (
 	currentTestDatasource *db.Datasource
-	currentTestDB         *mysql.DB
+	currentTestDB         *db.DB
 )
 
 func TestMain(m *testing.M) {
@@ -27,7 +26,7 @@ func TestMain(m *testing.M) {
 	if err != nil {
 		log.Fatal(err)
 	}
-	currentTestDB, err = mysql.Open(currentTestDatasource)
+	currentTestDB, err = db.Open(currentTestDatasource)
 	if err != nil {
 		currentTestDB.Close()
 		log.Fatal(err)

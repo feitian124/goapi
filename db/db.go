@@ -1,11 +1,9 @@
-package mysql
+package db
 
 import (
 	"database/sql"
 	"strings"
 	"time"
-
-	"github.com/tigql/tigql/db"
 
 	"github.com/aquasecurity/go-version/pkg/version"
 	// mysql driver
@@ -37,7 +35,7 @@ type DB struct {
 }
 
 // Open takes a dataSourceName like "root:mypass@tcp(127.0.0.1:33308)/testdb?parseTime=true"
-func Open(ds *db.Datasource) (*DB, error) {
+func Open(ds *Datasource) (*DB, error) {
 	db, err := sqlx.Open("mysql", ds.ConnectString())
 	if err != nil {
 		return nil, errors.WithStack(err)
