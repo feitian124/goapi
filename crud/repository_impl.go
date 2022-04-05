@@ -2,11 +2,11 @@ package crud
 
 import "database/sql"
 
-type repositoryImpl[T any, ID comparable] struct {
+type repositoryImpl[T Entity, ID comparable] struct {
 	Conn *sql.DB
 }
 
-func NewRepository[T any, ID comparable](Conn *sql.DB) Repository {
+func NewRepository[T Entity, ID comparable](Conn *sql.DB) Repository {
 	return &repositoryImpl[T, ID]{Conn}
 }
 
