@@ -26,7 +26,7 @@ fmt:
 lint: fmt
 	golangci-lint run --timeout "5m"
 
-## test: test default database tidb_5_2.
+## test: test default database
 test:
 	export DATASOURCE=tidb_5_2 && go test ./... --cover -count=1
 
